@@ -33,7 +33,7 @@ import BlogDetails from './components/Blog/BlogDetails';
 import Contact from './components/Contact/Contact';
 import About from './components/About/About';
 import Service from './components/Service/Service';
-import Dashboard from './components/Doctor/Dashboard/dashboard';
+import Dashboard from './components/Doctor/Dashboard/Dashboard';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
