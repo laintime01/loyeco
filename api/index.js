@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 //set up the routes
-app.use('/api', router);
+app.use('/api/v1', router);
 
 
 //set up the error handler

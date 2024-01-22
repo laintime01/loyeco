@@ -42,10 +42,10 @@ const SignIn = ({ handleResponse }) => {
                 <Toast.Header>
                     <strong className="mr-auto">Important Info</strong>
                 </Toast.Header>
-                <Toast.Body>Use this account to sign in as a admin <br />
+                <Toast.Body>Use this account to sign in for test <br />
                     <hr />
                     <div className='bg-dark text-white p-2 px-3 rounded'>
-                        email : Admin@gmail.com <br />
+                        email : hao@gmail.com <br />
                         password : 1234 <br />
                     </div>
                     <hr />

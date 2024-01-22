@@ -1,29 +1,27 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const ApiError = require("../../../errors/apiError");
 const httpStatus = require("http-status");
 const calculatePagination = require("../../../shared/paginationHelper");
-const Doctor = require('../../../models/doctorModel');
-
-
-const UserRole = {
-    doctor: 'doctor',
-    // add other user roles if any
-};
+const User = require("../../../models/userModel");
 
 const create = async (payload) => {
     try {
         const { password, ...othersData } = payload;
         
         // Check if email already exists
-        const existingDoctor = await Doctor.findOne({ email: othersData.email });
-        if (existingDoctor) {
+        const existingUser = await User.findOne({ email: othersData.email });
+        if (existingUser) {
             throw new ApiError(httpStatus.BAD_REQUEST, 'Email already exists');
         }
 
+        // Check if password is provided
+        if (!password) {
+            throw new ApiError(httpStatus.BAD_REQUEST, 'Password is required');
+        }
+
         const hashedPassword = bcrypt.hashSync(password, 12);
-        const doctor = new Doctor({ ...othersData, password: hashedPassword });
-        await doctor.save();
+        const newUser = new User({ ...othersData, password: hashedPassword });
+        await newUser.save();
 
         // Return a success message instead of the doctor record
         return {
@@ -34,7 +32,8 @@ const create = async (payload) => {
     }
 }
 
-const getAllDoctors = async (filters, options) => {
+
+const getAllUsers = async (filters, options) => {
     const { limit, page, skip } = calculatePagination(options);
     const { searchTerm, max, min, specialist, ...filterData } = filters;
 
@@ -100,6 +99,6 @@ module.exports = {
     create,
     updateDoctor,
     deleteDoctor,
-    getAllDoctors,
+    getAllUsers,
     getDoctor
 }

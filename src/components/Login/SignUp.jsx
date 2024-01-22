@@ -3,7 +3,7 @@ import { FaCheck, FaEnvelope, FaLock, FaTimes, FaUser } from 'react-icons/fa';
 import SocialSignUp from './SocialSignUp';
 import Spinner from 'react-bootstrap/Spinner'
 import swal from 'sweetalert';
-import { useDoctorSignUpMutation, usePatientSignUpMutation } from '../../redux/api/authApi';
+import { useDoctorSignUpMutation } from '../../redux/api/authApi';
 
 // password regex
 // ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
@@ -24,9 +24,7 @@ const SignUp = ({ setSignUp }) => {
         password: '',
     }
     const [user, setUser] = useState(formField)
-    const [userType, setUserType] = useState('patient');
     const [doctorSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useDoctorSignUpMutation();
-    const [patientSignUp, { data: pData, isSuccess: pIsSuccess, isError: pIsError, error: pError, isLoading: pIsLoading }] = usePatientSignUpMutation();
     const [passwordValidation, setPasswordValidation] = useState({
         carLength: false,
         specailChar: false,
@@ -40,7 +38,7 @@ const SignUp = ({ setSignUp }) => {
         setSignUp(false)
         swal({
             icon: 'success',
-            text: `Successfully ${userType === 'doctor' ? 'Doctor' : 'Patient'} Account Created Please Login`,
+            text: `Successfully Doctor Account Created Please Login`,
             timer: 2000
         })
     }
@@ -53,16 +51,7 @@ const SignUp = ({ setSignUp }) => {
         if (!dIsError && dIsSuccess) {
             handleSignUpSuccess();
         }
-        // Patient account
-        if (pIsError && pError) {
-            setLoading(false)
-            setInfoError(pError.data.message)
-        }
-        if (!pIsError && pIsSuccess) {
-            handleSignUpSuccess();
-        }
-
-    }, [dIsError, dError, pError, pIsError, , pIsLoading, dIsLoading, pData, dData, setSignUp, setLoading, dIsSuccess])
+    }, [dIsError, dError, dIsLoading, dData, setSignUp, setLoading, dIsSuccess])
 
     const [emailError, setEmailError] = useState({
         emailError: false
@@ -108,17 +97,10 @@ const SignUp = ({ setSignUp }) => {
         }
     }
 
-    const handleUserTypeChange = (e) => {
-        setUserType(e.target.value);
-    }
     const hanldeOnSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        if (userType === "doctor") {
-            doctorSignUp(user);
-        } else {
-            patientSignUp(user)
-        }
+        doctorSignUp(user);
     }
 
     return (
@@ -126,11 +108,11 @@ const SignUp = ({ setSignUp }) => {
             <h2 className="title">Sign Up</h2>
             <div className="input-field">
                 <span className="fIcon"><FaUser /></span>
-                <input placeholder="Name" name="firstName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstName} />
+                <input placeholder="First Name" name="firstName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstName} />
             </div>
             <div className="input-field">
                 <span className="fIcon"><FaUser /></span>
-                <input placeholder="Name" name="lastName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.lastName} />
+                <input placeholder="Last Name" name="lastName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.lastName} />
             </div>
             <div className="input-field">
                 <span className="fIcon"><FaEnvelope /></span>
@@ -139,18 +121,6 @@ const SignUp = ({ setSignUp }) => {
             <div className="input-field">
                 <span className="fIcon"><FaLock /></span>
                 <input type="password" name="password" placeholder="password" onChange={(e) => hanldeOnChange(e)} value={user.password} />
-            </div>
-            <div className='input-field d-flex align-items-center gap-2 justify-content-center'>
-                <div className='text-nowrap'>I'M A</div>
-                <select
-                    className="form-select w-50"
-                    aria-label="select"
-                    onChange={(e) => handleUserTypeChange(e)}
-                    defaultValue='patient'
-                >
-                    <option value="patient">Patient</option>
-                    <option value="doctor">Doctor</option>
-                </select>
             </div>
             {error.length && <h6 className="text-danger text-center">{error}</h6>}
             {infoError && <h6 className="text-danger text-center">{infoError}</h6>}
