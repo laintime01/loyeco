@@ -38,7 +38,7 @@ const SignIn = ({ handleResponse }) => {
 
     return (
         <form className="sign-in-form" onSubmit={handleSubmit(onSubmit)}>
-            <Toast show={show} onClose={() => setShow(!show)} className="signInToast">
+            {/* <Toast show={show} onClose={() => setShow(!show)} className="signInToast">
                 <Toast.Header>
                     <strong className="mr-auto">Important Info</strong>
                 </Toast.Header>
@@ -53,7 +53,7 @@ const SignIn = ({ handleResponse }) => {
                         Please Don't abuse the facility
                     </div>
                 </Toast.Body>
-            </Toast>
+            </Toast> */}
             <h2 className="title">Sign in</h2>
             <div className="input-field">
                 <span className="fIcon"><FaEnvelope /></span>
