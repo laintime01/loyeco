@@ -3,7 +3,7 @@ import './index.css';
 import useAuthCheck from '../../../redux/hooks/useAuthCheck';
 import TopHeader from '../TopHeader/TopHeader';
 import { Link, NavLink } from 'react-router-dom';
-import img from '../../../images/logo.png';
+import img from '../../../images/logo2.png';
 import img2 from '../../../images/doc/doctor 3.jpg';
 import { Button, Popover, message } from 'antd';
 import { loggedOut } from '../../../service/auth.service';
@@ -67,10 +67,7 @@ const Header = () => {
                         <ul>
                             <li><NavLink to={'/'} className={({ isActive }) => isActive ? "nav-link scrollto active" : ""} >Home</NavLink></li>
                             <li><NavLink to={'/about'} className={({ isActive }) => isActive ? "nav-link scrollto active" : ""}>About</NavLink></li>
-                            <li><NavLink to={'/service'} className={({ isActive }) => isActive ? "nav-link scrollto active" : ""}>Service</NavLink></li>
-                            <li><NavLink to={'/doctors'} className={({ isActive }) => isActive ? "nav-link scrollto active" : ""}>Doctors</NavLink></li>
                             <li><NavLink to={'/contact'} className={({ isActive }) => isActive ? "nav-link scrollto active" : ""}>Contact</NavLink></li>
-                            <li><NavLink to={'/blog'} className={({ isActive }) => isActive ? "nav-link scrollto active" : ""}>Blog</NavLink></li>
                             {!isLoggedIn && <li><Link to={'/login'} className="nav-link scrollto">Login</Link></li>}
                         </ul>
                         {isLoggedIn &&

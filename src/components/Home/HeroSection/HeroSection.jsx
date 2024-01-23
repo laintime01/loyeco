@@ -7,11 +7,10 @@ const HeroSection = () => {
         <section id="hero" class="d-flex align-items-center">
             <div className="container">
                 <div>
-                    <small>TOTAL HEALTH CARE SOLUTION</small>
-                    <h1>Your Most Trusted <br />Health Partner</h1>
-                    <small>A repudiandae ipsam labore ipsa voluptatum quidem quae laudantium quisquam aperiam maiores sunt fugit, deserunt rem suscipit placeat.</small>
+                    <small>Streamline Your Practice Management</small>
+                    <h1>Intelligent Case <br />Template Generation</h1>
                 </div>
-                <Link to={'/doctors'} className="btn-get-started scrollto">Get Started</Link>
+                <Link to={'/about'} className="btn-get-started scrollto">Get Started</Link>
             </div>
         </section>
     )

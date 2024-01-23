@@ -1,6 +1,6 @@
 import React from 'react';
 import './InfoPage.css';
-import { FaClock, FaHeadset,FaHouseUser  } from "react-icons/fa";
+import { FaClock, FaHandPaper, FaHeadset,FaHouseUser, FaLock, FaPager  } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
 const InfoPage = () => {
@@ -13,8 +13,8 @@ const InfoPage = () => {
                         <div className="content">
                             <h3>Why Choose Us?</h3>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit
-                                Asperiores dolores sed et. Tenetur quia eos. Autem tempore quibusdam vel necessitatibus optio ad corporis.
+                            Experience the future of practice management with our revolutionary system. Say goodbye to tedious paperwork and hello to streamlined efficiency. Our advanced platform seamlessly integrates appointment scheduling, 
+                            client management, and intelligent case template generation.
                             </p>
                             <div className="text-center">
                                 <Link href="/" className="more-btn">Learn More <i className="bx bx-chevron-right"></i></Link>
@@ -28,28 +28,21 @@ const InfoPage = () => {
                                     <div className="icon-box mt-4 mt-xl-0">
                                         <FaHouseUser className="icon"/>
                                         <h4>Appointment</h4>
-                                        <small className='text-secondary'>24 Hours Service</small>
-                                        <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</p>
+                                        <p>Effortlessly manage client appointments with our user-friendly online booking system.</p>
                                     </div>
                                 </div>
                                 <div className="col-xl-4 d-flex align-items-stretch">
                                     <div className="icon-box mt-4 mt-xl-0">
-                                        <FaHeadset className="icon"/>
-                                        <h4>Emegency Cases</h4>
-                                        <h6 className='text-secondary'>+88 01751 040425</h6>
-                                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Qui facilis perferendis quia maxime. Laborum excepturi pariatur laboriosam nihil, dolor molestias.</p>
+                                        <FaPager className="icon"/>
+                                        <h4>Intelligent Case Template Generation</h4>
+                                        <p>Our system automatically generates professional case templates based on the conditions selected by the massage therapist.</p>
                                     </div>
                                 </div>
                                 <div className="col-xl-4 d-flex align-items-stretch">
                                     <div className="icon-box mt-4 mt-xl-0">
-                                        <FaClock className="icon"/>
-                                        <h4>Working Hours</h4>
-                                        <small className='text-secondary'>Timing schedule</small>
-                                        <ul className='list-group list-group-flush'>
-                                        <li class="list-group-item d-flex justify-content-between text-nowrap" ><p>Sun - Wed : </p> <p>8:00 - 17: 00</p></li>
-                                        <li class="list-group-item d-flex justify-content-between text-nowrap" ><p>Thus - Fri : </p> <p>9:00 - 17: 00</p></li>
-                                        <li class="list-group-item d-flex justify-content-between text-nowrap" ><p>Sat - Sun : </p> <p>10:00 - 17: 00</p></li>
-                                        </ul>
+                                        <FaLock className="icon"/>
+                                        <h4>Secure Data Storage</h4>
+                                        <p>Our system securely stores client data and case templates in the cloud.</p>
                                     </div>
                                 </div>
                             </div>

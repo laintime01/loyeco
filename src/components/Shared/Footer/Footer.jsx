@@ -1,6 +1,6 @@
 import React from 'react';
 import './Footer.css';
-import logo from '../../../images/logo.png';
+import logo from '../../../images/logo2.png';
 import { Link } from 'react-router-dom';
 import { FaAngleDoubleRight } from "react-icons/fa";
 
@@ -18,33 +18,24 @@ const Footer = () => {
 									</Link>
 								</div>
 								<div className="footer-about-content">
-									<p className='form-text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+									<p className='form-text'>Introducing LoyEco - Simplify your practice, streamline appointments, manage clients effortlessly. Join our community, revolutionize therapeutic sessions. Sign up now! </p>
 								</div>
 							</div>
 						</div>
 
 						<div className="col-lg-3 col-md-6">
-							<div className="footer-widget footer-menu">
-								<h2 className="footer-title">For Patients</h2>
-								<ul>
-									<li><Link to={'/doctors'}><FaAngleDoubleRight className='icon' />  Search for Doctors</Link></li>
-									<li><Link to={'/login'}><FaAngleDoubleRight className='icon' />  Login</Link></li>
-									<li><Link to={'/login'}><FaAngleDoubleRight className='icon' />  Register</Link></li>
-									<li><Link to={'/doctors'}><FaAngleDoubleRight className='icon' />  Booking</Link></li>
-									<li><Link to={'/'}><FaAngleDoubleRight className='icon' />  Patient Dashboard</Link></li>
-								</ul>
-							</div>
+							
 						</div>
 
 						<div className="col-lg-3 col-md-6">
 
 							<div className="footer-widget footer-menu">
-								<h2 className="footer-title">For Doctors</h2>
+								<h2 className="footer-title">For Users</h2>
 								<ul>
 									<li><Link to={'/'}><FaAngleDoubleRight className='icon' /> Appointments</Link></li>
 									<li><Link to={'/login'}><FaAngleDoubleRight className='icon' /> Login</Link></li>
 									<li><Link to={'/register'}><FaAngleDoubleRight className='icon' /> Register</Link></li>
-									<li><Link to={'/dashboard'}><FaAngleDoubleRight className='icon' /> Doctor Dashboard</Link></li>
+									<li><Link to={'/dashboard'}><FaAngleDoubleRight className='icon' /> Clients Dashboard</Link></li>
 								</ul>
 							</div>
 						</div>
@@ -55,15 +46,15 @@ const Footer = () => {
 								<div className="footer-contact-info">
 									<div className="footer-address">
 										<span><i className="fas fa-map-marker-alt"></i></span>
-										<p> 121, Mirzapure Union office,<br /> Sylhet, Bangladesh 03214 </p>
+										<p> 38 tulocay lane,<br /> markham L6E0W2 </p>
 									</div>
 									<p>
 										<i className="fas fa-phone-alt"></i>
-										+88 017 51 040425
+										+1 647 888 6000
 									</p>
 									<p className="mb-0">
 										<i className="fas fa-envelope"></i>
-										ujjalzaman@gmail.com
+										loyeco@gmail.com
 									</p>
 								</div>
 							</div>
@@ -78,7 +69,7 @@ const Footer = () => {
 						<div className="row">
 							<div className="col-md-6 col-lg-6">
 								<div className="copyright-text">
-									<p className="mb-0"><a href="templateshub.net">
+									<p className="mb-0"><a href="">
 										<div className="copyRight text-center">
 											<p>Copyright {(new Date()).getFullYear()} All Rights Reserved</p>
 										</div></a></p>
