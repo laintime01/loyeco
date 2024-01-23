@@ -2,110 +2,36 @@ import React from 'react'
 import './index.css';
 import Header from '../Shared/Header/Header';
 import Footer from '../Shared/Footer/Footer';
-import img2 from '../../images/doc/doctor 5.jpg'
-import docImg from '../../images/doc/doctor 3.jpg'
+import img2 from '../../images/doc/doctor4.png'
 import SubHeader from '../Shared/SubHeader';
 
 const About = () => {
     return (
         <>
             <Header />
-            <SubHeader title="about us" subtitle="Lorem ipsum dolor sit amet consectetur adipisicing."/>
+            <SubHeader title="about us" subtitle="all-in-one practice management system."/>
             <div className="container" style={{ marginBottom: 100, marginTop: 100 }}>
                 <div className="row p-5">
                     <div className="col-lg-4">
                         <div className='section-title text-center'>
-                            <h2 className='text-uppercase'>Our Doctors Acheivement</h2>
-                            <p className='form-text m-0'>Lorem ipsum dolor sit amet.</p>
+                            <h2 className='text-uppercase'>LoyEco System</h2>
+                            <p className='form-text m-0'> Key Features to Optimize Your Practice.</p>
                         </div>
                     </div>
 
                     <div className="col-lg-8">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt, quod laborum alias. Vitae dolorum, officia sit! Saepe ullam facere at, consequatur incidunt, quae esse, quis ut reprehenderit dignissimos, libero delectus.</p>
-                        <img src={img2} alt="" className="img-fluid rounded shadow" />
+                        <p>Welcome to our all-in-one practice management system tailored for massage therapists, acupuncturists, and other wellness practitioners. With our intuitive platform, you can effortlessly manage client appointments, generate professional case templates based on selected conditions, and focus on delivering exceptional care and personalized treatment.</p>
+                        {/* <img src={img2} alt="" className="img-fluid rounded shadow" /> */}
                     </div>
                 </div>
             </div>
-
-            <div className="container" style={{ marginBottom: 100, marginTop: 100 }}>
-                <div className="row">
-                    {
-                        Array(4).fill(null).map((_item, id) => (
-                            <div className="col-lg-3 col-md-6" key={id + 4}>
-                                <div className="card shadow border-0 mb-5 mb-lg-0">
-                                    <img src={img2} alt="" className="m-0 img-fluid w-100" />
-                                    <div className='p-2'>
-                                        <h4 className="mt-3" style={{ color: '#223a66' }}>Healthcare for Kids</h4>
-                                        <p className='form-text'>Voluptate aperiam esse possimus maxime repellendus, nihil quod accusantium .</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-
-
-            <div className="container" style={{ marginBottom: 100, marginTop: 100 }}>
-                <div className="row align-items-center">
-                    <div className="col-lg-4">
-                        <div className='section-title text-center'>
-                            <h2 className='text-uppercase'>Our Doctors Acheivement</h2>
-                            <p className='form-text m-0'>Lorem ipsum dolor sit amet.</p>
-                        </div>
-                    </div>
-                    <div className="col-lg-8">
-                        <div className="row">
-                            {
-                                Array(6).fill(null).map((_, id) => (
-                                    <div className="col-lg-4 col-md-6 col-sm-6" key={id + 3}>
-                                        <div className="award-img">
-                                            <img src={docImg} alt="" className="img-fluid" />
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="container" style={{ marginBottom: 100, marginTop: 100 }}>
-                <div className="row justify-content-center">
-                    <div className="col-lg-6">
-                        <div className='mb-4 section-title text-center'>
-                            <h2 className='text-uppercase'>Meet Our Specialist</h2>
-                            <p className='form-text m-0'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut, ipsum!</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row">
-                    {
-                        Array(4).fill(null).map((_, id) => (
-                            <div className="col-lg-3 col-md-6 col-sm-6" key={id + 2}>
-                                <div className="card shadow border-0 mb-5 mb-lg-0">
-                                    <img src={docImg} alt="" className="img-fluid w-100" />
-
-                                    <div className="p-2">
-                                        <h4 className="mt-4 mb-0" style={{ color: '#223a66' }}><a>John Marshal</a></h4>
-                                        <p>Internist, Emergency Physician</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    }
-
-                </div>
-            </div>
-
 
             <div className="container say-about" style={{ marginBottom: 100, marginTop: 100 }}>
                 <div className="row">
                     <div className="col-lg-6 offset-lg-6">
                         <div className='mb-4 section-title text-center'>
-                            <h2 className='text-uppercase'>What Doctor's Say</h2>
-                            <p className='form-text m-0'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut, ipsum!</p>
+                            <h2 className='text-uppercase'>What User's Say</h2>
+                            <p className='form-text m-0'>Elevate My Practice with Integrated Solutions!</p>
                         </div>
                     </div>
                 </div>
@@ -117,7 +43,7 @@ const About = () => {
                             <span>John Partho</span>
                         </div>
                         <p className='form-text'>
-                            They provide great service facilty consectetur adipisicing elit. Itaque rem, praesentium, iure, ipsum magnam deleniti a vel eos adipisci suscipit fugit placeat. Quibusdam laboriosam eveniet nostrum nemo commodi numquam quod.
+                        Your practice management system has truly transformed the way I run my massage practice. It has given me the power to optimize my workflow, deliver personalized care, and exceed my clients' expectations. From the seamless appointment scheduling to the intelligent case template generation, every feature has simplified my administrative tasks, allowing me to focus on what I love most – providing exceptional treatments and improving client outcomes.
                         </p>
                     </div>
                 </div>

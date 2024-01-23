@@ -19,5 +19,6 @@
     left: 0px;
     position: absolute;
     content: "";
-    background: url("../../images/doc/doc4.jpg") no-repeat 50% 50%;
+    background: url("../../images/img/handshake.png") no-repeat 50% 50%;
+    background-size: contain;
 }
