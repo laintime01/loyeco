@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaCheck, FaEnvelope, FaLock, FaTimes, FaUser } from 'react-icons/fa';
+import { FaCheck, FaEnvelope, FaHatCowboy, FaLock, FaPersonBooth, FaTimes, FaUser } from 'react-icons/fa';
 import SocialSignUp from './SocialSignUp';
 import Spinner from 'react-bootstrap/Spinner'
 import swal from 'sweetalert';
@@ -20,15 +20,16 @@ const SignUp = ({ setSignUp }) => {
     const formField = {
         firstName: '',
         lastName: '',
+        preffredName: '',
         email: '',
         password: '',
     }
     const [user, setUser] = useState(formField)
     const [doctorSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useDoctorSignUpMutation();
     const [passwordValidation, setPasswordValidation] = useState({
-        carLength: false,
-        specailChar: false,
-        upperLowerCase: false,
+        // carLength: false,
+        // specailChar: false,
+        // upperLowerCase: false,
         numeric: false
     })
 
@@ -67,9 +68,9 @@ const SignUp = ({ setSignUp }) => {
     const hanldeValidation = (name, value) => {
         if (name === 'password') {
             setPasswordValidation({
-                carLength: (value.length > 8),
-                specailChar: /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(value),
-                upperLowerCase: /^(?=.*[a-z])(?=.*[A-Z])/.test(value),
+                // carLength: (value.length > 8),
+                // specailChar: /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(value),
+                // upperLowerCase: /^(?=.*[a-z])(?=.*[A-Z])/.test(value),
                 numeric: /^(?=.*\d)/.test(value),
             })
         }
@@ -85,10 +86,7 @@ const SignUp = ({ setSignUp }) => {
             isPassValid = /\S+@\S+\.\S+/.test(value);
         }
         if (value === 'password') {
-            isPassValid = ((value.length > 8)
-                && /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(value)
-                && /^(?=.*[a-z])(?=.*[A-Z])/.test(value)
-                && /^(?=.*\d)/.test(value))
+            isPassValid = (/^(?=.*\d)/.test(value))
         }
         if (isPassValid) {
             const newPass = { ...user };
@@ -124,11 +122,12 @@ const SignUp = ({ setSignUp }) => {
             </div>
             {error.length && <h6 className="text-danger text-center">{error}</h6>}
             {infoError && <h6 className="text-danger text-center">{infoError}</h6>}
+            {/* <button type="submit" className="btn btn-outline-secondary btn-block mt-2 iBtn">Next</button> */}
             <button type="submit"
                 className="btn btn-primary btn-block mt-2 iBtn"
-                disabled={
-                    passwordValidation.carLength && passwordValidation.numeric && passwordValidation.upperLowerCase && passwordValidation.specailChar && emailError.emailError ? "" : true
-                }
+                // disabled={
+                //     passwordValidation.carLength && passwordValidation.numeric && passwordValidation.upperLowerCase && passwordValidation.specailChar && emailError.emailError ? "" : true
+                // }
             >
                 {loading ? <Spinner animation="border" variant="info" /> : "Sign Up"}
             </button>
@@ -138,21 +137,6 @@ const SignUp = ({ setSignUp }) => {
                 <div style={emailError.emailError ? { color: "green" } : { color: "red" }}>
                     <p>{passwordValidation.numeric ? <FaCheck /> : <FaTimes />}
                         <span className="ms-2">Must Have Valid Email.</span></p>
-                </div>
-
-                <div style={passwordValidation.carLength ? { color: "green" } : { color: "red" }}>
-                    <p>{passwordValidation.numeric ? <FaCheck /> : <FaTimes />}
-                        <span className="ms-2">Password Must Have atlast 8 character.</span></p>
-                </div>
-
-                <div style={passwordValidation.specailChar ? { color: "green" } : { color: "red" }}>
-                    <p>{passwordValidation.numeric ? <FaCheck /> : <FaTimes />}
-                        <span className="ms-2">Password Must Have a special cracter.</span></p>
-                </div>
-
-                <div style={passwordValidation.upperLowerCase ? { color: "green" } : { color: "red" }}>
-                    <p>{passwordValidation.numeric ? <FaCheck /> : <FaTimes />}
-                        <span className="ms-2">Password Must Have uppercase and lower case.</span></p>
                 </div>
 
                 <div style={passwordValidation.numeric ? { color: "green" } : { color: "red" }}>
