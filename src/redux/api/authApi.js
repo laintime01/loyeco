@@ -1,16 +1,17 @@
 import { setUserInfo } from "../../utils/local-storage";
 import { baseApi } from "./baseApi"
 
-const AUTH_URL = '/auth'
-
 export const authApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
         userLogin: build.mutation({
-            query: (loginData) => ({
-                url: `${AUTH_URL}/login`,
-                method: 'POST',
-                data: loginData,
-            }),
+            query: (loginData) => {
+                console.log(loginData);  
+                return {
+                    url: `/login`,
+                    method: 'POST',
+                    data: loginData,
+                };
+            },
             async onQueryStarted(arg, { queryFulfilled, dispatch }) {
                 try {
                     const result = (await queryFulfilled).data;
@@ -19,21 +20,19 @@ export const authApi = baseApi.injectEndpoints({
                 }
             },
         }),
-        patientSignUp: build.mutation({
-            query: (data) => ({
-                url: `/patient`,
-                method: 'POST',
-                data,
-            }),
-        }),
         doctorSignUp: build.mutation({
-            query: (data) => ({
-                url: `/doctor`,
-                method: 'POST',
-                data,
-            }),
+            query: (data) => {
+                console.log(data);  
+                return {
+                    url: `/doctor`,
+                    method: 'POST',
+                    data,
+                };
+            },
         }),
     })
 })
 
-export const { useUserLoginMutation, useDoctorSignUpMutation, usePatientSignUpMutation } = authApi
+
+
+export const { useUserLoginMutation, useDoctorSignUpMutation } = authApi

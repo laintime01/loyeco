@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const prisma = require("../../../shared/prisma");
+const User = require('../../../models/userModel');
 const ApiError = require('../../../errors/apiError');
 const httpStatus = require('http-status');
 const JwtHelper = require('../../../helpers/jwtHelper');
@@ -8,18 +8,19 @@ const jwt = require('jsonwebtoken');
 
 const loginUser = async (user) => {
     const { email, password } = user;
-    const isUserExist = await prisma.auth.findUnique({
-        where: { email }
-    })
+    // check if user is exist
+    const isUserExist = await User.findOne({ email });
 
     if (!isUserExist) {
         throw new ApiError(httpStatus.NOT_FOUND, "User is not Exist !");
     }
+    // check if password is matched
     const isPasswordMatched = await bcrypt.compare(password, isUserExist.password);
 
     if (!isPasswordMatched) {
         throw new ApiError(httpStatus.NOT_FOUND, "Password is not Matched !");
     }
+    // create token
     const { id, role, userId } = isUserExist;
     const accessToken = JwtHelper.createToken(
         { role, userId },
