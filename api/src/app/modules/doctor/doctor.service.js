@@ -24,7 +24,7 @@ const create = async (payload) => {
         const newUser = new User({ ...othersData, password: hashedPassword });
         await newUser.save();
 
-        // Return a success message instead of the doctor record
+        // Return a success message instead of the user record
         return {
             message: 'Registration successful',
         };
@@ -68,8 +68,8 @@ const getAllUsers = async (filters, options) => {
         query.services = new RegExp(specialist, 'i');
     }
 
-    const result = await Doctor.find(query).skip(skip).limit(limit);
-    const total = await Doctor.countDocuments(query);
+    const result = await User.find(query).skip(skip).limit(limit);
+    const total = await User.countDocuments(query);
 
     return {
         meta: {
@@ -81,25 +81,25 @@ const getAllUsers = async (filters, options) => {
     }
 }
 
-const getDoctor = async (id) => {
-    const result = await Doctor.findById(id);
+const getUser = async (id) => {
+    const result = await User.findById(id);
     return result;
 }
 
-const deleteDoctor = async (id) => {
-    const doctor = await Doctor.findByIdAndRemove(id);
-    return doctor;
+const deleteUser = async (id) => {
+    const user = await User.findByIdAndRemove(id);
+    return user;
 }
 
-const updateDoctor = async (id, payload) => {
-    const result = await Doctor.findOneAndUpdate({ _id: id }, payload, { new: true });
+const updateUser = async (id, payload) => {
+    const result = await User.findOneAndUpdate({ _id: id }, payload, { new: true });
     return result;
 }
 
 module.exports = {
     create,
-    updateDoctor,
-    deleteDoctor,
+    updateUser,
+    deleteUser,
     getAllUsers,
-    getDoctor
+    getUser
 }

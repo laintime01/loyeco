@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Toast } from 'react-bootstrap';
 import { useUserLoginMutation } from '../../redux/api/authApi';
 
 const SignIn = ({ handleResponse }) => {
@@ -19,8 +18,9 @@ const SignIn = ({ handleResponse }) => {
     }, 10000)
     const [userLogin, {isError, isLoading, isSuccess, data, error}] = useUserLoginMutation();
 
+    // submit form
     const onSubmit = async (event) => {
-        userLogin({...event})
+        await userLogin({...event})
     }
     useEffect(() => {
         if(isError){
@@ -32,28 +32,12 @@ const SignIn = ({ handleResponse }) => {
                 text: `Successfully Logged In`,
                 timer: 2000
             })
-            navigate("/")
+            navigate("/dashboard")
         }
     }, [isError, error, isSuccess, navigate])
 
     return (
         <form className="sign-in-form" onSubmit={handleSubmit(onSubmit)}>
-            {/* <Toast show={show} onClose={() => setShow(!show)} className="signInToast">
-                <Toast.Header>
-                    <strong className="mr-auto">Important Info</strong>
-                </Toast.Header>
-                <Toast.Body>Use this account to sign in for test <br />
-                    <hr />
-                    <div className='bg-dark text-white p-2 px-3 rounded'>
-                        email : hao@gmail.com <br />
-                        password : 1234 <br />
-                    </div>
-                    <hr />
-                    <div className='bg-primary p-2 rounded text-white'>
-                        Please Don't abuse the facility
-                    </div>
-                </Toast.Body>
-            </Toast> */}
             <h2 className="title">Sign in</h2>
             <div className="input-field">
                 <span className="fIcon"><FaEnvelope /></span>

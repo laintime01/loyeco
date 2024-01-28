@@ -3,9 +3,9 @@ import { baseApi } from "./baseApi"
 
 export const authApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
+        // userLogin
         userLogin: build.mutation({
             query: (loginData) => {
-                console.log(loginData);  
                 return {
                     url: `/login`,
                     method: 'POST',
@@ -20,9 +20,9 @@ export const authApi = baseApi.injectEndpoints({
                 }
             },
         }),
+        // userSignUp
         doctorSignUp: build.mutation({
             query: (data) => {
-                console.log(data);  
                 return {
                     url: `/doctor`,
                     method: 'POST',

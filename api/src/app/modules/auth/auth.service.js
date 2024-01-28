@@ -8,26 +8,28 @@ const jwt = require('jsonwebtoken');
 
 const loginUser = async (user) => {
     const { email, password } = user;
-    // check if user is exist
+    // check if user exists
     const isUserExist = await User.findOne({ email });
 
     if (!isUserExist) {
-        throw new ApiError(httpStatus.NOT_FOUND, "User is not Exist !");
+        throw new ApiError(httpStatus.NOT_FOUND, "User does not exist !");
+        
     }
     // check if password is matched
     const isPasswordMatched = await bcrypt.compare(password, isUserExist.password);
 
     if (!isPasswordMatched) {
-        throw new ApiError(httpStatus.NOT_FOUND, "Password is not Matched !");
+        throw new ApiError(httpStatus.NOT_FOUND, "Password does not match !");
     }
     // create token
-    const { id, role, userId } = isUserExist;
+    const { id } = isUserExist;
+    console.log(config.jwt.secret)
     const accessToken = JwtHelper.createToken(
-        { role, userId },
+        { id },
         config.jwt.secret,
         config.jwt.JWT_EXPIRES_IN
     )
-    return { accessToken, user: { role, userId } }
+    return { accessToken, user: { id } }
 }
 
 module.exports = {
