@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../images/doc/doc4.jpg';
+import img from '../../images/john.png';
 import './DashboardSidebar.css';
 import { Link, NavLink } from 'react-router-dom';
 import useAuthCheck from '../../redux/hooks/useAuthCheck';
@@ -116,23 +116,9 @@ const DashboardSidebar = () => {
                             </li>
 
                             <li>
-                                <NavLink to={'/dashboard/reviews'} activeClassName="active">
-                                    <FaRegStar className="icon" />
-                                    <span>Reviews</span>
-                                </NavLink>
-                            </li>
-
-                            <li>
                                 <NavLink to={'/dashboard/profile-setting'} activeClassName="active">
                                     <FaUserCog className="icon" />
                                     <span>Profile Settings</span>
-                                </NavLink>
-                            </li>
-
-                            <li>
-                                <NavLink to={'/dashboard/blogs'} activeClassName="active">
-                                    <FaBlog className="icon" />
-                                    <span>Blogs (Will move to Admin)</span>
                                 </NavLink>
                             </li>
 
