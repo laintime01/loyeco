@@ -7,7 +7,6 @@ export default function useAuthCheck() {
     const [userId, setUserId] = useState('');
     const [isSkip, setIsSkip] = useState(true);
     const [data, setData] = useState({});
-    const [role, setRole] = useState("doctor");
     const { data: doctorData, isError, isSuccess: dIsSuccess } = useGetDoctorQuery(userId, { skip: isSkip });
 
     useEffect(() => {
@@ -24,6 +23,5 @@ export default function useAuthCheck() {
     return {
         authChecked,
         data,
-        role
     };
 }

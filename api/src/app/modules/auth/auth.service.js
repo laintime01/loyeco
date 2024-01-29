@@ -8,30 +8,48 @@ const jwt = require('jsonwebtoken');
 
 const loginUser = async (user) => {
     const { email, password } = user;
-    // check if user exists
     const isUserExist = await User.findOne({ email });
 
     if (!isUserExist) {
-        throw new ApiError(httpStatus.NOT_FOUND, "User does not exist !");
-        
+        throw new ApiError(httpStatus.NOT_FOUND, "User does not exist!");
     }
-    // check if password is matched
+
     const isPasswordMatched = await bcrypt.compare(password, isUserExist.password);
 
     if (!isPasswordMatched) {
-        throw new ApiError(httpStatus.NOT_FOUND, "Password does not match !");
+        throw new ApiError(httpStatus.NOT_FOUND, "Password does not match!");
     }
-    // create token
-    const { id } = isUserExist;
-    console.log(config.jwt.secret)
+
+    const { role, userId } = isUserExist;
     const accessToken = JwtHelper.createToken(
-        { id },
+        { role, userId },
         config.jwt.secret,
         config.jwt.JWT_EXPIRES_IN
-    )
-    return { accessToken, user: { id } }
-}
+    );
+
+    return { accessToken, user: { role, userId } };
+};
+
+const registerUser = async (user) => {
+    const { firstname, lastname, username, password, email } = user;
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const newUser = new User({
+        firstname,
+        lastname,
+        username,
+        password: hashedPassword,
+        email
+    });
+
+    await newUser.save();
+
+    return newUser;
+};
 
 module.exports = {
-    loginUser
-}
+    loginUser,
+    registerUser
+};
