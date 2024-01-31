@@ -9,8 +9,8 @@ const DashboardLayout = ({ children }) => {
 		<>
 		{/* hide Header */}
 			{/* <Header /> */}
-			<DashboardHeader />
-			<div className="container-fluid" style={{marginTop:50, marginBottom:200}}>
+			{/* <DashboardHeader /> */}
+			<div className="container-fluid" style={{marginTop:20, marginBottom:200}}>
 				<div className="row">
 					<div className="col-md-5 col-lg-4 col-xl-3">
 						<DashboardSidebar />
