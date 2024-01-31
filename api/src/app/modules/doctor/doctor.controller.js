@@ -17,7 +17,6 @@ const getAllUsers = catchAsync(async (req, res) => {
     const filter = pick(req.query, IDoctorFiltersData);
     const options = pick(req.query, IDoctorOptions);
     const result = await UserService.getAllUsers(filter, options);
-    console.log(result);
     sendResponse(res, {
         statusCode: 200,
         message: 'Successfully Retrieve users !!',

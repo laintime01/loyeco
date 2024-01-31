@@ -40,6 +40,7 @@ const router = createBrowserRouter([
   { path: '/dashboard/change-password', element: <ChangePassword /> },
   { path: '/dashboard/profile-setting', element: <ProfileSetting /> },
   { path: '/dashboard/invoices', element: <DoctorInvoice /> },
+  { path: '/dashboard/cases', element: <DoctorInvoice /> },
 
   { path: '/booking/:doctorId', element: <DoctorBooking /> },
   { path: '/booking/success/', element: <BookingSuccess /> },

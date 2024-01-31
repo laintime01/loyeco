@@ -50,6 +50,12 @@ const DashboardSidebar = () => {
                         </NavLink>
                     </li>
                     <li>
+                        <NavLink to={'/dashboard/cases'} activeClassName="active">
+                            <FaHouseUser className="icon" />
+                            <span>Case Management</span>
+                        </NavLink>
+                    </li>
+                    <li>
                         <NavLink to={'/dashboard/schedule'} activeClassName="active">
                             <FaCalendarDay className="icon" />
                             <span>Schedule Timings</span>

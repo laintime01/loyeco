@@ -7,7 +7,6 @@ const User = require("../../../models/userModel");
 const create = async (payload) => {
     try {
         const { password, ...othersData } = payload;
-        console.log(payload)
         
         // Check if email already exists
         const existingUser = await User.findOne({ email: othersData.email });
