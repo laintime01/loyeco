@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
 import { useGetAllPatientsQuery, useDeletePatientMutation } from '../../../redux/api/patientApi';
-import { Link } from 'react-router-dom';
-import { Button, Table, InputGroup, Form } from 'react-bootstrap';
+import { Button, Table, InputGroup, Form, Modal } from 'react-bootstrap';
 import './style.css';
 
 const MyPatients = () => {
     const { data, isLoading, isError } = useGetAllPatientsQuery();
     const [deletePatient] = useDeletePatientMutation();
     const [searchTerm, setSearchTerm] = useState("");
+    const [showModal, setShowModal] = useState(false);
     
     const handleDelete = async (id) => {
         try {
@@ -18,12 +18,15 @@ const MyPatients = () => {
         }
     };
 
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
+
     return (
         <DashboardLayout>
             <div className="row">
                 <div className="col-md-12">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <Button variant="secondary" className="addButton">ADD Patient</Button>
+                        <Button variant="secondary" className="addButton" onClick={handleShow}>ADD Patient</Button>
                         <InputGroup className="mb-3 d-flex justify-content-center" style={{ marginLeft: "40px",marginRight:"100px" }}>
                             <Form.Control
                             placeholder="Please enter patient name or email to search"
@@ -35,6 +38,35 @@ const MyPatients = () => {
                             </Button>
                         </InputGroup>
                     </div>
+                    <Modal show={showModal} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add New Patient</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <Form.Group controlId="formPatientFirstName">
+                                    <Form.Label>First Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter first name" />
+                                </Form.Group>
+                                <Form.Group controlId="formPatientLastName">
+                                    <Form.Label>Last Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter last name" />
+                                </Form.Group>
+                                <Form.Group controlId="formPatientEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email" />
+                                </Form.Group>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handleClose}>
+                                Confirm
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                     {!isLoading && isError && <div>Something Went Wrong !</div>}
                     {!isLoading && !isError && data?.length === 0 && <div>Empty</div>}
                     {!isLoading && !isError && data?.length > 0 && (
