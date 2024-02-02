@@ -10,18 +10,22 @@ const MyPatients = () => {
     const [deletePatient] = useDeletePatientMutation();
     const [createPatient] = useCreatePatientMutation();
     const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [patientToDelete, setPatientToDelete] = useState(null);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
     const [email, setEmail] = useState("");
     const [userId, setUserId] = useState("65b5cf279c1df765cee613af");
-    
-    const handleDelete = async (id) => {
+
+    const handleDelete = async () => {
         try {
-            await deletePatient(id).unwrap();
+            await deletePatient(patientToDelete).unwrap();
             toast.success('Delete Patient Successful');
             refetch();
         } catch (err) {
             console.error('Failed to delete the patient: ', err);
+        } finally {
+            handleCloseDeleteModal();
         }
     };
 
@@ -38,6 +42,11 @@ const MyPatients = () => {
     
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
+    const handleCloseDeleteModal = () => setShowDeleteModal(false);
+    const handleShowDeleteModal = (id) => {
+        setPatientToDelete(id);
+        setShowDeleteModal(true);
+    }
 
     return (
         <DashboardLayout>
@@ -57,34 +66,21 @@ const MyPatients = () => {
                         </InputGroup>
                     </div>
                     <Modal show={showModal} onHide={handleClose}>
+                        {/* ...Add patient modal code */}
+                    </Modal>
+                    <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Add New Patient</Modal.Title>
+                            <Modal.Title>Confirm Delete</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form>
-                                <Form.Group controlId="formPatientFirstName">
-                                    <Form.Label>First Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter first name" value={firstname} onChange={(e) => setFirstname(e.target.value)}/>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientLastName">
-                                    <Form.Label>Last Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter last name" value={lastname} onChange={(e) => setLastname(e.target.value)}/>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientEmail">
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientUserId" className="d-none">
-                                    <Form.Control type="text" defaultValue={userId}/>
-                                </Form.Group>
-                            </Form>
+                            Are you sure you want to delete this patient?
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleAddPatient}>
+                            <Button variant="danger" onClick={handleDelete}>
                                 Confirm
                             </Button>
-                            <Button variant="primary" onClick={handleClose}>
-                                Close
+                            <Button variant="secondary" onClick={handleCloseDeleteModal}>
+                                Cancel
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -108,7 +104,7 @@ const MyPatients = () => {
                                         <td>{item.email}</td>
                                         <td>
                                             <Button variant="success"  className="updateButton">Update</Button>
-                                            <Button variant="warning" className="deleteButton" onClick={() => handleDelete(item.id)}>
+                                            <Button variant="warning" className="deleteButton" onClick={() => handleShowDeleteModal(item._id)}>
                                                 Delete
                                             </Button>
                                         </td>
