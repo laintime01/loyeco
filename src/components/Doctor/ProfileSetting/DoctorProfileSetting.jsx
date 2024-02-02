@@ -254,93 +254,15 @@ const DoctorProfileSetting = () => {
                         </div>
                     </div>
 
-                    <div className="col-md-12">
-                        <div className="card mb-2 p-3 mt-2">
-                            <h6 className="card-title text-secondary">Education</h6>
-                            <div className="row form-row">
-                                <div className="col-12 col-md-6 col-lg-4">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Degree</label>
-                                        <input defaultValue={data?.degree} {...register("degree")} className="form-control" />
-                                    </div>
-                                </div>
-
-                                <div className="col-12 col-md-6 col-lg-4">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>College/Institute</label>
-                                        <input defaultValue={data?.college} {...register("college")} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="col-12 col-md-6 col-lg-4">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Year of Completion</label>
-                                        <input defaultValue={data?.completionYear} {...register("completionYear")} className="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="col-md-12">
                         <div className="card mb-2 p-3 mt-2">
-                            <h6 className="card-title text-secondary">Experience</h6>
-                            <div className="row form-row">
-                                <div className="col-12 col-md-6 col-lg-4">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Hospital Name</label>
-                                        <input defaultValue={data?.experienceHospitalName} {...register("experienceHospitalName")} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="col-12 col-md-6 col-lg-4">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>From</label>
-                                        <input defaultValue={data?.expericenceStart} {...register("expericenceStart")} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="col-12 col-md-6 col-lg-4">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>To</label>
-                                        <input defaultValue={data?.expericenceEnd} {...register("expericenceEnd")} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="col-12 col-md-6 col-lg-4">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Designation</label>
-                                        <input defaultValue={data?.designation} {...register("designation")} className="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-md-12">
-                        <div className="card mb-2 p-3 mt-2">
-                            <h6 className="card-title text-secondary">Awards</h6>
+                            <h6 className="card-title text-secondary">License Info</h6>
                             <div className="row form-row">
                                 <div className="col-md-6">
                                     <div className="form-group mb-2 card-label">
-                                        <label>Awards</label>
-                                        <input defaultValue={data?.award} {...register("award")} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Year</label>
-                                        <input defaultValue={data?.awardYear} {...register("awardYear")} className="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-md-12">
-                        <div className="card mb-2 p-3 mt-2">
-                            <h6 className="card-title text-secondary">Registrations</h6>
-                            <div className="row form-row">
-                                <div className="col-md-6">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Registrations</label>
-                                        <input defaultValue={data?.registration} {...register("registration")} className="form-control" />
+                                        <label>License Number</label>
+                                        <input defaultValue={data?.license} {...register("license")} className="form-control" />
                                     </div>
                                 </div>
                                 <div className="col-md-6">
@@ -353,6 +275,30 @@ const DoctorProfileSetting = () => {
                         </div>
                     </div>
 
+                    {/* change password */}
+                    <div className="col-md-12">
+                        <div className="card mb-2 p-3 mt-2">
+                            <h6 className="card-title text-secondary">Change Password</h6>
+                            <div className="row form-row">
+                                <div className="col-md-6">
+                                    <div className="form-group mb-2 card-label">
+                                        <label>Old Password</label>
+                                        <input type="password" className="form-control" />
+                                    </div>
+                                    <div className="form-group mb-2 card-label">
+                                        <label>New Password</label>
+                                        <input type="password" className="form-control" />
+                                    </div>
+                                    <div className="form-group mb-2 card-label">
+                                        <label>Confirm Password</label>
+                                        <input type="password" className="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
                     <div className='text-center my-3'>
                         <Button htmlType='submit' type="primary" size='large' loading={isLoading} disabled={isLoading ? true : false} >
                             {isLoading ? 'Saving ...' : 'Save Changes'}

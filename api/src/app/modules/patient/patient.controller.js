@@ -1,8 +1,6 @@
-const { Request, Response } = require("express");
 const catchAsync = require("../../../shared/catchAsync");
 const sendResponse = require("../../../shared/sendResponse");
 const PatientService = require("./patient.service");
-const { Patient } = require("@prisma/client");
 
 const createPatient = catchAsync(async (req, res) => {
     await PatientService.createPatient(req.body);
@@ -54,11 +52,9 @@ const updatePatient = catchAsync(async (req, res) => {
 })
 
 module.exports = {
-    PatientController: {
-        createPatient,
-        updatePatient,
-        getPatient,
-        getAllPatients,
-        deletePatient,
-    }
+    createPatient,
+    updatePatient,
+    getPatient,
+    getAllPatients,
+    deletePatient
 }

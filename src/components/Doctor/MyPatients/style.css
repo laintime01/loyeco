@@ -1,0 +1,60 @@
+.addButton {
+    background-color: #6a8caf !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    margin: 4px 2px 20px !important;
+    transition-duration: 0.4s !important;
+    cursor: pointer !important;
+    border-radius: 12px !important;
+}
+
+.addButton:hover {
+    background-color: #007bff !important;
+    color: white !important;
+}
+
+.updateButton {
+    background-color: #c9d1da !important;
+    border: none !important;
+    color: #343a40 !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    margin: 4px 2px !important;
+    transition-duration: 0.4s !important;
+    cursor: pointer !important;
+    border-radius: 12px !important;
+    margin-right: 10px !important;
+    margin-left: 20px !important;
+}
+
+.updateButton:hover {
+    background-color: #e9ecef !important;
+    color: black !important;
+}
+.deleteButton {
+    background-color: #e6babe !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    margin: 4px 2px !important;
+    transition-duration: 0.4s !important;
+    cursor: pointer !important;
+    border-radius: 12px !important;
+}
+
+.deleteButton:hover {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
