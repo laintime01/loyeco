@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import img from '../../../images/doc/john.png';
+import img from '../../../images/John.jpg';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
