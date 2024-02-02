@@ -1,3 +1,5 @@
+import React from 'react';
+import { Toaster } from 'react-hot-toast'; // Toaster
 import { createContext } from 'react';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -61,8 +63,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div>
+      <Toaster /> {/* Add Toase  */}
       <RouterProvider router={router} />
     </div>
   );
 }
+
 export default App;

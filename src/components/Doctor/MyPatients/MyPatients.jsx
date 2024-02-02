@@ -1,25 +1,52 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { useGetAllPatientsQuery, useDeletePatientMutation } from '../../../redux/api/patientApi';
+import { useGetAllPatientsQuery, useDeletePatientMutation, useCreatePatientMutation } from '../../../redux/api/patientApi';
 import { Button, Table, InputGroup, Form, Modal } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import './style.css';
 
 const MyPatients = () => {
-    const { data, isLoading, isError } = useGetAllPatientsQuery();
+    const { data, isLoading, isError, refetch } = useGetAllPatientsQuery();
     const [deletePatient] = useDeletePatientMutation();
-    const [searchTerm, setSearchTerm] = useState("");
+    const [createPatient] = useCreatePatientMutation();
     const [showModal, setShowModal] = useState(false);
-    
-    const handleDelete = async (id) => {
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [patientToDelete, setPatientToDelete] = useState(null);
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [email, setEmail] = useState("");
+    const [userId, setUserId] = useState("65b5cf279c1df765cee613af");
+
+    const handleDelete = async () => {
         try {
-            await deletePatient(id).unwrap();
+            await deletePatient(patientToDelete).unwrap();
+            toast.success('Delete Patient Successful');
+            refetch();
         } catch (err) {
             console.error('Failed to delete the patient: ', err);
+        } finally {
+            handleCloseDeleteModal();
         }
     };
 
+    const handleAddPatient = async () => {
+        try {
+            await createPatient({firstname, lastname, email, userId}).unwrap();
+            handleClose();
+            toast.success('Add Patient Successful');
+            refetch();
+        } catch(err) {
+            console.error('Failed to add the patient: ', err);
+        }
+    };
+    
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
+    const handleCloseDeleteModal = () => setShowDeleteModal(false);
+    const handleShowDeleteModal = (id) => {
+        setPatientToDelete(id);
+        setShowDeleteModal(true);
+    }
 
     return (
         <DashboardLayout>
@@ -39,31 +66,21 @@ const MyPatients = () => {
                         </InputGroup>
                     </div>
                     <Modal show={showModal} onHide={handleClose}>
+                        {/* ...Add patient modal code */}
+                    </Modal>
+                    <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Add New Patient</Modal.Title>
+                            <Modal.Title>Confirm Delete</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form>
-                                <Form.Group controlId="formPatientFirstName">
-                                    <Form.Label>First Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter first name" />
-                                </Form.Group>
-                                <Form.Group controlId="formPatientLastName">
-                                    <Form.Label>Last Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter last name" />
-                                </Form.Group>
-                                <Form.Group controlId="formPatientEmail">
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" />
-                                </Form.Group>
-                            </Form>
+                            Are you sure you want to delete this patient?
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Close
-                            </Button>
-                            <Button variant="primary" onClick={handleClose}>
+                            <Button variant="danger" onClick={handleDelete}>
                                 Confirm
+                            </Button>
+                            <Button variant="secondary" onClick={handleCloseDeleteModal}>
+                                Cancel
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -73,7 +90,6 @@ const MyPatients = () => {
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Last Name</th>
                                     <th>First Name</th>
                                     <th>Email</th>
@@ -83,13 +99,12 @@ const MyPatients = () => {
                             <tbody>
                                 {data.map((item) => (
                                     <tr key={item.id}>
-                                        <td>{item._id}</td>
                                         <td>{item.lastname}</td>
                                         <td>{item.firstname}</td>
                                         <td>{item.email}</td>
                                         <td>
                                             <Button variant="success"  className="updateButton">Update</Button>
-                                            <Button variant="warning" className="deleteButton" onClick={() => handleDelete(item.id)}>
+                                            <Button variant="warning" className="deleteButton" onClick={() => handleShowDeleteModal(item._id)}>
                                                 Delete
                                             </Button>
                                         </td>

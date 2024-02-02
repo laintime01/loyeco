@@ -30,9 +30,8 @@ export const patientApi = baseApi.injectEndpoints({
             query: (data) => ({
                 url: PAT_URL,
                 method: 'POST',
-                data: data
+                data,
             }),
-            invalidatesTags: [tagTypes.patient]
         }),
         deletePatient: build.mutation({
             query: (id) => ({
@@ -45,10 +44,10 @@ export const patientApi = baseApi.injectEndpoints({
     })
 })
 
-export const { 
-    useGetPatientQuery, 
-    useUpdatePatientMutation, 
-    useGetAllPatientsQuery, 
-    useCreatePatientMutation, 
-    useDeletePatientMutation 
+export const {
+    useGetPatientQuery,
+    useUpdatePatientMutation,
+    useGetAllPatientsQuery,
+    useCreatePatientMutation,
+    useDeletePatientMutation
 } = patientApi
