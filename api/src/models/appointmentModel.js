@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const appointmentSchema = new Schema({
-    clinicId: {
+    doctorId: {
         type: Schema.Types.ObjectId,
-        ref: 'Clinic',
+        ref: 'Doctor',
         required: true
     },
     patientId: {
@@ -22,14 +22,12 @@ const appointmentSchema = new Schema({
         ref: 'Location',
         required: true
     },
-    providerId: {
+    doctorId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
     generalNote: String,
-    backgroundColor: String,
-    borderColor: String,
     status: {
         type: String,
         enum: ['Uncheckin', 'Checkin', 'Cancel', 'Missed', 'Finished'],

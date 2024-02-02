@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../images/john.png';
+import img from '../../images/John.jpg';
 import './DashboardSidebar.css';
 import { Link, NavLink } from 'react-router-dom';
 import useAuthCheck from '../../redux/hooks/useAuthCheck';
@@ -38,45 +38,39 @@ const DashboardSidebar = () => {
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to={'/dashboard/appointments'} activeClassName="active">
-                            <FaCalendarDay className="icon" />
-                            <span>Appointments</span>
+                        <NavLink to={'/dashboard/my-patients'} activeClassName="active">
+                            <FaUserInjured className="icon" />
+                            <span>Patient</span>
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to={'/dashboard/my-patients'} activeClassName="active">
-                            <FaUserInjured className="icon" />
-                            <span>My Patients</span>
+                        <NavLink to={'/dashboard/appointments'} activeClassName="active">
+                            <FaCalendarDay className="icon" />
+                            <span>Calender</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink to={'/dashboard/cases'} activeClassName="active">
                             <FaHouseUser className="icon" />
-                            <span>Case Management</span>
+                            <span>Report</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink to={'/dashboard/schedule'} activeClassName="active">
                             <FaCalendarDay className="icon" />
-                            <span>Schedule Timings</span>
+                            <span>Export Data</span>
                         </NavLink>
                     </li>
-                    <li>
+                    {/* <li>
                         <NavLink to={'/dashboard/invoices'} activeClassName="active">
                             <FaHourglassStart className="icon" />
                             <span>Invoices</span>
                         </NavLink>
-                    </li>
+                    </li> */}
                     <li>
                         <NavLink to={'/dashboard/profile-setting'} activeClassName="active">
                             <FaUserCog className="icon" />
-                            <span>Profile Settings</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to={'/dashboard/change-password'} activeClassName="active">
-                            <FaLock className="icon" />
-                            <span>Change Password</span>
+                            <span>Settings</span>
                         </NavLink>
                     </li>
                     <li>

@@ -18,8 +18,37 @@ export const patientApi = baseApi.injectEndpoints({
                 data: data
             }),
             invalidatesTags: [tagTypes.patient]
-        })
+        }),
+        getAllPatients: build.query({
+            query: () => ({
+                url: PAT_URL,
+                method: 'GET',
+            }),
+            providesTags: [tagTypes.patient]
+        }),
+        createPatient: build.mutation({
+            query: (data) => ({
+                url: PAT_URL,
+                method: 'POST',
+                data: data
+            }),
+            invalidatesTags: [tagTypes.patient]
+        }),
+        deletePatient: build.mutation({
+            query: (id) => ({
+                url: `${PAT_URL}/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: [tagTypes.patient]
+        }),
+        
     })
 })
 
-export const { useGetPatientQuery, useUpdatePatientMutation } = patientApi
+export const { 
+    useGetPatientQuery, 
+    useUpdatePatientMutation, 
+    useGetAllPatientsQuery, 
+    useCreatePatientMutation, 
+    useDeletePatientMutation 
+} = patientApi

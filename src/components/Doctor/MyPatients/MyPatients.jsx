@@ -1,46 +1,75 @@
-import React from 'react';
-import img from '../../../images/doc/doctor 3.jpg';
+import React, { useState } from 'react';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { useGetDoctorPatientsQuery } from '../../../redux/api/appointmentApi';
-import moment from 'moment';
+import { useGetAllPatientsQuery, useDeletePatientMutation } from '../../../redux/api/patientApi';
 import { Link } from 'react-router-dom';
-import { FaClock, FaEnvelope, FaLocationArrow, FaPhoneAlt } from "react-icons/fa";
+import { Button, Table, InputGroup, Form } from 'react-bootstrap';
+import './style.css';
 
 const MyPatients = () => {
-    const { data, isLoading, isError } = useGetDoctorPatientsQuery();
-    let content = null;
-    if (!isLoading && isError) content = <div>Something Went Wrong !</div>
-    if (!isLoading && !isError && data?.length === 0) content = <div>Empty</div>
-    if (!isLoading && !isError && data?.length > 0) content =
-        <>
-            {data && data?.map((item) => (
-                <div className="w-100 mb-3 rounded p-3 text-center" style={{ background: '#f8f9fa' }}>
-                    <div className="">
-                        <Link to={'/'} className="my-3 patient-img">
-                            <img src={img} alt="" />
-                        </Link>
-                        <div className="patients-info mt-4">
-                            <h5>{item?.firstName + ' ' + item?.lastName}</h5>
-                            <div className="info">
-                                <p><FaClock className='icon' /> {moment(item?.appointmentTime).format("MMM Do YY")} </p>
-                                <p><FaLocationArrow className='icon' /> {item?.address}</p>
-                                <p><FaEnvelope className='icon' /> {item?.email}</p>
-                                <p><FaPhoneAlt className='icon' /> {item?.mobile}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </>
+    const { data, isLoading, isError } = useGetAllPatientsQuery();
+    const [deletePatient] = useDeletePatientMutation();
+    const [searchTerm, setSearchTerm] = useState("");
+    
+    const handleDelete = async (id) => {
+        try {
+            await deletePatient(id).unwrap();
+        } catch (err) {
+            console.error('Failed to delete the patient: ', err);
+        }
+    };
+
     return (
         <DashboardLayout>
             <div className="row">
-                <div className="col-md-6 col-lg-4 col-xl-3">
-                    {content}
+                <div className="col-md-12">
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <Button variant="secondary" className="addButton">ADD Patient</Button>
+                        <InputGroup className="mb-3 d-flex justify-content-center" style={{ marginLeft: "40px",marginRight:"100px" }}>
+                            <Form.Control
+                            placeholder="Please enter patient name or email to search"
+                            aria-label="Please enter patient name or email to search"
+                            aria-describedby="basic-addon2"
+                            />
+                            <Button variant="outline-secondary" id="button-addon2">
+                            Search
+                            </Button>
+                        </InputGroup>
+                    </div>
+                    {!isLoading && isError && <div>Something Went Wrong !</div>}
+                    {!isLoading && !isError && data?.length === 0 && <div>Empty</div>}
+                    {!isLoading && !isError && data?.length > 0 && (
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((item) => (
+                                    <tr key={item.id}>
+                                        <td>{item._id}</td>
+                                        <td>{item.lastname}</td>
+                                        <td>{item.firstname}</td>
+                                        <td>{item.email}</td>
+                                        <td>
+                                            <Button variant="success"  className="updateButton">Update</Button>
+                                            <Button variant="warning" className="deleteButton" onClick={() => handleDelete(item.id)}>
+                                                Delete
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    )}
                 </div>
             </div>
         </DashboardLayout>
-    )
-}
+    );
+};
 
-export default MyPatients
+export default MyPatients;
