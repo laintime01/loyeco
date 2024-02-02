@@ -66,8 +66,38 @@ const MyPatients = () => {
                         </InputGroup>
                     </div>
                     <Modal show={showModal} onHide={handleClose}>
-                        {/* ...Add patient modal code */}
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add New Patient</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <Form>
+                                <Form.Group controlId="formPatientFirstName">
+                                    <Form.Label>First Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter first name" value={firstname} onChange={(e) => setFirstname(e.target.value)}/>
+                                </Form.Group>
+                                <Form.Group controlId="formPatientLastName">
+                                    <Form.Label>Last Name</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter last name" value={lastname} onChange={(e) => setLastname(e.target.value)}/>
+                                </Form.Group>
+                                <Form.Group controlId="formPatientEmail">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                </Form.Group>
+                                <Form.Group controlId="formPatientUserId" className="d-none">
+                                    <Form.Control type="text" defaultValue={userId}/>
+                                </Form.Group>
+                            </Form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleAddPatient}>
+                                Confirm
+                            </Button>
+                            <Button variant="primary" onClick={handleClose}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
                     </Modal>
+                    {/* confirm delete modal */}
                     <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                         <Modal.Header closeButton>
                             <Modal.Title>Confirm Delete</Modal.Title>

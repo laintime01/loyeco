@@ -20,6 +20,10 @@ const patientSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    phone: {
+        type: String,
+        required: false
+    },
 });
 
 module.exports = mongoose.model('Patient', patientSchema);
