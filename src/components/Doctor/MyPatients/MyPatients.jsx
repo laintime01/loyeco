@@ -1,23 +1,41 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { useGetAllPatientsQuery, useDeletePatientMutation } from '../../../redux/api/patientApi';
+import { useGetAllPatientsQuery, useDeletePatientMutation, useCreatePatientMutation } from '../../../redux/api/patientApi';
 import { Button, Table, InputGroup, Form, Modal } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import './style.css';
 
 const MyPatients = () => {
-    const { data, isLoading, isError } = useGetAllPatientsQuery();
+    const { data, isLoading, isError, refetch } = useGetAllPatientsQuery();
     const [deletePatient] = useDeletePatientMutation();
-    const [searchTerm, setSearchTerm] = useState("");
+    const [createPatient] = useCreatePatientMutation();
     const [showModal, setShowModal] = useState(false);
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [email, setEmail] = useState("");
+    const [userId, setUserId] = useState("65b5cf279c1df765cee613af");
     
     const handleDelete = async (id) => {
         try {
             await deletePatient(id).unwrap();
+            toast.success('Delete Patient Successful');
+            refetch();
         } catch (err) {
             console.error('Failed to delete the patient: ', err);
         }
     };
 
+    const handleAddPatient = async () => {
+        try {
+            await createPatient({firstname, lastname, email, userId}).unwrap();
+            handleClose();
+            toast.success('Add Patient Successful');
+            refetch();
+        } catch(err) {
+            console.error('Failed to add the patient: ', err);
+        }
+    };
+    
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
 
@@ -46,24 +64,27 @@ const MyPatients = () => {
                             <Form>
                                 <Form.Group controlId="formPatientFirstName">
                                     <Form.Label>First Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter first name" />
+                                    <Form.Control type="text" placeholder="Enter first name" value={firstname} onChange={(e) => setFirstname(e.target.value)}/>
                                 </Form.Group>
                                 <Form.Group controlId="formPatientLastName">
                                     <Form.Label>Last Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter last name" />
+                                    <Form.Control type="text" placeholder="Enter last name" value={lastname} onChange={(e) => setLastname(e.target.value)}/>
                                 </Form.Group>
                                 <Form.Group controlId="formPatientEmail">
                                     <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" />
+                                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                </Form.Group>
+                                <Form.Group controlId="formPatientUserId" className="d-none">
+                                    <Form.Control type="text" defaultValue={userId}/>
                                 </Form.Group>
                             </Form>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Close
+                            <Button variant="secondary" onClick={handleAddPatient}>
+                                Confirm
                             </Button>
                             <Button variant="primary" onClick={handleClose}>
-                                Confirm
+                                Close
                             </Button>
                         </Modal.Footer>
                     </Modal>
@@ -73,7 +94,6 @@ const MyPatients = () => {
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Last Name</th>
                                     <th>First Name</th>
                                     <th>Email</th>
@@ -83,7 +103,6 @@ const MyPatients = () => {
                             <tbody>
                                 {data.map((item) => (
                                     <tr key={item.id}>
-                                        <td>{item._id}</td>
                                         <td>{item.lastname}</td>
                                         <td>{item.firstname}</td>
                                         <td>{item.email}</td>
