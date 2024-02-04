@@ -15,15 +15,20 @@ const patientSchema = new Schema({
         type: String,
         required: true
     },
+    phone: String,
+    gender: {
+        type: String,
+        enum: ['M', 'F']},
     email: String,
     timeCreated: {
         type: Date,
         default: Date.now
     },
-    phone: {
-        type: String,
-        required: false
+    lastVisit: {
+        type: Date,
+        default: Date.now
     },
+   
 });
 
 module.exports = mongoose.model('Patient', patientSchema);
