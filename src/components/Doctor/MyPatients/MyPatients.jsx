@@ -14,7 +14,8 @@ const MyPatients = () => {
     const [patientToDelete, setPatientToDelete] = useState(null);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [gender, setGender] = useState("");
     const [userId, setUserId] = useState("65b5cf279c1df765cee613af");
 
     const handleDelete = async () => {
@@ -31,7 +32,7 @@ const MyPatients = () => {
 
     const handleAddPatient = async () => {
         try {
-            await createPatient({firstname, lastname, email, userId}).unwrap();
+            await createPatient({firstname, lastname, phone, gender,userId}).unwrap();
             handleClose();
             toast.success('Add Patient Successful');
             refetch();
@@ -79,9 +80,17 @@ const MyPatients = () => {
                                     <Form.Label>Last Name</Form.Label>
                                     <Form.Control type="text" placeholder="Enter last name" value={lastname} onChange={(e) => setLastname(e.target.value)}/>
                                 </Form.Group>
-                                <Form.Group controlId="formPatientEmail">
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                <Form.Group controlId="formPatientPhone">
+                                    <Form.Label>Phone</Form.Label>
+                                    <Form.Control type="text" placeholder="Enter phone" value={phone} onChange={(e) => setPhone(e.target.value)}/>
+                                </Form.Group>
+                                <Form.Group controlId="formPatientGender">
+                                    <Form.Label>Gender</Form.Label>
+                                    <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
+                                        <option value="">Select Gender</option>
+                                        <option value="M">Male</option>
+                                        <option value="F">Female</option>
+                                    </Form.Select>
                                 </Form.Group>
                                 <Form.Group controlId="formPatientUserId" className="d-none">
                                     <Form.Control type="text" defaultValue={userId}/>
@@ -122,8 +131,9 @@ const MyPatients = () => {
                                 <tr>
                                     <th>Last Name</th>
                                     <th>First Name</th>
-                                    <th>Email</th>
-                                    <th>Action</th>
+                                    <th>Phone</th>
+                                    <th>Gender</th>
+                                    <th>LastVisit</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -131,13 +141,9 @@ const MyPatients = () => {
                                     <tr key={item.id}>
                                         <td>{item.lastname}</td>
                                         <td>{item.firstname}</td>
-                                        <td>{item.email}</td>
-                                        <td>
-                                            <Button variant="success"  className="updateButton">Update</Button>
-                                            <Button variant="warning" className="deleteButton" onClick={() => handleShowDeleteModal(item._id)}>
-                                                Delete
-                                            </Button>
-                                        </td>
+                                        <td>{item.phone}</td>
+                                        <td>{item.gender}</td>
+                                        <td>{item.lastVisit}</td>
                                     </tr>
                                 ))}
                             </tbody>

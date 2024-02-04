@@ -2,6 +2,7 @@ const Patient = require('../../../models/patientModel');
 
 
 const createPatient = async (payload) => {
+    console.log("payload", payload);
     const result = await Patient.create(payload);
     return result;
 }
