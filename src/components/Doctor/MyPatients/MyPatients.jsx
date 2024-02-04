@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { useGetAllPatientsQuery, useDeletePatientMutation, useCreatePatientMutation } from '../../../redux/api/patientApi';
+import { useGetAllPatientsQuery, useDeletePatientMutation, useCreatePatientMutation, useUpdatePatientMutation } from '../../../redux/api/patientApi';
 import { Button, Table, InputGroup, Form, Modal } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import './style.css';
 
 const MyPatients = () => {
+    // Existing states and handlers...
     const { data, isLoading, isError, refetch } = useGetAllPatientsQuery();
     const [deletePatient] = useDeletePatientMutation();
     const [createPatient] = useCreatePatientMutation();
+    const [updatePatient] = useUpdatePatientMutation();
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [patientToDelete, setPatientToDelete] = useState(null);
@@ -18,15 +20,24 @@ const MyPatients = () => {
     const [gender, setGender] = useState("");
     const [userId, setUserId] = useState("65b5cf279c1df765cee613af");
 
+    // New states for patient detail modal and edit functionality
+    const [selectedPatient, setSelectedPatient] = useState(null);
+    const [showDetailModal, setShowDetailModal] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+
+    // handle delete patient
     const handleDelete = async () => {
         try {
             await deletePatient(patientToDelete).unwrap();
             toast.success('Delete Patient Successful');
+            setShowDetailModal(false);
             refetch();
         } catch (err) {
+            toast.error('Failed to delete the patient');
             console.error('Failed to delete the patient: ', err);
         } finally {
             handleCloseDeleteModal();
+            setShowDetailModal(false);
         }
     };
 
@@ -40,7 +51,39 @@ const MyPatients = () => {
             console.error('Failed to add the patient: ', err);
         }
     };
+
+    // New handlers for patient detail modal and edit functionality
+    const handlePatientClick = (patient) => {
+        setSelectedPatient(patient);
+        setShowDetailModal(true);
+    };
+
+    const handleEditClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleSaveClick = async () => {
+        try {
+            await updatePatient({id: selectedPatient._id, data: selectedPatient}).unwrap();
+            toast.success('Update Patient Successful');
+            refetch();
+        } catch(err) {
+            toast.error('Failed to update the patient');
+            console.error('Failed to update the patient: ', err);
+        }
     
+        // After saving, close the editing mode
+        setIsEditing(false);
+        //close the modal
+        handleCloseDetailModal();
+    };
+
+    const handleCloseDetailModal = () => {
+        setSelectedPatient(null);
+        setShowDetailModal(false);
+        setIsEditing(false);
+    };
+
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
@@ -54,7 +97,7 @@ const MyPatients = () => {
             <div className="row">
                 <div className="col-md-12">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <Button variant="secondary" className="addButton" onClick={handleShow}>ADD Patient</Button>
+                        <Button variant="secondary" className="addButton" onClick={handleShow}>ADD</Button>
                         <InputGroup className="mb-3 d-flex justify-content-center" style={{ marginLeft: "40px",marginRight:"100px" }}>
                             <Form.Control
                             placeholder="Please enter patient name or email to search"
@@ -138,7 +181,7 @@ const MyPatients = () => {
                             </thead>
                             <tbody>
                                 {data.map((item) => (
-                                    <tr key={item.id}>
+                                    <tr key={item.id} onClick={() => handlePatientClick(item)}>
                                         <td>{item.lastname}</td>
                                         <td>{item.firstname}</td>
                                         <td>{item.phone}</td>
@@ -149,6 +192,75 @@ const MyPatients = () => {
                             </tbody>
                         </Table>
                     )}
+                    <Modal show={showDetailModal} onHide={handleCloseDetailModal}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Patient Details</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            {isEditing ? (
+                                // Render the form for editing the patient info
+                                <Form>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>First Name</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            value={selectedPatient?.firstname} 
+                                            onChange={(e) => setSelectedPatient({ ...selectedPatient, firstname: e.target.value })}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Last Name</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            value={selectedPatient?.lastname} 
+                                            onChange={(e) => setSelectedPatient({ ...selectedPatient, lastname: e.target.value })}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Gender</Form.Label>
+                                        <Form.Select 
+                                            value={selectedPatient?.gender} 
+                                            onChange={(e) => setSelectedPatient({ ...selectedPatient, gender: e.target.value })}
+                                        >
+                                            <option value="">Select Gender</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Phone</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            value={selectedPatient?.phone} 
+                                            onChange={(e) => setSelectedPatient({ ...selectedPatient, phone: e.target.value })}
+                                        />
+                                    </Form.Group>
+                                </Form>
+                            
+                            ) : (
+                                // Render the patient info
+                                <div>
+                                    <p>Patient ID: {selectedPatient?._id}</p>
+                                    <p>First Name: {selectedPatient?.firstname}</p>
+                                    <p>Last Name: {selectedPatient?.lastname}</p>
+                                    <p>Phone: {selectedPatient?.phone}</p>
+                                    <p>Gender: {selectedPatient?.gender}</p>
+                                    <p>Last Visit: {selectedPatient?.lastVisit}</p>
+                                </div>
+                            )}
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <div style={{display:'flex',justifyContent:'space-between', width:'100%'}}>
+                            {isEditing ? (
+                                <Button variant="success" onClick={handleSaveClick}>Save</Button>
+                            ) : (
+                                <>
+                                <Button variant="primary" onClick={handleEditClick}>Edit</Button></>
+                            )}
+                            <Button variant="danger" onClick={() => handleShowDeleteModal(selectedPatient?._id)}>Delete</Button>
+                            </div>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             </div>
         </DashboardLayout>
