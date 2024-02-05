@@ -2,7 +2,6 @@ import React from 'react';
 import img from '../../images/John.jpg';
 import './DashboardSidebar.css';
 import { Link, NavLink } from 'react-router-dom';
-import useAuthCheck from '../../redux/hooks/useAuthCheck';
 import {
     FaTable,
     FaCalendarDay,
@@ -14,7 +13,6 @@ import {
 } from "react-icons/fa";
 
 const DashboardSidebar = () => {
-    const { data } = useAuthCheck();
 
     return (
         <div className="profile-sidebar p-3 rounded">
@@ -23,9 +21,6 @@ const DashboardSidebar = () => {
                     <Link to={'/'}><img src={img} alt="" /></Link>
                     <div className='profile-details'>
                         <h5 className='mb-0'>John Snow</h5>
-                        <div>
-                            <p className="mb-0">{data?.designation}</p>
-                        </div>
                     </div>
                 </div>
             </div>

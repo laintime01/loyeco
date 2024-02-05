@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { Modal, Input, Button } from 'antd';
+import { Modal, Input } from 'antd';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -10,14 +10,16 @@ const localizer = momentLocalizer(moment);
 
 const Appointments = () => {
     const [visible, setVisible] = useState(false);
+    const [newEventModalVisible, setNewEventModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
+    const [selectedSlot, setSelectedSlot] = useState({});
     const [appointmentData, setAppointmentData] = useState({
         patient: "",
         appointmentContent: "",
         note: ""
     });
 
-    const events = [
+    const [events, setEvents] = useState([
         {
             id: 1,
             start: new Date(2024, 2, 5, 9, 0, 0),
@@ -26,42 +28,43 @@ const Appointments = () => {
         },
         {
             id: 2,
-            start: new Date(2024, 2, 6, 11, 0, 0),
-            end: new Date(2024, 2, 6, 12, 0, 0),
+            start: new Date(2024, 1, 6, 11, 0, 0),
+            end: new Date(2024, 1, 6, 12, 0, 0),
             title: 'Appointment for Mrs. Y'
         },
-        {
-            id: 3,
-            start: new Date(2024, 1, 7, 14, 0, 0),
-            end: new Date(2024, 1, 7, 15, 0, 0),
-            title: 'Appointment for Mr. Z'
-        },
-        {
-            id: 4,
-            start: new Date(2024, 1, 8, 16, 0, 0),
-            end: new Date(2024, 1, 8, 17, 0, 0),
-            title: 'Appointment for Ms. A'
-        },
-        {
-            id: 5,
-            start: new Date(2024, 1, 9, 10, 0, 0),
-            end: new Date(2024, 1, 9, 12, 0, 0),
-            title: 'Appointment for Mr. B'
-        },
-    ];
-    
+    ]);
 
-    const handleSelect = ({ start, end }) => {
-        setSelectedEvent({ start, end });
+    const handleSelectSlot = slotInfo => {
+        setSelectedSlot(slotInfo);
+        setNewEventModalVisible(true);
+    }
+
+    const handleSelectEvent = event => {
+        setSelectedEvent(event);
         setVisible(true);
     }
 
     const handleOk = () => {
-        setVisible(false);
+        if (!selectedSlot.start) return;
+        const newEvent = {
+            id: events.length + 1,
+            title: `Appointment for ${appointmentData.patient}`,
+            start: selectedSlot.start,
+            end: selectedSlot.end,
+            allDay: false
+        };
+        setEvents([...events, newEvent]);
+        setAppointmentData({
+            patient: "",
+            appointmentContent: "",
+            note: ""
+        });
+        setNewEventModalVisible(false);
     };
 
     const handleCancel = () => {
         setVisible(false);
+        setNewEventModalVisible(false);
     };
 
     const handleInputChange = e => {
@@ -79,15 +82,29 @@ const Appointments = () => {
                 defaultView="week"
                 events={events}
                 style={{ height: "80vh" }}
-                onSelectEvent={event => handleSelect(event)}
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleSelectEvent}
+                selectable={true}
             />
 
-            <Modal title="Book an Appointment" visible={visible} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Appointment Details" visible={visible} onCancel={handleCancel}>
                 <p>
-                    <strong>Day:</strong> {moment(selectedEvent.start).format('YYYY-MM-DD')}
+                    <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
                 </p>
                 <p>
-                    <strong>Time:</strong> {`${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
+                    <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
+                </p>
+                <p>
+                <strong>Patient:</strong> {selectedEvent.title?.split('for ')[1]}                
+                </p>
+            </Modal>
+
+            <Modal title="Book an Appointment" visible={newEventModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                <p>
+                    <strong>Day:</strong> {selectedSlot.start && moment(selectedSlot.start).format('YYYY-MM-DD')}
+                </p>
+                <p>
+                    <strong>Time:</strong> {selectedSlot.start && `${moment(selectedSlot.start).format('HH:mm')} - ${moment(selectedSlot.end).format('HH:mm')}`}
                 </p>
                 <Input
                     addonBefore="Patient"
