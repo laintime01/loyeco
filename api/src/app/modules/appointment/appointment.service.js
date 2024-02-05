@@ -6,13 +6,22 @@ const appointmentModel = require("../../../models/appointmentModel");
 const Doctor = require("../../../models/userModel");
 
 const createAppointment = async (user, payload) => {
-    const { patientInfo, payment } = payload;
+    const { patientInfo} = payload;
     // createa a new appointment
+    const newAppointment = new appointmentModel({
+        patientId: patientInfo.patientId,
+        doctorId: patientInfo.doctorId,
+        scheduleDate: patientInfo.scheduleDate,
+        generalNote: patientInfo.generalNote,
+        status: 'Uncheckin'
+    });
+    const result = await newAppointment.save();
+    return result;
     
 }
         
 const getAllAppointments = async () => {
-    const result = await appointmentModel.findall();
+    const result = await appointmentModel.find();
     return result;
 }
 
