@@ -44,7 +44,7 @@ export const appointmentApi = baseApi.injectEndpoints({
         }),
         getDoctorAppointments: build.query({
             query: (arg) => ({
-                url: `${APPOINTMENT_URL}/doctor/appointments`,
+                url: `${APPOINTMENT_URL}/doctor`,
                 method: 'GET',
                 params: arg
             }),
