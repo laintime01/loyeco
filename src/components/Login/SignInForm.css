@@ -428,4 +428,17 @@
     }
   }
   
-  
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-back {
+    background-color: #87CEFA;
+    margin-right: 50px;
+}
+
+.button-submit {
+    background-color: #90EE90;
+}
