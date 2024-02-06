@@ -25,10 +25,6 @@ const clinicSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    defaultLocationId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Location'
-    }
 });
 
 export default mongoose.model('Clinic', clinicSchema);

@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { FaCheck, FaEnvelope, FaHatCowboy, FaLock, FaPersonBooth, FaTimes, FaUser } from 'react-icons/fa';
+import { FaAddressBook, FaCheck, FaCity, FaCode, FaEnvelope, FaHatCowboy, FaLock, FaMap, FaPersonBooth, FaTimes, FaUser } from 'react-icons/fa';
 import SocialSignUp from './SocialSignUp';
 import Spinner from 'react-bootstrap/Spinner'
 import swal from 'sweetalert';
 import { useDoctorSignUpMutation } from '../../redux/api/authApi';
 
-// password regex
-// ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
-// At least one upper case English letter, (?=.*?[A-Z])
-// At least one lower case English letter, (?=.*?[a-z])
-// At least one digit, (?=.*?[0-9])
-// At least one special character, (?=.*?[#?!@$%^&*-])
-// Minimum eight in length .{8,} (with the anchors)
-
 const SignUp = ({ setSignUp }) => {
     const [error, setError] = useState({});
     const [infoError, setInfoError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [isClinic, setIsClinic] = useState(false);
     const formField = {
         firstName: '',
         lastname: '',
         email: '',
         password: '',
+        address: '',
+        city: '',
+        province: '',
+        postCode: '',
     }
     const [user, setUser] = useState(formField)
     const [doctorSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useDoctorSignUpMutation();
     const [passwordValidation, setPasswordValidation] = useState({
-        // carLength: false,
-        // specailChar: false,
-        // upperLowerCase: false,
         numeric: false
     })
 
@@ -43,7 +37,6 @@ const SignUp = ({ setSignUp }) => {
         })
     }
     useEffect(() => {
-        // doctor account
         if (dIsError && dError) {
             setLoading(false)
             setInfoError(dError.data.message)
@@ -67,9 +60,6 @@ const SignUp = ({ setSignUp }) => {
     const hanldeValidation = (name, value) => {
         if (name === 'password') {
             setPasswordValidation({
-                // carLength: (value.length > 8),
-                // specailChar: /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/.test(value),
-                // upperLowerCase: /^(?=.*[a-z])(?=.*[A-Z])/.test(value),
                 numeric: /^(?=.*\d)/.test(value),
             })
         }
@@ -100,54 +90,68 @@ const SignUp = ({ setSignUp }) => {
         doctorSignUp(user);
     }
 
+    const handleClinicClick = () => {
+        setIsClinic(true);
+    }
+
+    const handleBackClick = () => {
+        setIsClinic(false);
+    }
+
     return (
         <form className="sign-up-form" onSubmit={hanldeOnSubmit}>
-            <h2 className="title">Sign Up</h2>
-            <div className="input-field">
-                <span className="fIcon"><FaUser /></span>
-                <input placeholder="First Name" name="firstname" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstname} />
-            </div>
-            <div className="input-field">
-                <span className="fIcon"><FaUser /></span>
-                <input placeholder="Last Name" name="lastname" type="text" onChange={(e) => hanldeOnChange(e)} value={user.lastname} />
-            </div>
-            <div className="input-field">
-                <span className="fIcon"><FaEnvelope /></span>
-                <input placeholder="Email" name="email" type="email" onChange={(e) => hanldeOnChange(e)} value={user.email} />
-            </div>
-            <div className="input-field">
-                <span className="fIcon"><FaLock /></span>
-                <input type="password" name="password" placeholder="password" onChange={(e) => hanldeOnChange(e)} value={user.password} />
-            </div>
-            {error.length && <h6 className="text-danger text-center">{error}</h6>}
-            {infoError && <h6 className="text-danger text-center">{infoError}</h6>}
-            {/* <button type="submit" className="btn btn-outline-secondary btn-block mt-2 iBtn">Next</button> */}
-            <button type="submit"
-                className="btn btn-primary btn-block mt-2 iBtn"
-                // disabled={
-                //     passwordValidation.carLength && passwordValidation.numeric && passwordValidation.upperLowerCase && passwordValidation.specailChar && emailError.emailError ? "" : true
-                // }
-            >
-                {loading ? <Spinner animation="border" variant="info" /> : "Sign Up"}
-            </button>
-
-            <div className="password-validatity mx-auto">
-
-                <div style={emailError.emailError ? { color: "green" } : { color: "red" }}>
-                    <p>{passwordValidation.numeric ? <FaCheck /> : <FaTimes />}
-                        <span className="ms-2">Must Have Valid Email.</span></p>
-                </div>
-
-                <div style={passwordValidation.numeric ? { color: "green" } : { color: "red" }}>
-                    <p>{passwordValidation.numeric ? <FaCheck /> : <FaTimes />}
-                        <span className="ms-2">Password Must Have Number.</span></p>
-                </div>
-            </div>
-
+            {isClinic ? (
+                <>
+                    <h2 className="title">Clinic Info</h2>
+                    <div className="input-field">
+                        <span className="fIcon"><FaAddressBook /></span>
+                        <input placeholder="Address" name="address" type="text" onChange={(e) => hanldeOnChange(e)} value={user.address} />
+                    </div>
+                    <div className="input-field">
+                        <span className="fIcon"><FaCity /></span>
+                        <input placeholder="City" name="city" type="text" onChange={(e) => hanldeOnChange(e)} value={user.city} />
+                    </div>
+                    <div className="input-field">
+                        <span className="fIcon"><FaMap /></span>
+                        <input placeholder="Province" name="province" type="text" onChange={(e) => hanldeOnChange(e)} value={user.province} />
+                    </div>
+                    <div className="input-field">
+                        <span className="fIcon"><FaCode /></span>
+                        <input placeholder="Post Code" name="postCode" type="text" onChange={(e) => hanldeOnChange(e)} value={user.postCode} />
+                    </div>
+                    <div className='button-container'>
+                        <button className='button-back iBtn' type="button"  onClick={handleBackClick}>Back</button>
+                        <button className='button-submit iBtn' type="submit">{loading ? <Spinner animation="border" variant="info" /> : "Submit"}</button>
+                    </div>
+                    
+                </>
+            ) : (
+                <>
+                    <h2 className="title">Sign Up</h2>
+                    <div className="input-field">
+                        <span className="fIcon"><FaUser /></span>
+                        <input placeholder="First Name" name="firstName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstName} />
+                    </div>
+                    <div className="input-field">
+                        <span className="fIcon"><FaUser /></span>
+                        <input placeholder="Last Name" name="lastname" type="text" onChange={(e) => hanldeOnChange(e)} value={user.lastname} />
+                    </div>
+                    <div className="input-field">
+                        <span className="fIcon"><FaEnvelope /></span>
+                        <input placeholder="Email" name="email" type="email" onChange={(e) => hanldeOnChange(e)} value={user.email} />
+                    </div>
+                    <div className="input-field">
+                        <span className="fIcon"><FaLock /></span>
+                        <input type="password" name="password" placeholder="password" onChange={(e) => hanldeOnChange(e)} value={user.password} />
+                    </div>
+                    {error.length && <h6 className="text-danger text-center">{error}</h6>}
+                    {infoError && <h6 className="text-danger text-center">{infoError}</h6>}
+                    <button type="button" className='iBtn btn-primary mt-2' onClick={handleClinicClick}>Next</button>
+                </>
+            )}
             <p className="social-text">Or Sign up with social account</p>
             <SocialSignUp />
         </form>
-
     );
 };
 
