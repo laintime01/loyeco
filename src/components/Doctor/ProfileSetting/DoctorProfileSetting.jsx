@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import { useUpdateDoctorMutation } from '../../../redux/api/doctorApi';
 import useAuthCheck from '../../../redux/hooks/useAuthCheck';
 import { doctorSpecialistOptions } from '../../../constant/global';
+import './style.css';
+
 
 const DoctorProfileSetting = () => {
     const [selectedItems, setSelectedItems] = useState([]);
@@ -76,8 +78,8 @@ const DoctorProfileSetting = () => {
                     <div className="col-md-12 mb-5">
                         <div className="form-group">
                             <div className="change-avatar d-flex gap-2 align-items-center">
-                                <Link to={'/'} className="my-3 patient-img">
-                                    <img src={img} alt="" />
+                                <Link to={'/dashboard/profile-setting'} className="my-3">
+                                    <img src={img} alt="" style={{width: "100px", height: 'auto'}} />
                                 </Link>
                                 <div className='mt-3'>
                                     <div>

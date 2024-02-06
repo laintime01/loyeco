@@ -4,6 +4,7 @@ import moment from 'moment';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
 import { Modal, Input } from 'antd';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 
@@ -43,6 +44,20 @@ const Appointments = () => {
             end: new Date(2024, 1, 11, 15, 0, 0),
             title: 'Appointment for Mrs. Wang',
             content: 'meeting with Wang for cancer regular checkup.'
+        },
+        {
+            id: 4,
+            start: new Date(2024, 2, 13, 15, 0, 0),
+            end: new Date(2024, 2, 13, 17, 0, 0),
+            title: 'Appointment for Mrs. Wang',
+            content: 'meeting with Wang for cancer regular checkup.'
+        },
+        {
+            id: 5,
+            start: new Date(2024, 2, 19, 9, 0, 0),
+            end: new Date(2024, 2, 19, 10, 0, 0),
+            title: 'Appointment for Mr. Wong',
+            content: 'meeting with Mr. X for his regular checkup.'
         }
     ]);
 
