@@ -6,11 +6,6 @@ const clinicSchema = new Schema({
         type: String,
         required: true
     },
-    createdBy: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
     owner: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -27,4 +22,4 @@ const clinicSchema = new Schema({
     },
 });
 
-export default mongoose.model('Clinic', clinicSchema);
+module.exports = mongoose.model('Clinic', clinicSchema);
