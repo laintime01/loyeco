@@ -1,11 +1,20 @@
 import { tagTypes } from "../tag-types"
-import baseApi from "./baseApi"
+import {baseApi} from "./baseApi"
 
 const CLINIC_URL = '/clinic'
 
 export const clinicApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
-        getClinics: build.query({
+        //create clinic
+        createClinic: build.mutation({
+            query: (data) => ({
+                url: `${CLINIC_URL}`,
+                method: 'POST',
+                data: data
+            }),
+            invalidatesTags: [tagTypes.clinic]
+        }),
+        getAllClinics: build.query({
             query: (arg) => ({
                 url: `${CLINIC_URL}`,
                 method: 'GET',
@@ -37,5 +46,4 @@ export const clinicApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useGetClinicsQuery, useGetClinicQuery, useUpdateClinicMutation } = clinicApi
-    
+export const { useCreateClinicMutation, useGetAllClinicsQuery, useGetClinicQuery, useUpdateClinicMutation } = clinicApi
