@@ -29,4 +29,4 @@ const clinicLocationSchema = new Schema({
     }
 });
 
-export default mongoose.model('clinicLocation', clinicLocationSchema);
+module.exports = mongoose.model('ClinicLocation', clinicLocationSchema);

@@ -4,6 +4,7 @@ const LoginRouter = require('../modules/auth/auth.route');
 const PatientRouter = require('../modules/patient/patient.route');
 const AppointmentRouter = require('../modules/appointment/appointment.route');
 const ClinicRouter = require('../modules/clinic/clinic.route');
+const ClinicLocationRouter = require('../modules/clinicLocation/location.route');
 
 
 const router = express.Router();
@@ -28,6 +29,10 @@ const moduleRoutes = [
     {
         path: '/clinic',
         route: ClinicRouter,
+    },
+    {
+        path: '/location',
+        route: ClinicLocationRouter,
     },
     
 ];
