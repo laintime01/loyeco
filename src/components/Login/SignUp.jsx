@@ -4,6 +4,8 @@ import SocialSignUp from './SocialSignUp';
 import Spinner from 'react-bootstrap/Spinner'
 import swal from 'sweetalert';
 import { useDoctorSignUpMutation } from '../../redux/api/authApi';
+import { useCreateClinicMutation } from '../../redux/api/clinicApi';
+
 
 const SignUp = ({ setSignUp }) => {
     const [error, setError] = useState({});
@@ -15,13 +17,17 @@ const SignUp = ({ setSignUp }) => {
         lastname: '',
         email: '',
         password: '',
+    }
+    const clinicField = {
         address: '',
         city: '',
         province: '',
         postCode: '',
     }
     const [user, setUser] = useState(formField)
+    const [clinic, setClinic] = useState(clinicField)
     const [doctorSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useDoctorSignUpMutation();
+    const [createClinic, { data: cData, isSuccess: cIsSuccess, isError: cIsError, error: cError, isLoading: cIsLoading }] = useCreateClinicMutation();
     const [passwordValidation, setPasswordValidation] = useState({
         numeric: false
     })
@@ -29,6 +35,7 @@ const SignUp = ({ setSignUp }) => {
     const handleSignUpSuccess = () => {
         setLoading(false);
         setUser(formField)
+        setClinic(clinicField)
         setSignUp(false)
         swal({
             icon: 'success',
@@ -84,10 +91,20 @@ const SignUp = ({ setSignUp }) => {
         }
     }
 
+    // handle clinic info change
+    const handleClinicChange = (e) => {
+        let { name, value } = e.target;
+        const newClinic = { ...clinic };
+        newClinic[name] = value
+        setClinic(newClinic)
+    }
+
+
     const hanldeOnSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         doctorSignUp(user);
+        createClinic(clinic);
     }
 
     const handleClinicClick = () => {
@@ -105,19 +122,19 @@ const SignUp = ({ setSignUp }) => {
                     <h2 className="title">Clinic Info</h2>
                     <div className="input-field">
                         <span className="fIcon"><FaAddressBook /></span>
-                        <input placeholder="Address" name="address" type="text" onChange={(e) => hanldeOnChange(e)} value={user.address} />
+                        <input placeholder="Address" name="address" type="text" onChange={(e) => handleClinicChange(e)} value={clinic.address} />
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaCity /></span>
-                        <input placeholder="City" name="city" type="text" onChange={(e) => hanldeOnChange(e)} value={user.city} />
+                        <input placeholder="City" name="city" type="text" onChange={(e) => handleClinicChange(e)} value={clinic.city} />
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaMap /></span>
-                        <input placeholder="Province" name="province" type="text" onChange={(e) => hanldeOnChange(e)} value={user.province} />
+                        <input placeholder="Province" name="province" type="text" onChange={(e) => handleClinicChange(e)} value={clinic.province} />
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaCode /></span>
-                        <input placeholder="Post Code" name="postCode" type="text" onChange={(e) => hanldeOnChange(e)} value={user.postCode} />
+                        <input placeholder="Post Code" name="postCode" type="text" onChange={(e) => handleClinicChange(e)} value={clinic.postCode} />
                     </div>
                     <div className='button-container'>
                         <button className='button-back iBtn' type="button"  onClick={handleBackClick}>Back</button>

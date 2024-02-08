@@ -1,4 +1,7 @@
-const locationSchema = new Schema({
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const clinicLocationSchema = new Schema({
     clinicId: {
         type: Schema.Types.ObjectId,
         ref: 'Clinic',
@@ -26,4 +29,4 @@ const locationSchema = new Schema({
     }
 });
 
-export default mongoose.model('Location', locationSchema);
+module.exports = mongoose.model('ClinicLocation', clinicLocationSchema);
