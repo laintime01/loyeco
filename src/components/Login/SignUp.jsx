@@ -4,7 +4,7 @@ import SocialSignUp from './SocialSignUp';
 import Spinner from 'react-bootstrap/Spinner'
 import swal from 'sweetalert';
 import { useDoctorSignUpMutation } from '../../redux/api/authApi';
-import { useCreateClinicMutation } from '../../redux/api/clinicApi';
+import { useCreateLocationMutation } from '../../redux/api/clinicLocationApi';
 
 
 const SignUp = ({ setSignUp }) => {
@@ -12,8 +12,10 @@ const SignUp = ({ setSignUp }) => {
     const [infoError, setInfoError] = useState('');
     const [loading, setLoading] = useState(false);
     const [isClinic, setIsClinic] = useState(false);
+    // fake owner id
+    const fakeClinicId = '65b7b8d968dc6b8ddb5b9561';
     const formField = {
-        firstName: '',
+        firstname: '',
         lastname: '',
         email: '',
         password: '',
@@ -23,11 +25,12 @@ const SignUp = ({ setSignUp }) => {
         city: '',
         province: '',
         postCode: '',
+        clinicId: fakeClinicId
     }
     const [user, setUser] = useState(formField)
     const [clinic, setClinic] = useState(clinicField)
     const [doctorSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useDoctorSignUpMutation();
-    const [createClinic, { data: cData, isSuccess: cIsSuccess, isError: cIsError, error: cError, isLoading: cIsLoading }] = useCreateClinicMutation();
+    const [createClinic, { data: cData, isSuccess: cIsSuccess, isError: cIsError, error: cError, isLoading: cIsLoading }] = useCreateLocationMutation();
     const [passwordValidation, setPasswordValidation] = useState({
         numeric: false
     })
@@ -89,6 +92,7 @@ const SignUp = ({ setSignUp }) => {
             newPass[name] = value
             setUser(newPass)
         }
+        console.log(user)
     }
 
     // handle clinic info change
@@ -97,6 +101,7 @@ const SignUp = ({ setSignUp }) => {
         const newClinic = { ...clinic };
         newClinic[name] = value
         setClinic(newClinic)
+        console.log(clinic)
     }
 
 
@@ -147,7 +152,7 @@ const SignUp = ({ setSignUp }) => {
                     <h2 className="title">Sign Up</h2>
                     <div className="input-field">
                         <span className="fIcon"><FaUser /></span>
-                        <input placeholder="First Name" name="firstName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstName} />
+                        <input placeholder="First Name" name="firstname" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstname} />
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaUser /></span>
