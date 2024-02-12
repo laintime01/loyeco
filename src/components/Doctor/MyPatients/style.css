@@ -68,3 +68,7 @@
     border-radius: 4px !important;
     box-sizing: border-box !important;
 }
+
+.border-top-custom {
+    border-top: 20px solid #cccccc !important; /* Change '2px' to the thickness you want */
+}
