@@ -262,7 +262,8 @@ const MyPatients = () => {
                                     onChange={(e) => setSelectedPatient({ ...selectedPatient, email: e.target.value })}
                                 />
                             </Form.Group>
-                            <Form.Group className="mb-3 mt-4 border-top pb-3">
+
+                            <Form.Group className="border-top pb-3 mt-5">
                                 <Form.Label>Address</Form.Label>
                                 <Form.Control 
                                     type="text" 
@@ -270,9 +271,9 @@ const MyPatients = () => {
                                     onChange={(e) => setSelectedPatient({ ...selectedPatient, address: e.target.value })}
                                 />
                             </Form.Group>
-                            <Row className='mb-3'>
+                            <Row>
                                 <Col>
-                                    <Form.Group className="mb-3 ">
+                                    <Form.Group>
                                     <Form.Label>City</Form.Label>
                                     <Form.Control 
                                         type="text" 
@@ -282,7 +283,7 @@ const MyPatients = () => {
                                     </Form.Group>
                                 </Col>
                                 <Col>
-                                    <Form.Group className="mb-3">
+                                    <Form.Group>
                                     <Form.Label>Province/State</Form.Label>
                                     <Form.Control 
                                         type="text" 
@@ -293,7 +294,7 @@ const MyPatients = () => {
                                 </Col>
                             </Row>
 
-                            <Row className='mb-3'>
+                            <Row>
                                 <Col>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Postal Code</Form.Label>
@@ -316,7 +317,7 @@ const MyPatients = () => {
                                 </Col>
                             </Row>
 
-                            <Form.Group className="pb-3 border-top">
+                            <Form.Group className="pb-3 border-top mt-5">
                                 <Form.Label>Current Treatment</Form.Label>
                                 <Form.Control 
                                     type="text" 
@@ -325,11 +326,11 @@ const MyPatients = () => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label>Primary Complaint</Form.Label>
+                                <Form.Label>Treatment History</Form.Label>
                                 <Form.Control 
                                     type="text" 
-                                    value={selectedPatient?.primaryComplaint} 
-                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, primaryComplaint: e.target.value })}
+                                    value={selectedPatient?.treatmentHistory} 
+                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, treatmentHistory: e.target.value })}
                                 />
                             </Form.Group>
                             {/* Note text-area */}
@@ -385,7 +386,7 @@ const MyPatients = () => {
                                             </Card.Text>
                                         </Card.Body>
                                     </Card>
-                                    <Card bg="light" className="mb-4">
+                                    <Card bg="light" className="mb-3">
                                         <Card.Header as="h5">Billing & Appointment Details</Card.Header>
                                         <Card.Body>
                                             <Card.Text>
@@ -402,10 +403,13 @@ const MyPatients = () => {
 
                                     {/* current treatment info card */}
                                     <Card bg="light" className="mb-4">
-                                        <Card.Header as="h5">Current Treatment</Card.Header>
+                                        <Card.Header as="h5" className='mt-3'>Treatment</Card.Header>
                                         <Card.Body>
                                             <Card.Text>
                                                 <strong>Current Treatment:</strong> {selectedPatient?.currentTreatment}
+                                            </Card.Text>
+                                            <Card.Text>
+                                                <strong>Treatment History:</strong> {selectedPatient?.currentTreatment}
                                             </Card.Text>
                                             <Card.Text>
                                                 <strong>Primary Complaint:</strong> {selectedPatient?.primaryComplaint}
