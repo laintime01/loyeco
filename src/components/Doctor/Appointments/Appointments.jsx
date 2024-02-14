@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { Modal, Input } from 'antd';
+import { Modal, Input, Row, Select} from 'antd';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -11,16 +14,75 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
 
+function AddPatientModal({ show, handleClose }) {
+    return (
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Patient</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Row>
+              <Form.Group as={Col}>
+                <Form.Label>First Name *</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+  
+              <Form.Group as={Col}>
+                <Form.Label>Last Name *</Form.Label>
+                <Form.Control type="text" />
+              </Form.Group>
+            </Form.Row>
+  
+            <Form.Row>
+              <Form.Group as={Col}>
+                <Form.Label>Email</Form.Label>
+                <Form.Control type="email" />
+              </Form.Group>
+  
+              <Form.Group as={Col}>
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Row>
+                  <Col><Form.Control as="select">{/* Options for Year */}</Form.Control></Col>
+                  <Col><Form.Control as="select">{/* Options for Month */}</Form.Control></Col>
+                  <Col><Form.Control as="select">{/* Options for Day */}</Form.Control></Col>
+                </Form.Row>
+              </Form.Group>
+            </Form.Row>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>Close</Button>
+          <Button variant="primary" onClick={handleClose}>Save Changes</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
 const Appointments = () => {
     const [visible, setVisible] = useState(false);
     const [newEventModalVisible, setNewEventModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
     const [selectedSlot, setSelectedSlot] = useState({});
-    const [appointmentData, setAppointmentData] = useState({
-        patient: "",
-        appointmentContent: "",
-        note: ""
-    });
+    const [appointmentData, setAppointmentData] = useState({appointmentContent: ''});
+
+    const [startDate, setStartDate] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+
+    const [endDate, setEndDate] = useState(new Date());
+    const [showAddPatientModal, setShowAddPatientModal] = useState(false);
+
+    const { Option } = Select;
+
+
+    // fake service data
+    const serviceOptions = [
+        "Initial Appointment-60mins",
+        "Follow-up Appointment-30mins",
+        "Follow-up Appointment-60mins",
+      ];
+      
 
     const [events, setEvents] = useState([
         {
@@ -115,6 +177,13 @@ const Appointments = () => {
         setEvents(nextEvents);
     };
 
+    const handleSelectChange = (value) => {
+        setAppointmentData(prevState => ({
+            ...prevState,
+            appointmentContent: value
+        }));
+    }
+
     const onEventResize = ({ event, start, end }) => {
         const idx = events.indexOf(event);
         let updatedEvent = { ...event, start, end };
@@ -162,31 +231,81 @@ const Appointments = () => {
 
             {/* New Evenet Modal */}
             <Modal title="Book an Appointment" visible={newEventModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                <p>
-                    <strong>Day:</strong> {selectedSlot.start && moment(selectedSlot.start).format('YYYY-MM-DD')}
-                </p>
-                <p>
-                    <strong>Time:</strong> {selectedSlot.start && `${moment(selectedSlot.start).format('HH:mm')} - ${moment(selectedSlot.end).format('HH:mm')}`}
-                </p>
-                <Input
-                    addonBefore="Patient"
-                    name="patient"
-                    value={appointmentData.patient}
-                    onChange={handleInputChange}
-                />
-                <Input
-                    addonBefore="Appointment Content"
-                    name="appointmentContent"
-                    value={appointmentData.appointmentContent}
-                    onChange={handleInputChange}
-                />
-                <Input.TextArea
-                    placeholder="Note"
-                    name="note"
-                    value={appointmentData.note}
-                    onChange={handleInputChange}
-                    rows={4}
-                />
+                {/* patient name input and addd new patient button */}
+                <Row className='mb-3 mt-4'>
+                    <Col style={{ marginRight: '20px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <div style={{ marginRight: '20px' }}>
+                                <p style={{ marginBottom: '7px' }}>Patient</p>
+                                <Input
+                                    name="patient"
+                                    value={appointmentData.patient}
+                                    onChange={handleInputChange}
+                                    placeholder='Existing Patient...'
+                                />
+                            </div>
+                            <Button variant="link" onClick={() => setShowAddPatientModal(true)}>Add New Patient +</Button>
+                        </div>
+                    </Col>
+                </Row>
+
+
+                {/* select service using antd selec*/}
+                <Row className='mb-3 mt-4'>
+                    <Col>
+                        <p style={{ marginBottom: '7px' }}>Service</p>
+                        <Select 
+                            style={{ width: 300 }} 
+                            onChange={handleSelectChange} 
+                            name="appointmentContent" 
+                            value={appointmentData.appointmentContent || ''}  // Here
+                        >
+                            <Option value="">Initial Appointment-30mins</Option>
+                            {serviceOptions.map((service) => (
+                                <Option key={service} value={service.toLowerCase().replace(/\s+/g, '')}>
+                                    {service}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Col>
+                </Row>
+
+                {/* Date and time in same row */}
+                <Row className='mb-3'>
+                    <Col className='mr-3'>
+                        <Form.Label>Date</Form.Label>
+                        <Form.Control type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                    </Col> 
+                </Row>
+                <Row className='mb-3 no-gutters'>
+                    <Col xs={5} >
+                        <Form.Label>Start Time</Form.Label>
+                        <Form.Control type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                    </Col>
+                    {/* add Col xs=2 */}
+                    <Col xs={2}>
+                    </Col>
+                    <Col xs={5}>
+                        <Form.Label>End Time</Form.Label>
+                        <Form.Control type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                    </Col>
+                </Row>
+
+                
+                {/* Note */}
+                <Row>
+                    <Col>
+                        <p style={{ marginBottom: '7px' }}>Note</p>
+                        <Input.TextArea
+                            placeholder="Note"
+                            name="note"
+                            value={appointmentData.note}
+                            onChange={handleInputChange}
+                            rows={4}
+                        />
+                    </Col>
+                </Row>
+                
             </Modal>
         </DashboardLayout>
     )
