@@ -26,14 +26,6 @@ const Appointments = () => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
 
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [email, setEmail] = useState('');
-    const [month, setMonth] = useState('');
-    const [day, setDay] = useState('');
-    const [year, setYear] = useState('');
-    const [gender, setGender] = useState('');
-
     const [endDate, setEndDate] = useState(new Date());
     const [showAddPatientModal, setShowAddPatientModal] = useState(false);
 
@@ -61,6 +53,14 @@ const Appointments = () => {
         const monthOptions = Array.from({length: 12}, (_, i) => i + 1);
         const dayOptions = Array.from({length: 31}, (_, i) => i + 1);
         const yearOptions = Array.from({length: 121}, (_, i) => 1900 + i).reverse();
+
+        const [firstname, setFirstname] = useState('');
+        const [lastname, setLastname] = useState('');
+        const [email, setEmail] = useState('');
+        const [month, setMonth] = useState('');
+        const [day, setDay] = useState('');
+        const [year, setYear] = useState('');
+        const [gender, setGender] = useState('');
         
         return (
             <Modal title="Add New Patient" open={visible} onCancel={handleClose}>
@@ -69,11 +69,12 @@ const Appointments = () => {
                 <Row className='mb-3'>
                     <Col style={{marginRight:"5px"}}>
                         <Form.Label>First Name</Form.Label>
-                        <Form.Control type="text" value={firstname} onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Control type="text" placeholder="Enter first name" value={firstname} onChange={(e) => setFirstname(e.target.value)}/>
+
                     </Col> 
                     <Col>
                         <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" value={lastname} onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Control type="text" placeholder="Enter first name" value={lastname} onChange={(e) => setLastname(e.target.value)} />
                     </Col>
                 </Row>
 
@@ -81,13 +82,13 @@ const Appointments = () => {
                 <Row className='mb-3'>
                     <Col style={{marginRight:"5px"}}>
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" value={email} onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </Col>
                     <Col>
                         <Form.Label>Date of Birth</Form.Label>
                         <Row>
                             <Col>
-                                <Form.Control as="select" value={month} onChange={(e) => setStartDate(e.target.value)}>
+                                <Form.Control as="select" value={month} onChange={(e) => setMonth(e.target.value)}>
                                     <option value="">Month</option>
                                     {monthOptions.map((month) => (
                                         <option key={month} value={month}>
@@ -97,7 +98,7 @@ const Appointments = () => {
                                 </Form.Control>
                             </Col>
                             <Col>
-                                <Form.Control as="select" value={day} onChange={(e) => setStartDate(e.target.value)}>
+                                <Form.Control as="select" value={day} onChange={(e) => setDay(e.target.value)}>
                                     <option value="">Day</option>
                                     {dayOptions.map((day) => (
                                         <option key={day} value={day}>
@@ -107,7 +108,7 @@ const Appointments = () => {
                                 </Form.Control>
                             </Col>
                             <Col>
-                                <Form.Control as="select" value={year} onChange={(e) => setStartDate(e.target.value)}>
+                                <Form.Control as="select" value={year} onChange={(e) => setYear(e.target.value)}>
                                     <option value="">Year</option>
                                     {yearOptions.map((year) => (
                                         <option key={year} value={year}>
@@ -194,28 +195,6 @@ const Appointments = () => {
             end: new Date(2024, 1, 6, 13, 0, 0),
             title: 'Appointment for Mr. Zhou',
             content: 'meeting with Miss Zhou for her checkup.'
-        },
-        // more mock events
-        {
-            id: 3,
-            start: new Date(2024, 1, 11, 13, 0, 0),
-            end: new Date(2024, 1, 11, 15, 0, 0),
-            title: 'Appointment for Mrs. Wang',
-            content: 'meeting with Wang for cancer regular checkup.'
-        },
-        {
-            id: 4,
-            start: new Date(2024, 2, 13, 15, 0, 0),
-            end: new Date(2024, 2, 13, 17, 0, 0),
-            title: 'Appointment for Mrs. Wang',
-            content: 'meeting with Wang for cancer regular checkup.'
-        },
-        {
-            id: 5,
-            start: new Date(2024, 2, 19, 9, 0, 0),
-            end: new Date(2024, 2, 19, 10, 0, 0),
-            title: 'Appointment for Mr. Wong',
-            content: 'meeting with Mr. X for his regular checkup.'
         }
     ]);
 
@@ -293,7 +272,6 @@ const Appointments = () => {
     // handle on click of add new patient button
     const handleAddPatient = () => {
         setShowAddPatientModal(true);
-        console.log('Add New Patient Button Clicked');
     }
 
     // Log the showAddPatientModal value
@@ -360,7 +338,7 @@ const Appointments = () => {
                 </Row>
 
 
-                {/* select service using antd selec*/}
+                {/* select service using antd select*/}
                 <Row className='mb-3 mt-4'>
                     <Col>
                         <p style={{ marginBottom: '7px' }}>Service</p>
