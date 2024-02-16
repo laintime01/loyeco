@@ -7,6 +7,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
+import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools } from 'react-icons/fa';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -25,14 +26,6 @@ const Appointments = () => {
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
-
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [email, setEmail] = useState('');
-    const [month, setMonth] = useState('');
-    const [day, setDay] = useState('');
-    const [year, setYear] = useState('');
-    const [gender, setGender] = useState('');
 
     const [endDate, setEndDate] = useState(new Date());
     const [showAddPatientModal, setShowAddPatientModal] = useState(false);
@@ -61,19 +54,28 @@ const Appointments = () => {
         const monthOptions = Array.from({length: 12}, (_, i) => i + 1);
         const dayOptions = Array.from({length: 31}, (_, i) => i + 1);
         const yearOptions = Array.from({length: 121}, (_, i) => 1900 + i).reverse();
+
+        const [firstname, setFirstname] = useState('');
+        const [lastname, setLastname] = useState('');
+        const [email, setEmail] = useState('');
+        const [month, setMonth] = useState('');
+        const [day, setDay] = useState('');
+        const [year, setYear] = useState('');
+        const [gender, setGender] = useState('');
         
         return (
-            <Modal title="Add New Patient" open={visible} onCancel={handleClose}>
+            <Modal title="Add New Patient" open={visible} onCancel={handleClose}>  
             <Form layout="vertical">
                 {/* name */}
                 <Row className='mb-3'>
                     <Col style={{marginRight:"5px"}}>
                         <Form.Label>First Name</Form.Label>
-                        <Form.Control type="text" value={firstname} onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Control type="text" placeholder="Enter first name" value={firstname} onChange={(e) => setFirstname(e.target.value)}/>
+
                     </Col> 
                     <Col>
                         <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" value={lastname} onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Control type="text" placeholder="Enter first name" value={lastname} onChange={(e) => setLastname(e.target.value)} />
                     </Col>
                 </Row>
 
@@ -81,13 +83,13 @@ const Appointments = () => {
                 <Row className='mb-3'>
                     <Col style={{marginRight:"5px"}}>
                         <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" value={email} onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                     </Col>
                     <Col>
                         <Form.Label>Date of Birth</Form.Label>
                         <Row>
                             <Col>
-                                <Form.Control as="select" value={month} onChange={(e) => setStartDate(e.target.value)}>
+                                <Form.Control as="select" value={month} onChange={(e) => setMonth(e.target.value)}>
                                     <option value="">Month</option>
                                     {monthOptions.map((month) => (
                                         <option key={month} value={month}>
@@ -97,7 +99,7 @@ const Appointments = () => {
                                 </Form.Control>
                             </Col>
                             <Col>
-                                <Form.Control as="select" value={day} onChange={(e) => setStartDate(e.target.value)}>
+                                <Form.Control as="select" value={day} onChange={(e) => setDay(e.target.value)}>
                                     <option value="">Day</option>
                                     {dayOptions.map((day) => (
                                         <option key={day} value={day}>
@@ -107,7 +109,7 @@ const Appointments = () => {
                                 </Form.Control>
                             </Col>
                             <Col>
-                                <Form.Control as="select" value={year} onChange={(e) => setStartDate(e.target.value)}>
+                                <Form.Control as="select" value={year} onChange={(e) => setYear(e.target.value)}>
                                     <option value="">Year</option>
                                     {yearOptions.map((year) => (
                                         <option key={year} value={year}>
@@ -183,39 +185,32 @@ const Appointments = () => {
     const [events, setEvents] = useState([
         {
             id: 1,
-            start: new Date(2024, 2, 5, 9, 0, 0),
-            end: new Date(2024, 2, 5, 10, 0, 0),
+            patient: 'John Doe',
+            start: new Date(2024, 1, 17, 9, 0, 0),
+            end: new Date(2024, 1, 17, 11, 0, 0),
             title: 'Appointment for Mr. X',
-            content: 'meeting with Mr. X for his regular checkup.'
+            content: 'meeting with Mr. X for his regular checkup.',
+            service: 'Initial Appointment-60mins',
+            clinicName: 'york clinic',
+            note: 'Please remind him to bring his medical report.',
+            patientEmail: 'John@gmail.com',
+            patientPhone: '123-456-7890',
+            clinicAddress: '1234, 5th Avenue, New York, NY 10001'   
         },
         {
             id: 2,
-            start: new Date(2024, 1, 6, 11, 0, 0),
-            end: new Date(2024, 1, 6, 13, 0, 0),
+            patient: 'York Zhang',
+            start: new Date(2024, 1, 16, 11, 0, 0),
+            end: new Date(2024, 1, 16, 13, 0, 0),
             title: 'Appointment for Mr. Zhou',
-            content: 'meeting with Miss Zhou for her checkup.'
-        },
-        // more mock events
-        {
-            id: 3,
-            start: new Date(2024, 1, 11, 13, 0, 0),
-            end: new Date(2024, 1, 11, 15, 0, 0),
-            title: 'Appointment for Mrs. Wang',
-            content: 'meeting with Wang for cancer regular checkup.'
-        },
-        {
-            id: 4,
-            start: new Date(2024, 2, 13, 15, 0, 0),
-            end: new Date(2024, 2, 13, 17, 0, 0),
-            title: 'Appointment for Mrs. Wang',
-            content: 'meeting with Wang for cancer regular checkup.'
-        },
-        {
-            id: 5,
-            start: new Date(2024, 2, 19, 9, 0, 0),
-            end: new Date(2024, 2, 19, 10, 0, 0),
-            title: 'Appointment for Mr. Wong',
-            content: 'meeting with Mr. X for his regular checkup.'
+            content: 'meeting with Miss Zhou for her checkup.',
+            service: 'Follow-up Appointment-30mins',
+            clinicName: 'yaya clinic',
+            note: 'Please remind her to bring her medical report.',
+            patientEmail: 'york@hotmail.com',
+            patientPhone: '123-456-7890',
+            clinicAddress: '1234, 5th Avenue, New York, NY 10001'
+
         }
     ]);
 
@@ -293,7 +288,6 @@ const Appointments = () => {
     // handle on click of add new patient button
     const handleAddPatient = () => {
         setShowAddPatientModal(true);
-        console.log('Add New Patient Button Clicked');
     }
 
     // Log the showAddPatientModal value
@@ -320,21 +314,110 @@ const Appointments = () => {
 
             {/* Event Detail Modal */}
             <Modal title="Appointment Details" open={visible} onCancel={handleCancel}>
-                <p>
-                    <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
-                </p>
-                <p>
-                    <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
-                </p>
-                <p>
-                    <strong>Patient:</strong> {selectedEvent.title?.split('for ')[1]}                
-                </p>
-                <p>
-                    <strong>Appointment Content:</strong> {selectedEvent.content}
-                </p>
-                <p>
-                    <strong>Note:</strong> {selectedEvent.note}
-                </p>
+                {/* service */}
+                <Row className='mt-5 mb-3'>
+                    <p>
+                        <strong><FaTools/> Service:</strong> {selectedEvent.service}
+                    </p>
+                </Row>
+                
+                {/* date and time on same row */}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
+                        </p>
+                    </Col>
+                    <Col>
+                        <p>
+                            <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
+                        </p>
+                    </Col>
+                </Row>
+                {/* clinic info and two button arrived and noshow arrived font blue noshow font red with border 1 */}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong>Clinic:</strong> {selectedEvent.clinicName}
+                        </p>
+                    </Col>
+                    <Col>
+                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Arrived</Button>
+                        <Button variant="light" style={{color: 'red',border:"1px solid"}}>No Show</Button>
+                    </Col>
+                   
+                </Row>
+                {/* draw a line to seprate */}
+                <hr />
+                <h5>Patient Info</h5>
+                <hr />
+                {/* patient*/}
+                <Row className='mb-3'>
+                    <p>
+                        <strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}                
+                    </p>
+                </Row>
+                {/* patient email and phone on same row margin 5px*/}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}
+                        </p>
+                    </Col>
+                    <Col>
+                        <p>
+                            <strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}
+                        </p>
+                    </Col>
+                </Row>
+                <hr />
+                <h5>Clinic Details</h5>
+                <hr />
+                {/* clinic details */}
+                <Row className='mb-3'>
+                    <p>
+                        <strong>Clinic Address:</strong> {selectedEvent.clinicAddress}
+                    </p>
+                </Row>
+                {/* note */}
+                <Row className='mb-3'>
+                   <Col xs={10}>
+                        <p>
+                            <strong>Note:</strong> {selectedEvent.note}
+                        </p>
+                    </Col>
+                    <Col xs={2}>
+                        <Button variant="light" style={{border:"1px solid"}}>Add+</Button>
+                    </Col>
+                </Row>
+                {/* invoce */}
+                <Row className='mb-3'>
+                    <Col xs={10}>
+                        <p>
+                            <strong>Invoice:</strong> {selectedEvent.invoice || 'Not Available'}
+                        </p>
+                    </Col>
+                    <Col xs={2}>
+                        <Button variant="light" style={{border:"1px solid"}}>Invoice+</Button>
+                    </Col>
+                </Row>
+                <hr />
+                <h5>History</h5>
+                <hr />
+                {/* patient history */}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong>Patient History:</strong> {selectedEvent.patientHistory || 'Not Available'}
+                        </p>
+                    </Col>
+                    {/* history date and time */}
+                    <Col>
+                        <p>
+                            <strong>Date:</strong> {selectedEvent.historyDate || 'Not Available'}
+                        </p>
+                    </Col>
+                </Row>
             </Modal>
 
             {/* New Evenet Modal */}
@@ -360,7 +443,7 @@ const Appointments = () => {
                 </Row>
 
 
-                {/* select service using antd selec*/}
+                {/* select service using antd select*/}
                 <Row className='mb-3 mt-4'>
                     <Col>
                         <p style={{ marginBottom: '7px' }}>Service</p>
