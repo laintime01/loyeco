@@ -7,6 +7,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
+import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools } from 'react-icons/fa';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -63,7 +64,7 @@ const Appointments = () => {
         const [gender, setGender] = useState('');
         
         return (
-            <Modal title="Add New Patient" open={visible} onCancel={handleClose}>
+            <Modal title="Add New Patient" open={visible} onCancel={handleClose}>  
             <Form layout="vertical">
                 {/* name */}
                 <Row className='mb-3'>
@@ -184,17 +185,32 @@ const Appointments = () => {
     const [events, setEvents] = useState([
         {
             id: 1,
-            start: new Date(2024, 2, 5, 9, 0, 0),
-            end: new Date(2024, 2, 5, 10, 0, 0),
+            patient: 'John Doe',
+            start: new Date(2024, 1, 17, 9, 0, 0),
+            end: new Date(2024, 1, 17, 11, 0, 0),
             title: 'Appointment for Mr. X',
-            content: 'meeting with Mr. X for his regular checkup.'
+            content: 'meeting with Mr. X for his regular checkup.',
+            service: 'Initial Appointment-60mins',
+            clinicName: 'york clinic',
+            note: 'Please remind him to bring his medical report.',
+            patientEmail: 'John@gmail.com',
+            patientPhone: '123-456-7890',
+            clinicAddress: '1234, 5th Avenue, New York, NY 10001'   
         },
         {
             id: 2,
-            start: new Date(2024, 1, 6, 11, 0, 0),
-            end: new Date(2024, 1, 6, 13, 0, 0),
+            patient: 'York Zhang',
+            start: new Date(2024, 1, 16, 11, 0, 0),
+            end: new Date(2024, 1, 16, 13, 0, 0),
             title: 'Appointment for Mr. Zhou',
-            content: 'meeting with Miss Zhou for her checkup.'
+            content: 'meeting with Miss Zhou for her checkup.',
+            service: 'Follow-up Appointment-30mins',
+            clinicName: 'yaya clinic',
+            note: 'Please remind her to bring her medical report.',
+            patientEmail: 'york@hotmail.com',
+            patientPhone: '123-456-7890',
+            clinicAddress: '1234, 5th Avenue, New York, NY 10001'
+
         }
     ]);
 
@@ -298,21 +314,110 @@ const Appointments = () => {
 
             {/* Event Detail Modal */}
             <Modal title="Appointment Details" open={visible} onCancel={handleCancel}>
-                <p>
-                    <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
-                </p>
-                <p>
-                    <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
-                </p>
-                <p>
-                    <strong>Patient:</strong> {selectedEvent.title?.split('for ')[1]}                
-                </p>
-                <p>
-                    <strong>Appointment Content:</strong> {selectedEvent.content}
-                </p>
-                <p>
-                    <strong>Note:</strong> {selectedEvent.note}
-                </p>
+                {/* service */}
+                <Row className='mt-5 mb-3'>
+                    <p>
+                        <strong><FaTools/> Service:</strong> {selectedEvent.service}
+                    </p>
+                </Row>
+                
+                {/* date and time on same row */}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
+                        </p>
+                    </Col>
+                    <Col>
+                        <p>
+                            <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
+                        </p>
+                    </Col>
+                </Row>
+                {/* clinic info and two button arrived and noshow arrived font blue noshow font red with border 1 */}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong>Clinic:</strong> {selectedEvent.clinicName}
+                        </p>
+                    </Col>
+                    <Col>
+                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Arrived</Button>
+                        <Button variant="light" style={{color: 'red',border:"1px solid"}}>No Show</Button>
+                    </Col>
+                   
+                </Row>
+                {/* draw a line to seprate */}
+                <hr />
+                <h5>Patient Info</h5>
+                <hr />
+                {/* patient*/}
+                <Row className='mb-3'>
+                    <p>
+                        <strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}                
+                    </p>
+                </Row>
+                {/* patient email and phone on same row margin 5px*/}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}
+                        </p>
+                    </Col>
+                    <Col>
+                        <p>
+                            <strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}
+                        </p>
+                    </Col>
+                </Row>
+                <hr />
+                <h5>Clinic Details</h5>
+                <hr />
+                {/* clinic details */}
+                <Row className='mb-3'>
+                    <p>
+                        <strong>Clinic Address:</strong> {selectedEvent.clinicAddress}
+                    </p>
+                </Row>
+                {/* note */}
+                <Row className='mb-3'>
+                   <Col xs={10}>
+                        <p>
+                            <strong>Note:</strong> {selectedEvent.note}
+                        </p>
+                    </Col>
+                    <Col xs={2}>
+                        <Button variant="light" style={{border:"1px solid"}}>Add+</Button>
+                    </Col>
+                </Row>
+                {/* invoce */}
+                <Row className='mb-3'>
+                    <Col xs={10}>
+                        <p>
+                            <strong>Invoice:</strong> {selectedEvent.invoice || 'Not Available'}
+                        </p>
+                    </Col>
+                    <Col xs={2}>
+                        <Button variant="light" style={{border:"1px solid"}}>Invoice+</Button>
+                    </Col>
+                </Row>
+                <hr />
+                <h5>History</h5>
+                <hr />
+                {/* patient history */}
+                <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong>Patient History:</strong> {selectedEvent.patientHistory || 'Not Available'}
+                        </p>
+                    </Col>
+                    {/* history date and time */}
+                    <Col>
+                        <p>
+                            <strong>Date:</strong> {selectedEvent.historyDate || 'Not Available'}
+                        </p>
+                    </Col>
+                </Row>
             </Modal>
 
             {/* New Evenet Modal */}
