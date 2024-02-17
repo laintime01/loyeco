@@ -7,7 +7,7 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
-import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools, FaBroadcastTower, FaNutritionix, FaDatabase, FaTimesCircle, FaUserTimes, FaExpand, FaNotesMedical } from 'react-icons/fa';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -427,7 +427,7 @@ const Appointments = () => {
                     <Col style={{ marginRight: '20px' }}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <div style={{ marginRight: '20px' }}>
-                                <p style={{ marginBottom: '7px' }}>Patient</p>
+                                <p style={{ marginBottom: '7px' }}><FaUserInjured/> Patient</p>
                                 <Input
                                     name="patient"
                                     value={appointmentData.patient}
@@ -446,7 +446,7 @@ const Appointments = () => {
                 {/* select service using antd select*/}
                 <Row className='mb-3 mt-4'>
                     <Col>
-                        <p style={{ marginBottom: '7px' }}>Service</p>
+                        <p style={{ marginBottom: '7px' }}><FaNutritionix/> Service</p>
                         <Select 
                             style={{ width: 300 }} 
                             onChange={handleSelectChange} 
@@ -466,20 +466,20 @@ const Appointments = () => {
                 {/* Date and time in same row */}
                 <Row className='mb-3'>
                     <Col className='mr-3'>
-                        <Form.Label>Date</Form.Label>
+                        <Form.Label> <FaDatabase/> Date</Form.Label>
                         <Form.Control type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                     </Col> 
                 </Row>
                 <Row className='mb-3 no-gutters'>
                     <Col xs={5} >
-                        <Form.Label>Start Time</Form.Label>
+                        <Form.Label><FaUserTimes/> Start Time</Form.Label>
                         <Form.Control type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
                     </Col>
                     {/* add Col xs=2 */}
                     <Col xs={2}>
                     </Col>
                     <Col xs={5}>
-                        <Form.Label>End Time</Form.Label>
+                        <Form.Label><FaExpand/> End Time</Form.Label>
                         <Form.Control type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
                     </Col>
                 </Row>
@@ -488,7 +488,7 @@ const Appointments = () => {
                 {/* Note */}
                 <Row>
                     <Col>
-                        <p style={{ marginBottom: '7px' }}>Note</p>
+                        <p style={{ marginBottom: '7px' }}><FaNotesMedical/> Note</p>
                         <Input.TextArea
                             placeholder="Note"
                             name="note"

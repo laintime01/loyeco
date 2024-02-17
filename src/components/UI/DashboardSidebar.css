@@ -70,3 +70,26 @@
 .profile-details p{
     font-size: 13px;
 }
+
+/* add css to subnav */
+.dashboard-menu .subnav-item {
+    display: block;
+    padding: 16px 20px 16px 40px; /* Increase left padding to push to the right */
+    color: inherit; /* Inherit color from parent */
+    transition: 0.2s ease-in; /* Inherit transition effect from parent */
+}
+.dashboard-menu .subnav-item.active {
+    color: #1977cc;
+    background: #fff;
+}
+/* Add hover effect to subnav items */
+.dashboard-menu .subnav-item:hover {
+    background-color: #f0f0f0; /* Change this to the desired hover background color */
+    transform: scale(1.05);
+}
+
+.dashboard-menu .subnav-item:hover span {
+    color: #1977cc; /* Change this to the desired hover text color */
+}
+
+
