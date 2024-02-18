@@ -12,6 +12,7 @@ import Appointments from './components/Doctor/Appointments/Appointments';
 import MyPatients from './components/Doctor/MyPatients/MyPatients';
 import Schedule from './components/Doctor/Schedule/Schedule';
 import ProfileSetting from './components/Doctor/ProfileSetting/ProfileSetting';
+import ClinicSetting from './components/Doctor/ClinicSetting/ClinicSetting';
 import ChangePassword from './components/Doctor/ChangePassword/ChangePassword';
 import AdminDashboard from './components/Admin/Dashboard/Dashboard';
 import AdminAppointments from './components/Admin/Appointments/Appointments';
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
   { path: '/dashboard/appointments', element: <Appointments /> },
   { path: '/dashboard/change-password', element: <ChangePassword /> },
   { path: '/dashboard/profile-setting', element: <ProfileSetting /> },
+  { path: '/dashboard/clinic-setting', element: <ClinicSetting /> },
   { path: '/dashboard/invoices', element: <DoctorInvoice /> },
   { path: '/dashboard/cases', element: <DoctorInvoice /> },
 

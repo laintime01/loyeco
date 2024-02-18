@@ -1,14 +1,14 @@
 import React from 'react';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import DoctorProfileSetting from './DoctorProfileSetting';
+import DoctorClinicSetting from './DoctorClinicSetting';
 import useAuthCheck from '../../../redux/hooks/useAuthCheck';
 
-const ProfileSetting = () => {
+const ClinicSetting = () => {
     const { role } = useAuthCheck();
     return (
         <DashboardLayout>
-            <DoctorProfileSetting />
+            <DoctorClinicSetting />
         </DashboardLayout>
     )
 }
-export default ProfileSetting;
+export default ClinicSetting;
