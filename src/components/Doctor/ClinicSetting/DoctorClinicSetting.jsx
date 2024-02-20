@@ -84,12 +84,6 @@ const DoctorClinicSetting = () => {
                                     </div>
                                 </div>
 
-                                <div className="col-md-6">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Clinic Address</label>
-                                        <input type="text" defaultValue={data?.clinicAddress} {...register("clinicAddress")} className="form-control" />
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,24 +125,10 @@ const DoctorClinicSetting = () => {
                                         <input defaultValue={data?.postalCode} {...register("postalCode")} className="form-control" />
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-md-12">
-                        <div className="card mb-2 p-3 mt-2">
-                            <h6 className="card-title text-secondary">License Info</h6>
-                            <div className="row form-row">
                                 <div className="col-md-6">
                                     <div className="form-group mb-2 card-label">
-                                        <label>License Number</label>
-                                        <input defaultValue={data?.license} {...register("license")} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Year</label>
-                                        <input defaultValue={data?.year} {...register("year")} className="form-control" />
+                                        <label>Phone</label>
+                                        <input defaultValue={data?.phone} {...register("phone")} className="form-control" />
                                     </div>
                                 </div>
                             </div>
