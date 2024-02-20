@@ -22,6 +22,7 @@ import Profile from './components/Admin/Profile/Profile';
 import Transactions from './components/Admin/Transactions/Transactions';
 import Specialites from './components/Admin/Specialites/Specialites';
 import DoctorInvoice from './components/Doctor/Invoice/DoctorInvoice';
+import Report from './components/Doctor/Report/Report';
 import Contact from './components/Contact/Contact';
 import About from './components/About/About';
 import Service from './components/Service/Service';
@@ -44,7 +45,7 @@ const router = createBrowserRouter([
   { path: '/dashboard/profile-setting', element: <ProfileSetting /> },
   { path: '/dashboard/clinic-setting', element: <ClinicSetting /> },
   { path: '/dashboard/invoices', element: <DoctorInvoice /> },
-  { path: '/dashboard/cases', element: <DoctorInvoice /> },
+  { path: '/dashboard/cases', element: <Report /> },
 
   { path: '/booking/:doctorId', element: <DoctorBooking /> },
   { path: '/booking/success/', element: <BookingSuccess /> },
