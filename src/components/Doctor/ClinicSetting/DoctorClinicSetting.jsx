@@ -91,7 +91,7 @@ const DoctorClinicSetting = () => {
 
                     <div className="col-md-12">
                         <div className="card mb-2 p-3 mt-2">
-                            <h6 className="card-title text-secondary">Contact Details</h6>
+                            <h6 className="card-title text-secondary">Location Details</h6>
                             <div className="row form-row">
                                 <div className="col-md-6">
                                     <div className="form-group mb-2 card-label">

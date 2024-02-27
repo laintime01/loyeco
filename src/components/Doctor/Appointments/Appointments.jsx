@@ -15,6 +15,15 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
 
+// min time and max time for the calendar
+const minTime = new Date();
+minTime.setHours(9, 0, 0);
+const maxTime = new Date();
+maxTime.setHours(22, 0, 0);
+
+// custom time gutter for the calendar
+
+
 
 const Appointments = () => {
     const [visible, setVisible] = useState(false);
@@ -186,8 +195,8 @@ const Appointments = () => {
         {
             id: 1,
             patient: 'John Doe',
-            start: new Date(2024, 1, 17, 9, 0, 0),
-            end: new Date(2024, 1, 17, 11, 0, 0),
+            start: new Date(2024, 2, 17, 9, 0, 0),
+            end: new Date(2024, 2, 17, 11, 0, 0),
             title: 'Appointment for Mr. X',
             content: 'meeting with Mr. X for his regular checkup.',
             service: 'Initial Appointment-60mins',
@@ -200,8 +209,8 @@ const Appointments = () => {
         {
             id: 2,
             patient: 'York Zhang',
-            start: new Date(2024, 1, 16, 11, 0, 0),
-            end: new Date(2024, 1, 16, 13, 0, 0),
+            start: new Date(2024, 2, 16, 11, 0, 0),
+            end: new Date(2024, 2, 16, 13, 0, 0),
             title: 'Appointment for Mr. Zhou',
             content: 'meeting with Miss Zhou for her checkup.',
             service: 'Follow-up Appointment-30mins',
@@ -310,6 +319,9 @@ const Appointments = () => {
                 onEventResize={onEventResize}
                 resizable={true}
                 selectable={true}
+                min={minTime} // Set the min time
+                max={maxTime} // Set the max time
+                timeslots={4} // Divide hour into 4 slots of 15 minutes each
             />
 
             {/* Event Detail Modal */}
