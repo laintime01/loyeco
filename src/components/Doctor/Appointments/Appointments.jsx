@@ -192,11 +192,11 @@ const Appointments = () => {
       
 
     const [events, setEvents] = useState([
-        {
-            id: 1,
-            patient: 'John Doe',
-            start: new Date(2024, 2, 17, 9, 0, 0),
-            end: new Date(2024, 2, 17, 11, 0, 0),
+        {   
+            id: 1,  
+            patient: 'John Doe',    
+            start: new Date(2024, 2, 8, 9, 0, 0),
+            end: new Date(2024, 2, 8, 11, 0, 0),
             title: 'Appointment for Mr. X',
             content: 'meeting with Mr. X for his regular checkup.',
             service: 'Initial Appointment-60mins',
@@ -209,8 +209,8 @@ const Appointments = () => {
         {
             id: 2,
             patient: 'York Zhang',
-            start: new Date(2024, 2, 16, 11, 0, 0),
-            end: new Date(2024, 2, 16, 13, 0, 0),
+            start: new Date(2024, 2, 9, 11, 0, 0),
+            end: new Date(2024, 2, 9, 14, 0, 0),
             title: 'Appointment for Mr. Zhou',
             content: 'meeting with Miss Zhou for her checkup.',
             service: 'Follow-up Appointment-30mins',
@@ -326,41 +326,7 @@ const Appointments = () => {
 
             {/* Event Detail Modal */}
             <Modal title="Appointment Details" open={visible} onCancel={handleCancel}>
-                {/* service */}
-                <Row className='mt-5 mb-3'>
-                    <p>
-                        <strong><FaTools/> Service:</strong> {selectedEvent.service}
-                    </p>
-                </Row>
-                
-                {/* date and time on same row */}
-                <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
-                        </p>
-                    </Col>
-                    <Col>
-                        <p>
-                            <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
-                        </p>
-                    </Col>
-                </Row>
-                {/* clinic info and two button arrived and noshow arrived font blue noshow font red with border 1 */}
-                <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong>Clinic:</strong> {selectedEvent.clinicName}
-                        </p>
-                    </Col>
-                    <Col>
-                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Arrived</Button>
-                        <Button variant="light" style={{color: 'red',border:"1px solid"}}>No Show</Button>
-                    </Col>
-                   
-                </Row>
                 {/* draw a line to seprate */}
-                <hr />
                 <h5>Patient Info</h5>
                 <hr />
                 {/* patient*/}
@@ -382,37 +348,52 @@ const Appointments = () => {
                         </p>
                     </Col>
                 </Row>
-                <hr />
-                <h5>Clinic Details</h5>
-                <hr />
-                {/* clinic details */}
+                {/* reminder with in textarea with a edit icon on the right side*/}
                 <Row className='mb-3'>
+                    <Col>
+                        <p>
+                            <strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}
+                        </p>
+                    </Col>
+                    <Col xs={2} className="offset-4">
+                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
+                    </Col>
+                </Row>
+                {/* draw a line to seprate */}
+                <h5>Appointment Info</h5>
+                <hr />
+                {/* service */}
+                <Row className='mt-5 mb-3'>
                     <p>
-                        <strong>Clinic Address:</strong> {selectedEvent.clinicAddress}
+                        <strong><FaTools/> Service:</strong> {selectedEvent.service}
                     </p>
                 </Row>
-                {/* note */}
+                
+                {/* date and time on same row */}
                 <Row className='mb-3'>
-                   <Col xs={10}>
+                    <Col>
                         <p>
-                            <strong>Note:</strong> {selectedEvent.note}
+                            <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
                         </p>
                     </Col>
-                    <Col xs={2}>
-                        <Button variant="light" style={{border:"1px solid"}}>Add+</Button>
-                    </Col>
-                </Row>
-                {/* invoce */}
-                <Row className='mb-3'>
-                    <Col xs={10}>
+                    <Col>
                         <p>
-                            <strong>Invoice:</strong> {selectedEvent.invoice || 'Not Available'}
+                            <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
                         </p>
                     </Col>
-                    <Col xs={2}>
-                        <Button variant="light" style={{border:"1px solid"}}>Invoice+</Button>
-                    </Col>
                 </Row>
+
+                <h5>Actions</h5>
+                <hr />
+                {/* Action includes Arrive,Late, Reschedule, NoShow and Cancel. all buttons*/}
+                <Row className='mb-3'>
+                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Arrive</Button>  
+                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Late</Button>
+                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Reschedule</Button>
+                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>No Show</Button>
+                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Cancel</Button>
+                </Row>
+                
                 <hr />
                 <h5>History</h5>
                 <hr />
@@ -447,31 +428,10 @@ const Appointments = () => {
                                     placeholder='Existing Patient...'
                                 />
                             </div>
-                            <Button variant="link" onClick={handleAddPatient} >Add New Patient +</Button>
+                            <Button variant="light" style={{marginTop:'30px', marginLeft:'10px'}}onClick={handleAddPatient} >Add New Patient +</Button>
                             <AddPatientModal visible={showAddPatientModal} handleClose={() => setShowAddPatientModal(false)} />
 
                         </div>
-                    </Col>
-                </Row>
-
-
-                {/* select service using antd select*/}
-                <Row className='mb-3 mt-4'>
-                    <Col>
-                        <p style={{ marginBottom: '7px' }}><FaNutritionix/> Service</p>
-                        <Select 
-                            style={{ width: 300 }} 
-                            onChange={handleSelectChange} 
-                            name="appointmentContent" 
-                            value={appointmentData.appointmentContent || ''}  // Here
-                        >
-                            <Option value="">Initial Appointment-30mins</Option>
-                            {serviceOptions.map((service) => (
-                                <Option key={service} value={service.toLowerCase().replace(/\s+/g, '')}>
-                                    {service}
-                                </Option>
-                            ))}
-                        </Select>
                     </Col>
                 </Row>
 
@@ -497,10 +457,10 @@ const Appointments = () => {
                 </Row>
 
                 
-                {/* Note */}
+                {/* Reminder */}
                 <Row>
                     <Col>
-                        <p style={{ marginBottom: '7px' }}><FaNotesMedical/> Note</p>
+                        <p style={{ marginBottom: '7px' }}><FaNotesMedical/> Reminder</p>
                         <Input.TextArea
                             placeholder="Note"
                             name="note"
@@ -508,6 +468,30 @@ const Appointments = () => {
                             onChange={handleInputChange}
                             rows={4}
                         />
+                    </Col>
+                </Row>
+
+                {/* select service using antd select*/}
+                <Row className='mb-3 mt-4'>
+                    <Col>
+                        <p style={{ marginBottom: '7px' }}><FaNutritionix/> Service</p>
+                        <Select 
+                            style={{ width: 300 }} 
+                            onChange={handleSelectChange} 
+                            name="appointmentContent" 
+                            value={appointmentData.appointmentContent || ''}  // Here
+                        >
+                            <Option value="">Initial Appointment-30mins</Option>
+                            {serviceOptions.map((service) => (
+                                <Option key={service} value={service.toLowerCase().replace(/\s+/g, '')}>
+                                    {service}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Col>
+                    {/* add service plain button  */}
+                    <Col>
+                        <Button variant="light" style={{marginTop: '30px',marginLeft:'10px'}}>Add Service +</Button>
                     </Col>
                 </Row>
                 
