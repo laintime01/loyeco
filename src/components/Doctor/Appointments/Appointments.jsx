@@ -197,28 +197,30 @@ const Appointments = () => {
             patient: 'John Doe',    
             start: new Date(2024, 2, 8, 9, 0, 0),
             end: new Date(2024, 2, 8, 11, 0, 0),
-            title: 'Appointment for Mr. X',
-            content: 'meeting with Mr. X for his regular checkup.',
+            title: 'Appointment for Mr Yock Zhang',
+            content: 'meeting with Mr Yock Zhang for his regular checkup.',
             service: 'Initial Appointment-60mins',
             clinicName: 'york clinic',
             note: 'Please remind him to bring his medical report.',
             patientEmail: 'John@gmail.com',
             patientPhone: '123-456-7890',
-            clinicAddress: '1234, 5th Avenue, New York, NY 10001'   
+            clinicAddress: '1234, 5th Avenue, New York, NY 10001',
+            historyDate: '2023-03-08',   
         },
         {
             id: 2,
-            patient: 'York Zhang',
+            patient: 'Yu Guan',
             start: new Date(2024, 2, 9, 11, 0, 0),
             end: new Date(2024, 2, 9, 14, 0, 0),
-            title: 'Appointment for Mr. Zhou',
-            content: 'meeting with Miss Zhou for her checkup.',
+            title: 'Appointment for Yu Guan',
+            content: 'meeting with Yu Guan for her checkup.',
             service: 'Follow-up Appointment-30mins',
             clinicName: 'yaya clinic',
             note: 'Please remind her to bring her medical report.',
             patientEmail: 'york@hotmail.com',
             patientPhone: '123-456-7890',
-            clinicAddress: '1234, 5th Avenue, New York, NY 10001'
+            clinicAddress: '1234, 5th Avenue, New York, NY 10001',
+            historyDate: '2022-03-08',
 
         }
     ]);
@@ -325,7 +327,7 @@ const Appointments = () => {
             />
 
             {/* Event Detail Modal */}
-            <Modal title="Appointment Details" open={visible} onCancel={handleCancel}>
+            <Modal title="Appointment Details" open={visible} onCancel={handleCancel} width={800}>
                 {/* draw a line to seprate */}
                 <h5>Patient Info</h5>
                 <hr />
@@ -362,14 +364,19 @@ const Appointments = () => {
                 {/* draw a line to seprate */}
                 <h5>Appointment Info</h5>
                 <hr />
-                {/* service */}
-                <Row className='mt-5 mb-3'>
+                {/* service with add service button on the right*/}
+                <Row className='mt-3 mb-3'>
+                    <Col>
                     <p>
                         <strong><FaTools/> Service:</strong> {selectedEvent.service}
                     </p>
+                    </Col>
+                    <Col xs={2} className="offset-4">
+                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add +</Button>
+                    </Col>
                 </Row>
                 
-                {/* date and time on same row */}
+                {/* date and time on same row edit button on the right*/}
                 <Row className='mb-3'>
                     <Col>
                         <p>
@@ -380,6 +387,9 @@ const Appointments = () => {
                         <p>
                             <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
                         </p>
+                    </Col>
+                    <Col xs={2} className="offset-4">
+                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
                 </Row>
 
@@ -394,22 +404,29 @@ const Appointments = () => {
                     <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Cancel</Button>
                 </Row>
                 
-                <hr />
                 <h5>History</h5>
                 <hr />
-                {/* patient history */}
+                {/* patient history with time, service and arrive status*/}
                 <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong>Patient History:</strong> {selectedEvent.patientHistory || 'Not Available'}
-                        </p>
-                    </Col>
                     {/* history date and time */}
                     <Col>
                         <p>
-                            <strong>Date:</strong> {selectedEvent.historyDate || 'Not Available'}
+                            {selectedEvent.historyDate || 'Not Available'}
                         </p>
                     </Col>
+                    {/* service */}
+                    <Col>
+                        <p>
+                            {selectedEvent.service || 'Not Available'}
+                        </p>
+                    </Col>
+                    {/* arrive status */}
+                    <Col>
+                        <p>
+                            Arrive OnTime
+                        </p>
+                    </Col>
+
                 </Row>
             </Modal>
 
