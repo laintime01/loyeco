@@ -1,9 +1,7 @@
 import axios from "axios";
 import { getFromLocalStorage } from "../../utils/local-storage";
 
-export const instance = axios.create({
-    baseURL: '/api', // 设置代理地址为本地地址
-});
+export const instance = axios.create({});
 
 //check baseURL console.log
 console.log('baseURL:', instance.defaults.baseURL);

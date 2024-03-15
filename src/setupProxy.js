@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://loyeco.com:12121/api',
+      target: 'http://loyeco.com:12121',
       changeOrigin: true,
     })
   );
