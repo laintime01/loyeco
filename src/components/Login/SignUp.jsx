@@ -5,6 +5,8 @@ import Spinner from 'react-bootstrap/Spinner';
 import swal from 'sweetalert';
 import { useDoctorSignUpMutation } from '../../redux/api/authApi';
 
+import {instance} from '../../helpers/axios/axiosInstance';
+
 const SignUp = ({ setSignUp }) => {
     const [error, setError] = useState({});
     const [infoError, setInfoError] = useState('');
@@ -94,7 +96,16 @@ const SignUp = ({ setSignUp }) => {
         if (page === 1) {
             setPage(2);
         } else {
-            doctorSignUp(user);
+            console.log(user);
+            
+            instance.post('/signup', user)
+                .then(res => {
+                    console.log(res);
+                    console.log("success");
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     };
 
