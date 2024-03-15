@@ -1,3 +1,3 @@
 export const getBaseUrl = () =>{
-    return  'http://localhost:5000/api/v1';
+    return  'http://loyeco.com:12121/api';
 }
