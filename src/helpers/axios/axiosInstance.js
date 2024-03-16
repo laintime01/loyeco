@@ -4,7 +4,6 @@ import { getFromLocalStorage } from "../../utils/local-storage";
 export const instance = axios.create({
     baseURL: '/api',
     withCredentials: true
-
 });
 
 instance.defaults.headers.post['Accept'] = 'application/json';

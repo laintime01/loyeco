@@ -13,15 +13,6 @@ const MyPatients = () => {
     // Existing states and handlers...
     const { data, isLoading, isError, refetch } = useGetAllPatientsQuery();
     console.log('data:'+ data);
-
-    instance.get('/patient', { headers: { Authorization: 'Bearer admin@123.com' } })
-        .then(response => {
-            console.log("pdate:", response); // 打印返回的 JSON 数据
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
-        });
-
     const [deletePatient] = useDeletePatientMutation();
     const [createPatient] = useCreatePatientMutation();
     const [updatePatient] = useUpdatePatientMutation();
