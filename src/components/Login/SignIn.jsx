@@ -20,6 +20,7 @@ const SignIn = ({ handleResponse }) => {
 
     // submit form
     const onSubmit = async (event) => {
+        console.log(event);
         await userLogin({...event})
     }
     useEffect(() => {

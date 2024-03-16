@@ -40,7 +40,6 @@
     "swiper": "^11.0.5",
     "web-vitals": "^1.1.0"
   },
-  "proxy": "http://loyeco.com:12121/api",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
