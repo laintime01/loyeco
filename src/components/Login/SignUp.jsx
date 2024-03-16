@@ -3,7 +3,7 @@ import { FaAddressBook, FaCheck, FaCity, FaCode, FaEnvelope, FaHatCowboy, FaLock
 import SocialSignUp from './SocialSignUp';
 import Spinner from 'react-bootstrap/Spinner';
 import swal from 'sweetalert';
-import { useDoctorSignUpMutation } from '../../redux/api/authApi';
+import { useSignUpMutation } from '../../redux/api/authApi';
 
 import {instance} from '../../helpers/axios/axiosInstance';
 
@@ -26,7 +26,7 @@ const SignUp = ({ setSignUp }) => {
     }
 
     const [user, setUser] = useState(formField);
-    const [doctorSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useDoctorSignUpMutation();
+    const [userSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useSignUpMutation();
     const [passwordValidation, setPasswordValidation] = useState({
         numeric: false
     });
@@ -93,20 +93,7 @@ const SignUp = ({ setSignUp }) => {
 
     const hanldeOnSubmit = async (e) => {
         e.preventDefault();
-        if (page === 1) {
-            setPage(2);
-        } else {
-            console.log(user);
-            
-            instance.post('/signup', user)
-                .then(res => {
-                    console.log(res);
-                    console.log("success");
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
+        userSignUp(user);
     };
 
     const handleBackClick = () => {

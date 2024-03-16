@@ -5,11 +5,11 @@ export const authApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
         // userLogin
         userLogin: build.mutation({
-            query: (loginData) => {
+            query: (loginParams) => {
                 return {
-                    url: `/login`,
+                    url: '/login',
                     method: 'POST',
-                    data: loginData,
+                    params: loginParams,
                 };
             },
             async onQueryStarted(arg, { queryFulfilled, dispatch }) {
@@ -21,10 +21,10 @@ export const authApi = baseApi.injectEndpoints({
             },
         }),
         // userSignUp
-        doctorSignUp: build.mutation({
+        SignUp: build.mutation({
             query: (data) => {
                 return {
-                    url: '/singup',
+                    url: '/signup',
                     method: 'POST',
                     data,
                 };
@@ -35,4 +35,4 @@ export const authApi = baseApi.injectEndpoints({
 
 
 
-export const { useUserLoginMutation, useDoctorSignUpMutation } = authApi
+export const { useUserLoginMutation, useSignUpMutation } = authApi
