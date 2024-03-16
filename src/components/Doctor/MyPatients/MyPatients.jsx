@@ -7,10 +7,21 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './style.css';
+import { instance } from '../../../helpers/axios/axiosInstance';
 
 const MyPatients = () => {
     // Existing states and handlers...
     const { data, isLoading, isError, refetch } = useGetAllPatientsQuery();
+    console.log('data:'+ data);
+
+    instance.get('/patient', { headers: { Authorization: 'Bearer admin@123.com' } })
+        .then(response => {
+            console.log("pdate:", response); // 打印返回的 JSON 数据
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+        });
+
     const [deletePatient] = useDeletePatientMutation();
     const [createPatient] = useCreatePatientMutation();
     const [updatePatient] = useUpdatePatientMutation();
@@ -184,17 +195,17 @@ const MyPatients = () => {
                                     <th>First Name</th>
                                     <th>Phone</th>
                                     <th>Gender</th>
-                                    <th>LastVisit</th>
+                                    <th>VisitStatus</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.map((item) => (
                                     <tr key={item.id} onClick={() => handlePatientClick(item)}>
-                                        <td>{item.lastname}</td>
-                                        <td>{item.firstname}</td>
+                                        <td>{item.lastName}</td>
+                                        <td>{item.firstName}</td>
                                         <td>{item.phone}</td>
                                         <td>{item.gender}</td>
-                                        <td>{item.lastVisit}</td>
+                                        <td>{item.visitStatus}</td>
                                     </tr>
                                 ))}
                             </tbody>

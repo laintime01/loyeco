@@ -3,9 +3,6 @@ import { getFromLocalStorage } from "../../utils/local-storage";
 
 export const instance = axios.create({
     baseURL: '/api',
-    headers: {
-        'Content-Type': 'application/json'
-    },
     withCredentials: true
 
 });
@@ -25,7 +22,7 @@ instance.interceptors.request.use(function (config) {
 
 instance.interceptors.response.use(function (response) {
     const responseObj = {
-        data: response?.data?.data,
+        data: response?.data?.content,
         meta: response?.data?.meta
     }
     return responseObj;
