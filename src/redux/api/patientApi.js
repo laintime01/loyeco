@@ -35,7 +35,11 @@ export const patientApi = baseApi.injectEndpoints({
             query: (data) => ({
                 url: PAT_URL,
                 method: 'POST',
-                data,
+                data: data,
+                // add header Authorization Bearer admin@123.com
+                headers: {
+                    Authorization: 'Bearer admin@123.com'
+                },
             }),
         }),
         deletePatient: build.mutation({
