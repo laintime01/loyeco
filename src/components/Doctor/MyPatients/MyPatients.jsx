@@ -9,6 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
+import {instance} from '../../../helpers/axios/axiosInstance';
 
 
 const MyPatients = () => {
@@ -52,8 +53,7 @@ const MyPatients = () => {
 
     const handleAddPatient = async () => {
         try {
-            console.log({firstName, lastName, phone, email});
-            await createPatient({firstName, lastName, phone, email,gender,pname}).unwrap();
+            await createPatient({firstName, lastName, phone, email,gender,pname,occupation,emergencyContactName}).unwrap();
             handleClose();
             toast.success('Add Patient Successful');
             refetch();
