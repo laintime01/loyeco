@@ -6,25 +6,28 @@ import toast from 'react-hot-toast';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
-import { instance } from '../../../helpers/axios/axiosInstance';
+
 
 const MyPatients = () => {
     // Existing states and handlers...
     const { data, isLoading, isError, refetch } = useGetAllPatientsQuery();
-    console.log('data:'+ data);
     const [deletePatient] = useDeletePatientMutation();
     const [createPatient] = useCreatePatientMutation();
     const [updatePatient] = useUpdatePatientMutation();
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [patientToDelete, setPatientToDelete] = useState(null);
-    const [firstname, setFirstname] = useState("");
-    const [lastname, setLastname] = useState("");
+    const [firstName, setFirstname] = useState("");
+    const [lastName, setLastname] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [gender, setGender] = useState("");
-    const [userId, setUserId] = useState("65b5cf279c1df765cee613af");
+    const [pname, setPname] = useState("");
+    const [occupation, setOccupation] = useState("");
+    const [emergencyContactName, setEmergencyContactName] = useState("");
 
     // New states for patient detail modal and edit functionality
     const [selectedPatient, setSelectedPatient] = useState(null);
@@ -49,7 +52,8 @@ const MyPatients = () => {
 
     const handleAddPatient = async () => {
         try {
-            await createPatient({firstname, lastname, phone, email,gender,userId}).unwrap();
+            console.log({firstName, lastName, phone, email});
+            await createPatient({firstName, lastName, phone, email,gender,pname}).unwrap();
             handleClose();
             toast.success('Add Patient Successful');
             refetch();
@@ -115,50 +119,107 @@ const MyPatients = () => {
                             </Button>
                         </InputGroup>
                     </div>
-                    <Modal show={showModal} onHide={handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Add New Patient</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Form>
-                                <Form.Group controlId="formPatientFirstName">
-                                    <Form.Label>First Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter first name" value={firstname} onChange={(e) => setFirstname(e.target.value)}/>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientLastName">
-                                    <Form.Label>Last Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter last name" value={lastname} onChange={(e) => setLastname(e.target.value)}/>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientPhone">
-                                    <Form.Label>Phone</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter phone" value={phone} onChange={(e) => setPhone(e.target.value)}/>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientEmail">
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setPhone(e.target.value)}/>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientGender">
-                                    <Form.Label>Gender</Form.Label>
-                                    <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
-                                        <option value="">Select Gender</option>
-                                        <option value="M">Male</option>
-                                        <option value="F">Female</option>
-                                    </Form.Select>
-                                </Form.Group>
-                                <Form.Group controlId="formPatientUserId" className="d-none">
-                                    <Form.Control type="text" defaultValue={userId}/>
-                                </Form.Group>
-                            </Form>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleAddPatient}>
-                                Confirm
-                            </Button>
-                            <Button variant="primary" onClick={handleClose}>
-                                Close
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
+                    <Modal show={showModal} onHide={handleClose} size="lg">
+    <Modal.Header closeButton>
+        <Modal.Title>Add New Patient</Modal.Title>
+    </Modal.Header>
+
+    <Modal.Body>
+        <Form>
+            <Row className="mt-3">
+                <Col>
+                    <Form.Group controlId="formPatientFirstName">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faUser} /></InputGroup.Text>
+                            <Form.Control type="text" placeholder="Enter first name" value={firstName} onChange={(e) => setFirstname(e.target.value)}/>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group controlId="formPatientLastName">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faUser} /></InputGroup.Text>
+                            <Form.Control type="text" placeholder="Enter last name" value={lastName} onChange={(e) => setLastname(e.target.value)}/>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+            </Row>
+
+            <Row className="mt-3">
+                <Col>
+                    <Form.Group controlId="formPatientPhone">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faPhone} /></InputGroup.Text>
+                            <Form.Control type="text" placeholder="Enter phone" value={phone} onChange={(e) => setPhone(e.target.value)}/>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group controlId="formPatientEmail">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faEnvelope} /></InputGroup.Text>
+                            <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col>
+                    <Form.Group controlId="formPreferredName">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
+                        <Form.Control type="text" placeholder="Enter preferred name" value={pname} onChange={(e) => setPname(e.target.value)}/>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+                <Col>
+                    <Form.Group controlId="formOccupation">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faDice} /></InputGroup.Text>
+                        <Form.Control type="text" placeholder="Enter occupation" value={occupation} onChange={(e) => setOccupation(e.target.value)}/>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+            </Row>
+            <Row className="mt-3">
+                <Col>
+                    <Form.Group controlId="formPatientGender">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
+                        <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
+                            <option value="">Select Gender</option>
+                            <option value="MALE">MALE</option>
+                            <option value="FEMALE">FEMALE</option>
+                            <option value="UNKNOWN">UNKNOWN</option>
+                        </Form.Select>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+                {/* emergencyContactName */}
+                <Col>
+                    <Form.Group controlId="formEmergencyContactName">
+                        <InputGroup>
+                            <InputGroup.Text><FontAwesomeIcon icon={faPeace} /></InputGroup.Text>
+                        <Form.Control type="text" placeholder="Enter emergency contact name" value={emergencyContactName} onChange={(e) => setEmergencyContactName(e.target.value)}/>
+                        </InputGroup>
+                    </Form.Group>
+                </Col>
+            </Row>
+
+        </Form>
+    </Modal.Body>
+
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleAddPatient}>
+            Confirm
+        </Button>
+        <Button variant="primary" onClick={handleClose}>
+            Close
+        </Button>
+    </Modal.Footer>
+</Modal>
+
+
                     {/* confirm delete modal */}
                     <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                         <Modal.Header closeButton>
