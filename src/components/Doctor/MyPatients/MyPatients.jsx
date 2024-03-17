@@ -7,10 +7,9 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace, faCamera, faAddressCard, faBacon, faBahai} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
-import {instance} from '../../../helpers/axios/axiosInstance';
-
+import { FaAddressBook, FaAddressCard, FaContao } from 'react-icons/fa';
 
 const MyPatients = () => {
     // Existing states and handlers...
@@ -29,6 +28,16 @@ const MyPatients = () => {
     const [pname, setPname] = useState("");
     const [occupation, setOccupation] = useState("");
     const [emergencyContactName, setEmergencyContactName] = useState("");
+    const [emergencyContactRelationship, setEmergencyContactRelationship] = useState("");
+    const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
+    const [address, setAddress] = useState("");
+    const [city, setCity] = useState("");
+    const [province, setProvince] = useState("");
+    const [postal, setPostal] = useState("");
+    const [country, setCountry] = useState("");
+    const [familyDoctorName, setFamilyDoctorName] = useState("");
+    const [familyDoctorPhone, setFamilyDoctorPhone] = useState("");
+
 
     // New states for patient detail modal and edit functionality
     const [selectedPatient, setSelectedPatient] = useState(null);
@@ -53,7 +62,10 @@ const MyPatients = () => {
 
     const handleAddPatient = async () => {
         try {
-            await createPatient({firstName, lastName, phone, email,gender,pname,occupation,emergencyContactName}).unwrap();
+            await createPatient({firstName, lastName, phone, email,gender,pname,occupation,
+                emergencyContactName,emergencyContactPhone, emergencyContactRelationship,
+                address,city,province,postal,country,familyDoctorName,familyDoctorPhone
+            }).unwrap();
             handleClose();
             toast.success('Add Patient Successful');
             refetch();
@@ -120,104 +132,187 @@ const MyPatients = () => {
                         </InputGroup>
                     </div>
                     <Modal show={showModal} onHide={handleClose} size="lg">
-    <Modal.Header closeButton>
-        <Modal.Title>Add New Patient</Modal.Title>
-    </Modal.Header>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add New Patient</Modal.Title>
+                        </Modal.Header>
 
-    <Modal.Body>
-        <Form>
-            <Row className="mt-3">
-                <Col>
-                    <Form.Group controlId="formPatientFirstName">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faUser} /></InputGroup.Text>
-                            <Form.Control type="text" placeholder="Enter first name" value={firstName} onChange={(e) => setFirstname(e.target.value)}/>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group controlId="formPatientLastName">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faUser} /></InputGroup.Text>
-                            <Form.Control type="text" placeholder="Enter last name" value={lastName} onChange={(e) => setLastname(e.target.value)}/>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-            </Row>
+                        <Modal.Body>
+                            <Form>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formPatientFirstName">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faUser} /></InputGroup.Text>
+                                                <Form.Control type="text" placeholder="Enter first name" value={firstName} onChange={(e) => setFirstname(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="formPatientLastName">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faUser} /></InputGroup.Text>
+                                                <Form.Control type="text" placeholder="Enter last name" value={lastName} onChange={(e) => setLastname(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
 
-            <Row className="mt-3">
-                <Col>
-                    <Form.Group controlId="formPatientPhone">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faPhone} /></InputGroup.Text>
-                            <Form.Control type="text" placeholder="Enter phone" value={phone} onChange={(e) => setPhone(e.target.value)}/>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group controlId="formPatientEmail">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faEnvelope} /></InputGroup.Text>
-                            <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)}/>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-            </Row>
-            <Row className="mt-3">
-                <Col>
-                    <Form.Group controlId="formPreferredName">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
-                        <Form.Control type="text" placeholder="Enter preferred name" value={pname} onChange={(e) => setPname(e.target.value)}/>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-                <Col>
-                    <Form.Group controlId="formOccupation">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faDice} /></InputGroup.Text>
-                        <Form.Control type="text" placeholder="Enter occupation" value={occupation} onChange={(e) => setOccupation(e.target.value)}/>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-            </Row>
-            <Row className="mt-3">
-                <Col>
-                    <Form.Group controlId="formPatientGender">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
-                        <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
-                            <option value="">Select Gender</option>
-                            <option value="MALE">MALE</option>
-                            <option value="FEMALE">FEMALE</option>
-                            <option value="UNKNOWN">UNKNOWN</option>
-                        </Form.Select>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-                {/* emergencyContactName */}
-                <Col>
-                    <Form.Group controlId="formEmergencyContactName">
-                        <InputGroup>
-                            <InputGroup.Text><FontAwesomeIcon icon={faPeace} /></InputGroup.Text>
-                        <Form.Control type="text" placeholder="Enter emergency contact name" value={emergencyContactName} onChange={(e) => setEmergencyContactName(e.target.value)}/>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-            </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formPatientPhone">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faPhone} /></InputGroup.Text>
+                                                <Form.Control type="text" placeholder="Enter phone" value={phone} onChange={(e) => setPhone(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="formPatientEmail">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faEnvelope} /></InputGroup.Text>
+                                                <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formPreferredName">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter preferred name" value={pname} onChange={(e) => setPname(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="formOccupation">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faDice} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter occupation" value={occupation} onChange={(e) => setOccupation(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formPatientGender">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
+                                            <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
+                                                <option value="">Select Gender</option>
+                                                <option value="MALE">MALE</option>
+                                                <option value="FEMALE">FEMALE</option>
+                                                <option value="UNKNOWN">UNKNOWN</option>
+                                            </Form.Select>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    {/* emergencyContactName */}
+                                    <Col>
+                                        <Form.Group controlId="formEmergencyContactName">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faPeace} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter emergency contact name" value={emergencyContactName} onChange={(e) => setEmergencyContactName(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formEmergencyContactRelationship">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faCamera} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter emergency contact relationship" value={emergencyContactRelationship} onChange={(e) => setEmergencyContactRelationship(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="formEmergencyContactPhone">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faPhone} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter emergency contact phone" value={emergencyContactPhone} onChange={(e) => setEmergencyContactPhone(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formPatientAddress">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faEnvelope} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter address" value={address} onChange={(e) => setAddress(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="formPatientCity">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faAddressCard} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter city" value={city} onChange={(e) => setCity(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formPatientProvince">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faAddressCard} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter province" value={province} onChange={(e) => setProvince(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="formPatientPostal">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faAddressCard} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter postal" value={postal} onChange={(e) => setPostal(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formPatientCountry">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faBahai} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter country" value={country} onChange={(e) => setCountry(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group controlId="formFamilyDoctorName">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faBacon} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter family doctor name" value={familyDoctorName} onChange={(e) => setFamilyDoctorName(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row className="mt-3">
+                                    <Col>
+                                        <Form.Group controlId="formFamilyDoctorPhone">
+                                            <InputGroup>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faPhone} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter family doctor phone" value={familyDoctorPhone} onChange={(e) => setFamilyDoctorPhone(e.target.value)}/>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Modal.Body>
 
-        </Form>
-    </Modal.Body>
-
-    <Modal.Footer>
-        <Button variant="secondary" onClick={handleAddPatient}>
-            Confirm
-        </Button>
-        <Button variant="primary" onClick={handleClose}>
-            Close
-        </Button>
-    </Modal.Footer>
-</Modal>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleAddPatient}>
+                                Confirm
+                            </Button>
+                            <Button variant="primary" onClick={handleClose}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
 
                     {/* confirm delete modal */}
@@ -263,6 +358,7 @@ const MyPatients = () => {
                             </tbody>
                         </Table>
                     )}
+
                     {/* Edit Modal */}
                     <Modal show={showDetailModal} onHide={handleCloseDetailModal} dialogClassName="modal-lg">
                         <Modal.Header closeButton>
@@ -277,8 +373,8 @@ const MyPatients = () => {
                                                             <Form.Label>First Name</Form.Label>
                                                             <Form.Control 
                                                                 type="text" 
-                                                                value={selectedPatient?.firstname} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, firstname: e.target.value })}
+                                                                value={selectedPatient?.firstName} 
+                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, firstName: e.target.value })}
                                                             />
                                                         </Form.Group>
                                                     </Col>
@@ -287,8 +383,8 @@ const MyPatients = () => {
                                                             <Form.Label>Last Name</Form.Label>
                                                             <Form.Control 
                                                                 type="text" 
-                                                                value={selectedPatient?.lastname} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, lastname: e.target.value })}
+                                                                value={selectedPatient?.lastName} 
+                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, lastName: e.target.value })}
                                                             />
                                                         </Form.Group>
                                                     </Col>
@@ -302,8 +398,9 @@ const MyPatients = () => {
                                                                 onChange={(e) => setSelectedPatient({ ...selectedPatient, gender: e.target.value })}
                                                             >
                                                                 <option value="">Select Gender</option>
-                                                                <option value="M">Male</option>
-                                                                <option value="F">Female</option>
+                                                                <option value="MALE">Male</option>
+                                                                <option value="FEMALE">Female</option>
+                                                                <option value="UNKNOWN">Unknown</option>
                                                             </Form.Select>
                                                         </Form.Group>
                                                     </Col>
@@ -423,17 +520,17 @@ const MyPatients = () => {
                                                             <Card.Header as="h5">Patient Details</Card.Header>
                                                             <Card.Body>
                                                                 <Card.Text>
-                                                                    <strong>Patient ID:</strong> {selectedPatient?._id}
+                                                                    <strong>Patient ID:</strong> {selectedPatient?.id}
                                                                 </Card.Text>
                                                                 <Row className="mb-3">
                                                                     <Col className="mb-3">
                                                                         <Card.Text>
-                                                                            <strong>First Name:</strong> {selectedPatient?.firstname}
+                                                                            <strong>First Name:</strong> {selectedPatient?.firstName}
                                                                         </Card.Text>
                                                                     </Col>
                                                                     <Col className="mb-3">
                                                                         <Card.Text>
-                                                                            <strong>Last Name:</strong> {selectedPatient?.lastname}
+                                                                            <strong>Last Name:</strong> {selectedPatient?.lastName}
                                                                         </Card.Text>
                                                                     </Col>
                                                                 </Row>
@@ -453,7 +550,7 @@ const MyPatients = () => {
                                                                     <strong>Email:</strong> {selectedPatient?.email}
                                                                 </Card.Text>
                                                                 <Card.Text>
-                                                                    <strong>Last Visit:</strong> {selectedPatient?.lastVisit}
+                                                                    <strong>VisitStatus:</strong> {selectedPatient?.visitStatus}
                                                                 </Card.Text>
                                                             </Card.Body>
                                                         </Card>
