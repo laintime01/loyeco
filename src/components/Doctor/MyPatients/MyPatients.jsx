@@ -523,50 +523,90 @@ const MyPatients = () => {
                                                                     <strong>Patient ID:</strong> {selectedPatient?.id}
                                                                 </Card.Text>
                                                                 <Row className="mb-3">
-                                                                    <Col className="mb-3">
+                                                                    <Col>
                                                                         <Card.Text>
                                                                             <strong>First Name:</strong> {selectedPatient?.firstName}
                                                                         </Card.Text>
                                                                     </Col>
-                                                                    <Col className="mb-3">
+                                                                    <Col>
                                                                         <Card.Text>
                                                                             <strong>Last Name:</strong> {selectedPatient?.lastName}
                                                                         </Card.Text>
                                                                     </Col>
                                                                 </Row>
                                                                 <Row className="mb-3">
-                                                                    <Col className="mb-3">
+                                                                    <Col>
                                                                         <Card.Text>
                                                                             <strong>Phone:</strong> {selectedPatient?.phone}
                                                                         </Card.Text>
                                                                     </Col>
-                                                                    <Col className="mb-3">
+                                                                    <Col>
                                                                         <Card.Text>
                                                                             <strong>Gender:</strong> {selectedPatient?.gender}
                                                                         </Card.Text>
                                                                     </Col>
                                                                 </Row>
-                                                                <Card.Text>
-                                                                    <strong>Email:</strong> {selectedPatient?.email}
-                                                                </Card.Text>
-                                                                <Card.Text>
-                                                                    <strong>VisitStatus:</strong> {selectedPatient?.visitStatus}
-                                                                </Card.Text>
+                                                                <Row className='mb-3'>
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Email:</strong> {selectedPatient?.email}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>VisitStatus:</strong> {selectedPatient?.visitStatus}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                </Row>
                                                             </Card.Body>
                                                         </Card>
+                                                        {/* patient address and emergency infos*/}
                                                         <Card bg="light" className="mb-3">
-                                                            <Card.Header as="h5">Billing & Appointment Details</Card.Header>
+                                                            <Card.Header as="h5">Patient Address and Emergency Infos</Card.Header>
                                                             <Card.Body>
+                                                                <Row className="mb-3">
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Address:</strong> {selectedPatient?.address}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>City:</strong> {selectedPatient?.city}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                </Row>
+                                                                <Row className="mb-3">
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Province/State:</strong> {selectedPatient?.province}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Postal Code:</strong> {selectedPatient?.postal}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                </Row>
+                                                            
+                                                                <Row className="mb-3">
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Emergency Contact Name:</strong> {selectedPatient?.emergencyContactName}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Emergency Contact Phone:</strong> {selectedPatient?.emergencyContactPhone}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                </Row>
                                                                 <Card.Text>
-                                                                    <strong>Billing:</strong> {selectedPatient?.billing}
+                                                                            <strong>Emergency Contact Relationship:</strong> {selectedPatient?.emergencyContactRelationship}
                                                                 </Card.Text>
-                                                                <Card.Text>
-                                                                    <strong>Appointment Calendar:</strong> {selectedPatient?.appointmentCalendar}
-                                                                </Card.Text>
-                                                                <Card.Text>
-                                                                    <strong>Appointment Time:</strong> {selectedPatient?.appointmentTime}
-                                                                </Card.Text>
+
                                                             </Card.Body>
+
                                                         </Card>
 
                                                         {/* current treatment info card */}
