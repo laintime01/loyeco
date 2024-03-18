@@ -47,11 +47,15 @@ export const patientApi = baseApi.injectEndpoints({
         }),
         deletePatient: build.mutation({
             query: (id) => ({
-                url: `${PAT_URL}/${id}`,
+                url: `${PAT_URL}?id=${id}`,
                 method: 'DELETE',
+                headers: {
+                    Authorization: 'Bearer admin@123.com'
+                },
             }),
             invalidatesTags: [tagTypes.patient]
         }),
+
         
     })
 })

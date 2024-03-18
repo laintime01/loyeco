@@ -47,6 +47,7 @@ const MyPatients = () => {
     // handle delete patient
     const handleDelete = async () => {
         try {
+            console.log('patientToDelete: ', patientToDelete);
             await deletePatient(patientToDelete).unwrap();
             toast.success('Delete Patient Successful');
             setShowDetailModal(false);
@@ -726,7 +727,7 @@ const MyPatients = () => {
                                                     <>
                                                     <Button variant="primary" onClick={handleEditClick}>Edit</Button></>
                                                 )}
-                                                <Button variant="danger" onClick={() => handleShowDeleteModal(selectedPatient?._id)}>Delete</Button>
+                                                <Button variant="danger" onClick={() => handleShowDeleteModal(selectedPatient?.id)}>Delete</Button>
                                                 </div>
                                             </Modal.Footer>
                                         </Modal>
