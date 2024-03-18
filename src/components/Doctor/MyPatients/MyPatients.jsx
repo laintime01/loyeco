@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace, faCamera, faAddressCard, faBacon, faBahai} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
-import { FaAddressBook, FaAddressCard, FaContao } from 'react-icons/fa';
+import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon} from 'react-icons/fa';
 
 const MyPatients = () => {
     // Existing states and handlers...
@@ -25,7 +25,7 @@ const MyPatients = () => {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [gender, setGender] = useState("");
-    const [pname, setPname] = useState("");
+    const [preferredName, setPreferredName] = useState("");
     const [occupation, setOccupation] = useState("");
     const [emergencyContactName, setEmergencyContactName] = useState("");
     const [emergencyContactRelationship, setEmergencyContactRelationship] = useState("");
@@ -62,7 +62,7 @@ const MyPatients = () => {
 
     const handleAddPatient = async () => {
         try {
-            await createPatient({firstName, lastName, phone, email,gender,pname,occupation,
+            await createPatient({firstName, lastName, phone, email,gender,preferredName,occupation,
                 emergencyContactName,emergencyContactPhone, emergencyContactRelationship,
                 address,city,province,postal,country,familyDoctorName,familyDoctorPhone
             }).unwrap();
@@ -86,7 +86,7 @@ const MyPatients = () => {
 
     const handleSaveClick = async () => {
         try {
-            await updatePatient({id: selectedPatient._id, data: selectedPatient}).unwrap();
+            await updatePatient(selectedPatient).unwrap();
             toast.success('Update Patient Successful');
             refetch();
         } catch(err) {
@@ -180,7 +180,7 @@ const MyPatients = () => {
                                         <Form.Group controlId="formPreferredName">
                                             <InputGroup>
                                                 <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
-                                            <Form.Control type="text" placeholder="Enter preferred name" value={pname} onChange={(e) => setPname(e.target.value)}/>
+                                            <Form.Control type="text" placeholder="Enter preferred name" value={preferredName} onChange={(e) => setPreferredName(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
                                     </Col>
@@ -371,146 +371,227 @@ const MyPatients = () => {
                                                     <Col>
                                                         <Form.Group>
                                                             <Form.Label>First Name</Form.Label>
-                                                            <Form.Control 
-                                                                type="text" 
-                                                                value={selectedPatient?.firstName} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, firstName: e.target.value })}
-                                                            />
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaUser /></InputGroup.Text>
+                                                                <Form.Control 
+                                                                    type="text" 
+                                                                    value={selectedPatient?.firstName} 
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, firstName: e.target.value })}
+                                                                />
+                                                            </InputGroup>
                                                         </Form.Group>
                                                     </Col>
                                                     <Col>
                                                         <Form.Group>
                                                             <Form.Label>Last Name</Form.Label>
-                                                            <Form.Control 
-                                                                type="text" 
-                                                                value={selectedPatient?.lastName} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, lastName: e.target.value })}
-                                                            />
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaUser /></InputGroup.Text>
+                                                                <Form.Control 
+                                                                    type="text" 
+                                                                    value={selectedPatient?.lastName} 
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, lastName: e.target.value })}
+                                                                />
+                                                            </InputGroup>
                                                         </Form.Group>
                                                     </Col>
                                                 </Row>
                                                 <Row className="mb-3">
                                                     <Col>
                                                         <Form.Group>
-                                                            <Form.Label>Gender</Form.Label>
-                                                            <Form.Select 
-                                                                value={selectedPatient?.gender} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, gender: e.target.value })}
-                                                            >
-                                                                <option value="">Select Gender</option>
-                                                                <option value="MALE">Male</option>
-                                                                <option value="FEMALE">Female</option>
-                                                                <option value="UNKNOWN">Unknown</option>
-                                                            </Form.Select>
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Col>
-                                                        <Form.Group>
                                                             <Form.Label>Phone</Form.Label>
-                                                            <Form.Control 
-                                                                type="text" 
-                                                                value={selectedPatient?.phone} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, phone: e.target.value })}
-                                                            />
-                                                        </Form.Group>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col>
-                                                    <Form.Group className="mb-3">
-                                                    <Form.Label>Email</Form.Label>
-                                                    <Form.Control 
-                                                        type="email" 
-                                                        value={selectedPatient?.email} 
-                                                        onChange={(e) => setSelectedPatient({ ...selectedPatient, email: e.target.value })}
-                                                    />
-                                                </Form.Group>
-                                                    </Col> 
-                                                    <Col>
-                                                    </Col>
-                                                </Row>
-                                
-
-                                                <Form.Group className="border-top pb-3 mt-5">
-                                                    <Form.Label>Address</Form.Label>
-                                                    <Form.Control 
-                                                        type="text" 
-                                                        value={selectedPatient?.address} 
-                                                        onChange={(e) => setSelectedPatient({ ...selectedPatient, address: e.target.value })}
-                                                    />
-                                                </Form.Group>
-                                                <Row>
-                                                    <Col>
-                                                        <Form.Group>
-                                                        <Form.Label>City</Form.Label>
-                                                        <Form.Control 
-                                                            type="text" 
-                                                            value={selectedPatient?.city} 
-                                                            onChange={(e) => setSelectedPatient({ ...selectedPatient, city: e.target.value })}
-                                                        />
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaPhone /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.phone}  
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, phone: e.target.value })}
+                                                                />
+                                                            </InputGroup>
                                                         </Form.Group>
                                                     </Col>
                                                     <Col>
                                                         <Form.Group>
-                                                        <Form.Label>Province/State</Form.Label>
-                                                        <Form.Control 
-                                                            type="text" 
-                                                            value={selectedPatient?.province} 
-                                                            onChange={(e) => setSelectedPatient({ ...selectedPatient, province: e.target.value })}
-                                                        />
+                                                            <Form.Label>Email</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="email"
+                                                                    value={selectedPatient?.email}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, email: e.target.value })}
+                                                                />
+                                                            </InputGroup>
                                                         </Form.Group>
                                                     </Col>
                                                 </Row>
-
-                                                <Row>
+                                                {/* preferred name and gender */}
+                                                <Row className="mb-3">
                                                     <Col>
-                                                        <Form.Group className="mb-3">
+                                                        <Form.Group>
+                                                            <Form.Label>Preferred Name</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaDice /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.preferredName}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, preferredName: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Gender</Form.Label>
+                                                                <Form.Select
+                                                                    value={selectedPatient?.gender}
+                                                                    onChange={(e)=> setSelectedPatient({...selectedPatient, gender:e.target.value})}
+                                                                    >
+                                                                    <option value="">Select Gender</option>
+                                                                    <option value="MALE">MALE</option>
+                                                                    <option value="FEMALE">FEMALE</option>
+                                                                    <option value="UNKNOWN">UNKNOWN</option>                       
+                                                                    </Form.Select>
+                                                        </Form.Group>
+                                                    </Col>
+                                                </Row>
+                                                {/* address and city */}
+                                                <Row className="mb-3">
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Address</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaAddressCard /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.address}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, address: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>City</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaAddressCard /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.city}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, city: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                </Row>
+                                                {/* province and postal */}
+                                                <Row className="mb-3">
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Province/State</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaAddressCard /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.province}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, province: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Group>
                                                             <Form.Label>Postal Code</Form.Label>
-                                                            <Form.Control 
-                                                                type="text" 
-                                                                value={selectedPatient?.postal} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, postal: e.target.value })}
-                                                            />
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Col>
-                                                        <Form.Group className="mb-3">
-                                                            <Form.Label>Country</Form.Label>
-                                                            <Form.Control 
-                                                                type="text" 
-                                                                value={selectedPatient?.country} 
-                                                                onChange={(e) => setSelectedPatient({ ...selectedPatient, country: e.target.value })}
-                                                            />
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaAddressCard /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.postal}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, postal: e.target.value })}
+                                                                />
+                                                            </InputGroup>
                                                         </Form.Group>
                                                     </Col>
                                                 </Row>
+                                                {/* country and family doctor name */}
+                                                <Row className="mb-3">
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Country</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaBahai /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.country}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, country: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Family Doctor Name</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaBacon /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.familyDoctorName}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, familyDoctorName: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                </Row>
+                                                        
+                                                {/* emergency contact name and phone */}
+                                                <Row className="mb-3">
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Emergency Contact Name</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaPeace /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.emergencyContactName}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, emergencyContactName: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Emergency Contact Phone</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaPhone /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.emergencyContactPhone}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, emergencyContactPhone: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                </Row>
+                                                {/* emergency contact relationship */}
+                                                <Row className="mb-3">
+                                                    <Col>
+                                                        <Form.Group>
+                                                            <Form.Label>Emergency Contact Relationship</Form.Label>
+                                                            <InputGroup>
+                                                                <InputGroup.Text><FaCamera /></InputGroup.Text>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={selectedPatient?.emergencyContactRelationship}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, emergencyContactRelationship: e.target.value })}
+                                                                />
+                                                            </InputGroup>
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col>
+                                                    </Col>
+                                                </Row>
 
-                                                <Form.Group className="pb-3 border-top mt-5">
-                                                    <Form.Label>Current Treatment</Form.Label>
-                                                    <Form.Control 
-                                                        type="text" 
-                                                        value={selectedPatient?.currentTreatment} 
-                                                        onChange={(e) => setSelectedPatient({ ...selectedPatient, currentTreatment: e.target.value })}
-                                                    />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label>Treatment History</Form.Label>
-                                                    <Form.Control 
-                                                        type="text" 
-                                                        value={selectedPatient?.treatmentHistory} 
-                                                        onChange={(e) => setSelectedPatient({ ...selectedPatient, treatmentHistory: e.target.value })}
-                                                    />
-                                                </Form.Group>
-                                                {/* Note text-area */}
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label>Notes</Form.Label>
-                                                    <Form.Control 
-                                                        as="textarea" 
-                                                        rows={3} 
-                                                        value={selectedPatient?.notes} 
-                                                        onChange={(e) => setSelectedPatient({ ...selectedPatient, notes: e.target.value })}
-                                                    />
-                                                </Form.Group>
+
+
+                                                
                                             </Form>
                                                 
                                                 ) : (
@@ -609,23 +690,28 @@ const MyPatients = () => {
 
                                                         </Card>
 
-                                                        {/* current treatment info card */}
+                                                        {/* family doctor and visit status */}
                                                         <Card bg="light" className="mb-4">
-                                                            <Card.Header as="h5" className='mt-3'>Treatment</Card.Header>
+                                                            <Card.Header as="h5" className='mt-3'>Family Doctor and Visit Infos</Card.Header>
                                                             <Card.Body>
+                                                                <Row className="mb-3">
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Family Doctor Name:</strong> {selectedPatient?.familyDoctorName}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <Card.Text>
+                                                                            <strong>Family Doctor Phone:</strong> {selectedPatient?.familyDoctorPhone}
+                                                                        </Card.Text>
+                                                                    </Col>
+                                                                </Row>
                                                                 <Card.Text>
-                                                                    <strong>Current Treatment:</strong> {selectedPatient?.currentTreatment}
+                                                                    <strong>VisitStatus:</strong> {selectedPatient?.visitStatus}
                                                                 </Card.Text>
-                                                                <Card.Text>
-                                                                    <strong>Treatment History:</strong> {selectedPatient?.currentTreatment}
-                                                                </Card.Text>
-                                                                <Card.Text>
-                                                                    <strong>Primary Complaint:</strong> {selectedPatient?.primaryComplaint}
-                                                                </Card.Text>
-                                                                {/* note text-area */}
-                                                                <Card.Text>
-                                                                    <strong>Notes:</strong> {selectedPatient?.notes}
-                                                                </Card.Text>
+
+
+                                                               
                                                             </Card.Body>
                                                         </Card>
                                                     </div>

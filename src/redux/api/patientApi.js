@@ -12,10 +12,13 @@ export const patientApi = baseApi.injectEndpoints({
             providesTags: [tagTypes.patient]
         }),
         updatePatient: build.mutation({
-            query: ({ data, id }) => ({
-                url: `${PAT_URL}/${id}`,
-                method: 'PATCH',
-                data: data
+            query: (data) => ({
+                url: PAT_URL,
+                method: 'PUT',
+                data: data,
+                headers: {
+                    Authorization: 'Bearer admin@123.com'
+                },
             }),
             invalidatesTags: [tagTypes.patient]
         }),
