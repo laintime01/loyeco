@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { useGetAllPatientsQuery, useDeletePatientMutation, useCreatePatientMutation, useUpdatePatientMutation } from '../../../redux/api/patientApi';
+import { useGetAllPatientsQuery, useDeletePatientMutation, useCreatePatientMutation, useUpdatePatientMutation, useSearchPatientQuery } from '../../../redux/api/patientApi';
 import { Button, Table, InputGroup, Form, Modal } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import Card from 'react-bootstrap/Card';
@@ -12,11 +12,16 @@ import './style.css';
 import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon} from 'react-icons/fa';
 
 const MyPatients = () => {
+    // search related
+    const [search, setSearch] = useState('');
+    const [searchData, setSearchData] = useState(null);
     // Existing states and handlers...
     const { data, isLoading, isError, refetch } = useGetAllPatientsQuery();
     const [deletePatient] = useDeletePatientMutation();
     const [createPatient] = useCreatePatientMutation();
     const [updatePatient] = useUpdatePatientMutation();
+    const searchPatient = useSearchPatientQuery(search);
+    
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [patientToDelete, setPatientToDelete] = useState(null);
@@ -114,6 +119,26 @@ const MyPatients = () => {
         setShowDeleteModal(true);
     }
 
+    // on successful search, rerender the patient list to the search result
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        try {
+            // Set the search result to the patient list
+            const result = await searchPatient.data;
+            console.log('search result: ', result);
+            if (result && result.length > 0) {
+                setSearchData(result);
+            }else{
+                toast.error('No patient found');
+            }
+        }
+        catch(err) {
+            console.error('Failed to search the patient: ', err);
+        }
+    };
+
+    const dataList = searchData !== null? searchData : data;
+
     return (
         <DashboardLayout>
             <div className="row">
@@ -125,8 +150,14 @@ const MyPatients = () => {
                             placeholder="Please enter patient name or email to search"
                             aria-label="Please enter patient name or email to search"
                             aria-describedby="basic-addon2"
+                            value={search}
+                            onChange={(e)=>setSearch(e.target.value)}
                             />
-                            <Button variant="outline-secondary" id="button-addon2">
+                            <Button 
+                            variant="outline-secondary" 
+                            id="button-addon2"
+                            onClick={handleSearch}
+                            >
                             Search
                             </Button>
                         </InputGroup>
@@ -332,9 +363,11 @@ const MyPatients = () => {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-                    {!isLoading && isError && <div>Something Went Wrong !</div>}
-                    {!isLoading && !isError && data?.length === 0 && <div>Empty</div>}
-                    {!isLoading && !isError && data?.length > 0 && (
+
+                    {/* use searchDate if its not null otherwise use data */}
+                    {!isLoading && isError && <div>Loading...</div>}
+                    {!isLoading && !isError && dataList?.length === 0 && <div>Empty</div>}
+                    {!isLoading && !isError && dataList?.length > 0 && (
                         <Table striped bordered hover>
                             <thead>
                                 <tr>
@@ -346,7 +379,7 @@ const MyPatients = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map((item) => (
+                                {dataList.map((item) => (
                                     <tr key={item.id} onClick={() => handlePatientClick(item)}>
                                         <td>{item.lastName}</td>
                                         <td>{item.firstName}</td>
@@ -726,7 +759,7 @@ const MyPatients = () => {
                                                     <>
                                                     <Button variant="primary" onClick={handleEditClick}>Edit</Button></>
                                                 )}
-                                                <Button variant="danger" onClick={() => handleShowDeleteModal(selectedPatient?._id)}>Delete</Button>
+                                                <Button variant="danger" onClick={() => handleShowDeleteModal(selectedPatient?.id)}>Delete</Button>
                                                 </div>
                                             </Modal.Footer>
                                         </Modal>
