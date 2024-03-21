@@ -27,6 +27,9 @@ import Contact from './components/Contact/Contact';
 import About from './components/About/About';
 import Service from './components/Service/Service';
 import Dashboard from './components/Doctor/Dashboard/Dashboard';
+import ChartSetting from './components/Doctor/ChartSetting/ChartSetting';
+import ServiceSetting from './components/Doctor/ServiceSetting/ServiceSetting';
+import LocationSetting from './components/Doctor/LocationSetting/LocationSetting';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -46,6 +49,10 @@ const router = createBrowserRouter([
   { path: '/dashboard/clinic-setting', element: <ClinicSetting /> },
   { path: '/dashboard/invoices', element: <DoctorInvoice /> },
   { path: '/dashboard/cases', element: <Report /> },
+  { path: '/dashboard/service-setting', element: <ServiceSetting /> },
+  { path: '/dashboard/location-setting', element: <LocationSetting /> },
+  { path: '/dashboard/chart-setting', element: <ChartSetting /> },
+
 
   { path: '/booking/:doctorId', element: <DoctorBooking /> },
   { path: '/booking/success/', element: <BookingSuccess /> },

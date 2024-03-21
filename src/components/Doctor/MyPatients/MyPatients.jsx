@@ -125,7 +125,6 @@ const MyPatients = () => {
         try {
             // Set the search result to the patient list
             const result = await searchPatient.data;
-            console.log('search result: ', result);
             if (result && result.length > 0) {
                 setSearchData(result);
             }else{

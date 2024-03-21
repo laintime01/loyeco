@@ -11,7 +11,10 @@ import {
     FaHouseUser,
     FaTools,
     FaSlidersH,
-    FaCog
+    FaCog,
+    FaServer,
+    FaLocationArrow,
+    FaChartBar
 } from "react-icons/fa";
 
 const MyNavLink = ({ to, children, icon, onClick, active }) => {
@@ -44,7 +47,8 @@ const DashboardSidebar = () => {
     const location = useLocation();
 
     useEffect(() => {
-        const settingsSubMenuPaths = ['/dashboard/profile-setting', '/dashboard/clinic-setting', '/dashboard/change-password'];
+        // add service,location and chart setting
+        const settingsSubMenuPaths = ['/dashboard/profile-setting', '/dashboard/clinic-setting', '/dashboard/change-password', '/dashboard/service-setting', '/dashboard/location-setting', '/dashboard/chart-setting'];
         if (settingsSubMenuPaths.includes(location.pathname)) {
             setSelectedMenu('settings');
         }
@@ -99,19 +103,36 @@ const DashboardSidebar = () => {
                             <ul>
                                 <li>
                                     <SubNavLink to={'/dashboard/profile-setting'} icon={<FaTools className="icon" />}>
-                                        Profile Settings
+                                        Profile
                                     </SubNavLink>
                                 </li>
                                 <li>
                                     <SubNavLink to={'/dashboard/clinic-setting'} icon={<FaSlidersH className="icon" />}>
-                                        Clinic Settings
+                                        Clinic
                                     </SubNavLink>
                                 </li>
                                 <li>
                                     <SubNavLink to={'/dashboard/change-password'} icon={<FaCog className="icon" />}>
-                                        Password Change
+                                        Password
                                     </SubNavLink>
                                 </li>
+                                <li>
+                                    <SubNavLink to={'/dashboard/service-setting'} icon={<FaServer className="icon" />}>
+                                        Service
+                                    </SubNavLink>
+                                </li>
+                                {/* add chart and location settings */}
+                                <li>
+                                    <SubNavLink to={'/dashboard/location-setting'} icon={<FaLocationArrow className="icon" />}>
+                                        Location
+                                    </SubNavLink>
+                                </li>
+                                <li>
+                                    <SubNavLink to={'/dashboard/chart-setting'} icon={<FaChartBar className="icon" />}>
+                                        Chart
+                                    </SubNavLink>
+                                </li>
+
                             </ul>
                         )}
                     </li>
