@@ -14,7 +14,8 @@ import {
     FaCog,
     FaServer,
     FaLocationArrow,
-    FaChartBar
+    FaChartBar,
+    FaAd
 } from "react-icons/fa";
 
 const MyNavLink = ({ to, children, icon, onClick, active }) => {
@@ -47,8 +48,8 @@ const DashboardSidebar = () => {
     const location = useLocation();
 
     useEffect(() => {
-        // add service,location and chart setting
-        const settingsSubMenuPaths = ['/dashboard/profile-setting', '/dashboard/clinic-setting', '/dashboard/change-password', '/dashboard/service-setting', '/dashboard/location-setting', '/dashboard/chart-setting'];
+        // add service,location,license and chart setting
+        const settingsSubMenuPaths = ['/dashboard/profile-setting', '/dashboard/clinic-setting', '/dashboard/change-password', '/dashboard/service-setting', '/dashboard/location-setting', '/dashboard/chart-setting', '/dashboard/license-setting'];
         if (settingsSubMenuPaths.includes(location.pathname)) {
             setSelectedMenu('settings');
         }
@@ -130,6 +131,11 @@ const DashboardSidebar = () => {
                                 <li>
                                     <SubNavLink to={'/dashboard/chart-setting'} icon={<FaChartBar className="icon" />}>
                                         Chart
+                                    </SubNavLink>
+                                </li>
+                                <li>
+                                    <SubNavLink to={'/dashboard/license-setting'} icon={<FaAd className="icon" />}>
+                                        License
                                     </SubNavLink>
                                 </li>
 

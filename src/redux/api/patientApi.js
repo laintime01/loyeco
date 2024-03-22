@@ -41,10 +41,8 @@ export const patientApi = baseApi.injectEndpoints({
                 url: PAT_URL,
                 method: 'GET',
                 // add header Authorization Bearer admin@123.com
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
-               
+             
+
             }),
             providesTags: [tagTypes.patient]
         }),
