@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from "../DashboardLayout/DashboardLayout";
 import { Form, Button, Modal, Table, Row, Col } from 'react-bootstrap';
+import { instance } from '../../../helpers/axios/axiosInstance';
 
 const LocationSetting = () => {
     const [locations, setLocations] = useState([]);
@@ -14,25 +15,13 @@ const LocationSetting = () => {
         phone: '',
         email: '',
         status: 'Active',
-        id: 0,
         province: ''
     });
 
-    // Fetch locations from backend
-    useEffect(() => {
-        // Replace this with your actual fetch call
-        const fetchLocations = async () => {
-            const response = await fetch('http:/loyeco.com:12121/api/location');
-            const data = await response.json();
-            setLocations(data);
-        };
-        fetchLocations();
-    }, []);
 
     const handleAddLocation = () => {
         // Logic to add new location
         // You may need to send a POST request to your backend
-        console.log(newLocation);
         setShowModal(false);
     };
 

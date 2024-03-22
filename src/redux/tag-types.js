@@ -7,6 +7,10 @@ export const tagTypes = {
     reviews: 'reviews',
     timeSlot: 'timeSlot',
     blogs: 'blogs',
+    service: 'service',
+    chart: 'chart',
+    location: 'location',
+    license: 'license',
 }
 
 export const tagTypeList = [
@@ -17,5 +21,9 @@ export const tagTypeList = [
     tagTypes.doctor,
     tagTypes.reviews,
     tagTypes.timeSlot,
-    tagTypes.blogs
+    tagTypes.blogs,
+    tagTypes.service,
+    tagTypes.chart,
+    tagTypes.location,
+    tagTypes.license,
 ]

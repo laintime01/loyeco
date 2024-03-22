@@ -30,6 +30,7 @@ import Dashboard from './components/Doctor/Dashboard/Dashboard';
 import ChartSetting from './components/Doctor/ChartSetting/ChartSetting';
 import ServiceSetting from './components/Doctor/ServiceSetting/ServiceSetting';
 import LocationSetting from './components/Doctor/LocationSetting/LocationSetting';
+import LicenseSetting from './components/Doctor/LicenseSetting/LicenseSetting';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
   { path: '/dashboard/service-setting', element: <ServiceSetting /> },
   { path: '/dashboard/location-setting', element: <LocationSetting /> },
   { path: '/dashboard/chart-setting', element: <ChartSetting /> },
+  { path: '/dashboard/license-setting', element: <LicenseSetting />},
 
 
   { path: '/booking/:doctorId', element: <DoctorBooking /> },
