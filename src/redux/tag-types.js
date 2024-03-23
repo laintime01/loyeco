@@ -13,6 +13,7 @@ export const tagTypes = {
     license: 'license',
     profile: 'profile',
     password: 'password',
+    avarar: 'avatar',
 }
 
 export const tagTypeList = [
@@ -30,4 +31,5 @@ export const tagTypeList = [
     tagTypes.license,
     tagTypes.profile,
     tagTypes.password,
+    tagTypes.avatar,
 ]
