@@ -1,85 +1,68 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import img from '../../../images/John.jpg';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import moment from 'moment';
-import { useForm } from 'react-hook-form';
-import { Button, Select, message } from 'antd';
+import { Button, message } from 'antd';
 import { Link } from 'react-router-dom';
-import { useUpdateDoctorMutation } from '../../../redux/api/doctorApi';
-import useAuthCheck from '../../../redux/hooks/useAuthCheck';
-import { doctorSpecialistOptions } from '../../../constant/global';
+import { useGetProfileQuery, useUpdateProfileMutation } from '../../../redux/api/profileApi';
 import './style.css';
 
-
 const DoctorProfileSetting = () => {
-    const [selectedItems, setSelectedItems] = useState([]);
-    const [updateDoctor, { isLoading, isSuccess, isError, error }] = useUpdateDoctorMutation()
-    const { data } = useAuthCheck();
-    const { register, handleSubmit } = useForm({});
-    const [userId, setUserId] = useState('');
-    const [selectValue, setSelectValue] = useState({});
-    const [value, setValue] = useState(undefined);
-    const [showCalender, setShowCalender] = useState(false);
-    const buttonRef = useRef(null);
-
-    const handleDateChange = (date) => { setValue(date) }
-
-    const handleButtonClick = () => { setShowCalender(!showCalender) }
-
-    const handleClickOutSide = (event) => {
-        if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-            setShowCalender(false);
-        }
-    }
+    const { data, isLoading, isError, refetch } = useGetProfileQuery();
+    const [updateProfile] = useUpdateProfileMutation();
+    const [profileData, setProfileData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        preferredName: '',
+        clinicName: '',
+        clinicLocationName: '',
+        clinicAddress: '',
+        clinicCity: '',
+        clinicProvince: '',
+        clinicCountry: '',
+        clinicPostalCode: '',
+        clinicPhone: '',
+        clinicEmail: '',
+        licenses: []
+    });
 
     useEffect(() => {
         if (data) {
-            const { id, services } = data;
-            setUserId(id);
-            setSelectedItems(services?.split(','))
-        };
-        document.addEventListener('click', handleClickOutSide);
-        return () => {
-            document.removeEventListener('click', handleClickOutSide);
+            setProfileData(data);
         }
     }, [data]);
 
     const handleChange = (e) => {
-        setSelectValue({ ...selectValue, [e.target.name]: e.target.value })
-    }
-
-    const onSubmit = (data) => {
-        const obj = data
-        const newObj = { ...obj, ...selectValue };
-        if (value) {
-            const newDate = moment(value).format()
-            newObj['dateOfBirth'] = newDate;
-        }
-        newObj["services"] = selectedItems.join(',');
-        const changedValue = Object.fromEntries(Object.entries(newObj).filter(([key, value]) => value !== ''));
-        updateDoctor({ data: changedValue, id: userId })
+        const { name, value } = e.target;
+        setProfileData({ ...profileData, [name]: value });
     };
 
-    useEffect(() => {
-        if (!isLoading && isError) {
-            message.error(error?.data?.message);
+    const handleLicenseChange = (index, e) => {
+        const updatedLicenses = [...profileData.licenses];
+        updatedLicenses[index] = { ...updatedLicenses[index], [e.target.name]: e.target.value };
+        setProfileData({ ...profileData, licenses: updatedLicenses });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await updateProfile(profileData).unwrap();
+            message.success('Profile Updated Successfully');
+            refetch();
+        } catch (error) {
+            console.log(error);
         }
-        if (isSuccess) {
-            message.success('Successfully Changed Saved !')
-        }
-    }, [isLoading, isError, error, isSuccess])
+    };
 
     return (
         <div style={{ marginBottom: '10rem' }}>
             <div className="w-100 mb-3 rounded mb-5 p-2" style={{ background: '#f8f9fa' }}>
                 <h5 className="text-title mb-2 mt-3">Update Your Information</h5>
-                <form className="row form-row" onSubmit={handleSubmit(onSubmit)}>
+                <form className="row form-row" onSubmit={handleSubmit}>
                     <div className="col-md-12 mb-5">
                         <div className="form-group">
                             <div className="change-avatar d-flex gap-2 align-items-center">
                                 <Link to={'/dashboard/profile-setting'} className="my-3">
-                                    <img src={img} alt="" style={{width: "100px", height: 'auto'}} />
+                                    <img src={img} alt="" style={{ width: "100px", height: 'auto' }} />
                                 </Link>
                                 <div className='mt-3'>
                                     <div>
@@ -95,93 +78,119 @@ const DoctorProfileSetting = () => {
                     <div className="col-md-6">
                         <div className="form-group mb-2 card-label">
                             <label>First Name <span className="text-danger">*</span></label>
-                            <input defaultValue={data?.firstName} {...register("firstName")} className="form-control" />
+                            <input name="firstName" value={profileData.firstName} onChange={handleChange} className="form-control" />
                         </div>
                     </div>
 
                     <div className="col-md-6">
                         <div className="form-group mb-2 card-label">
                             <label>Last Name <span className="text-danger">*</span></label>
-                            <input defaultValue={data?.lastName} {...register("lastName")} className="form-control" />
+                            <input name="lastName" value={profileData.lastName} onChange={handleChange} className="form-control" />
                         </div>
                     </div>
 
                     <div className="col-md-6">
                         <div className="form-group mb-2 card-label">
                             <label>Email</label>
-                            <input defaultValue={data?.email} {...register("email")} className="form-control" />
-
+                            <input name="email" value={profileData.email} onChange={handleChange} className="form-control" />
                         </div>
                     </div>
 
                     <div className="col-md-6">
                         <div className="form-group mb-2 card-label">
-                            <label>Phone Number</label>
-                            <input defaultValue={data?.phone} {...register("phone")} className="form-control" />
+                            <label>Preferred Name</label>
+                            
+                            <input name="preferredName" value={profileData.preferredName} onChange={handleChange} className="form-control" />
+                        </div>
+                    </div>
+
+                    {/* Clinic Information */}
+                    <div className="col-md-6">
+                        <div className="form-group mb-2 card-label">
+                            <label>Clinic Name</label>
+                            <input name="clinicName" value={profileData.clinicName} onChange={handleChange} className="form-control" />
                         </div>
                     </div>
 
                     <div className="col-md-6">
                         <div className="form-group mb-2 card-label">
-                            <label>Gender</label>
-                            <select className="form-control select" onChange={handleChange} name='gender'>
-                                <option value={''}>Select</option>
-                                <option className='text-capitalize'>male</option>
-                                <option className='text-capitalize'>female</option>
-                                <option className='text-capitalize'>shemale</option>
-                            </select>
+                            <label>Clinic Location Name</label>
+                            <input name="clinicLocationName" value={profileData.clinicLocationName} onChange={handleChange} className="form-control" />
                         </div>
                     </div>
 
                     <div className="col-md-6">
                         <div className="form-group mb-2 card-label">
-                            <label>Date of Birth {moment(data?.dateOfBirth).format("MMM Do YY")}</label>
-                            <input value={value && moment(value).format("MMM Do YY")} type="text" className="form-control" name='dateOfBirth' onClick={handleButtonClick} ref={buttonRef} />
-                            {showCalender && (<Calendar className="rounded shadow border-0" onChange={handleDateChange} value={value} />)}
+                            <label>Clinic Address</label>
+                            <input name="clinicAddress" value={profileData.clinicAddress} onChange={handleChange} className="form-control" />
                         </div>
                     </div>
 
-                    <div className="col-md-12">
-                        <div className="card mb-2 mt-2">
-                            <div className="card-body">
-                                <h6 className="card-title text-secondary">About Me</h6>
-                                <div className="form-group mb-2 card-label">
-                                    <label>Biography</label>
-                                    <textarea defaultValue={data?.biography} {...register("biography")} className="form-control" rows={5} />
-                                </div>
+                    <div className="col-md-6">
+                        <div className="form-group mb-2 card-label">
+                            <label>Clinic City</label>
+                            <input name="clinicCity" value={profileData.clinicCity} onChange={handleChange} className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-group mb-2 card-label">
+                            <label>Clinic Province</label>
+                            <input name="clinicProvince" value={profileData.clinicProvince} onChange={handleChange} className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-group mb-2 card-label">
+                            <label>Clinic Country</label>
+                            <input name="clinicCountry" value={profileData.clinicCountry} onChange={handleChange} className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-group mb-2 card-label">
+                            <label>Clinic Postal Code</label>
+                            <input name="clinicPostalCode" value={profileData.clinicPostalCode} onChange={handleChange} className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-group mb-2 card-label">
+                            <label>Clinic Phone</label>
+                            <input name="clinicPhone" value={profileData.clinicPhone} onChange={handleChange} className="form-control" />
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-group mb-2 card-label">
+                            <label>Clinic Email</label>
+                            <input name="clinicEmail" value={profileData.clinicEmail} onChange={handleChange} className="form-control" />
+                        </div>
+                    </div>
+
+                    {/* Licenses Information */}
+                    {profileData.licenses.map((license, index) => (
+                        <div key={index} className="col-md-12">
+                            <div className="form-group mb-2 card-label">
+                                <label>License ID</label>
+                                <input name="licenseId" value={license.licenseId} onChange={(e) => handleLicenseChange(index, e)} className="form-control" />
+                            </div>
+                            <div className="form-group mb-2 card-label">
+                                <label>License Type</label>
+                                <input name="licenseType" value={license.licenseType} onChange={(e) => handleLicenseChange(index, e)} className="form-control" />
                             </div>
                         </div>
-                    </div>
+                    ))}
 
-                    <div className="col-md-12">
-                        <div className="card mb-2 p-3 mt-2">
-                            <h6 className="card-title text-secondary">License Info</h6>
-                            <div className="row form-row">
-                                <div className="col-md-6">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>License Number</label>
-                                        <input defaultValue={data?.license} {...register("license")} className="form-control" />
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group mb-2 card-label">
-                                        <label>Year</label>
-                                        <input defaultValue={data?.year} {...register("year")} className="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div className='text-center my-3'>
-                        <Button htmlType='submit' type="primary" size='large' loading={isLoading} disabled={isLoading ? true : false} >
-                            {isLoading ? 'Saving ...' : 'Save Changes'}
+                        <Button htmlType='submit' type="primary" size='large'>
+                            Save Changes
                         </Button>
                     </div>
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default DoctorProfileSetting
+export default DoctorProfileSetting;
