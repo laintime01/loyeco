@@ -9,9 +9,6 @@ export const locationApi = baseApi.injectEndpoints({
             query: () => ({
                 url: LOC_URL,
                 method: 'GET',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             providesTags: [tagTypes.location]  
         }),
@@ -21,9 +18,6 @@ export const locationApi = baseApi.injectEndpoints({
                 url: LOC_URL,
                 method: 'POST',
                 data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'  
-                },
             }),
             invalidatesTags: [tagTypes.location]
         }),
@@ -32,21 +26,15 @@ export const locationApi = baseApi.injectEndpoints({
             query: (data) => ({
                 url: LOC_URL,
                 method: 'PUT',
-                data: data,
-                headers: {
-                    Authorization:'Bearer adimn@123.com'
-                },
+                data: data
             }),
             invalidatesTags: [tagTypes.location]
         }),
         // delete location
         deleteLocation: build.mutation({
             query: (id) => ({
-                url: `${LOC_URL}/${id}`,
+                url: `${LOC_URL}?id=${id}`,
                 method: 'DELETE',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.location]
         }),
@@ -55,10 +43,7 @@ export const locationApi = baseApi.injectEndpoints({
             query: (data) => ({
                 url: `${LOC_URL}/status`,
                 method: 'PUT',
-                data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
+                data: data
     }),
     
     overrideExisting: false,

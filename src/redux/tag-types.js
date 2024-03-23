@@ -11,6 +11,8 @@ export const tagTypes = {
     chart: 'chart',
     location: 'location',
     license: 'license',
+    profile: 'profile',
+    password: 'password',
 }
 
 export const tagTypeList = [
@@ -26,4 +28,6 @@ export const tagTypeList = [
     tagTypes.chart,
     tagTypes.location,
     tagTypes.license,
+    tagTypes.profile,
+    tagTypes.password,
 ]

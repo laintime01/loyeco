@@ -9,11 +9,8 @@ export const licenseApi = baseApi.injectEndpoints({
         // get license types
         getLicenseTypes: build.query({
             query: () => ({
-                url: LIC_URL,
+                url: `${LIC_URL}/types`,
                 method: 'GET',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             providesTags: [tagTypes.license]
         }),
@@ -24,20 +21,14 @@ export const licenseApi = baseApi.injectEndpoints({
                 url: LIC_URL,
                 method: 'POST',
                 params: params,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.license]
         }),
         // delete license
         deleteLicense: build.mutation({
             query: (id) => ({
-                url: `${LIC_URL}/${id}`,
+                url: `${LIC_URL}?id=${id}`,
                 method: 'DELETE',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.license]
         }),        
