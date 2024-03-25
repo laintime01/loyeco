@@ -8,9 +8,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools, FaBroadcastTower, FaNutritionix, FaDatabase, FaTimesCircle, FaUserTimes, FaExpand, FaNotesMedical } from 'react-icons/fa';
-
+import {useCreatePatientMutation, useGetAllPatientsQuery} from '../../../redux/api/patientApi';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
+import toast from 'react-hot-toast';
+import { set } from 'react-hook-form';
 
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
@@ -25,13 +27,17 @@ maxTime.setHours(22, 0, 0);
 
 
 
+
 const Appointments = () => {
     const [visible, setVisible] = useState(false);
     const [newEventModalVisible, setNewEventModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
     const [selectedSlot, setSelectedSlot] = useState({});
-    const [appointmentData, setAppointmentData] = useState({appointmentContent: ''});
-
+    const [appointmentData, setAppointmentData] = useState({
+        patient: '',
+        note: '',
+        appointmentContent: ''
+    });
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
@@ -42,7 +48,28 @@ const Appointments = () => {
     const { Option } = Select;
     const { Panel } = Collapse;
 
+    const [createPatient] = useCreatePatientMutation();
 
+    const [patientName, setPatientName] = useState('');
+    const [patientOptions, setPatientOptions] = useState([]);
+    const { data: patients } = useGetAllPatientsQuery();
+
+    useEffect(() => {
+        if (patients) {
+            setPatientOptions(patients.map(patient => ({
+                label: patient.firstName + ' ' + patient.lastName,
+                value: patient.patientId
+            })));
+        }
+    }, [patients]);
+    
+    const handleSelectNameChange = (event) => {
+        const value = event.target.value;
+        console.log(value);
+        setAppointmentData({ ...appointmentData, patient: value });
+    };
+
+    
 
     // fake service data
     const serviceOptions = [
@@ -51,145 +78,124 @@ const Appointments = () => {
         "Follow-up Appointment-60mins",
       ];
 
-    // gender options
-    const genderOptions = [
-        "Male",
-        "Female",
-        "Other"
-    ];
-
-    // Add Patient Modal
     const AddPatientModal = ({ visible, handleClose }) => {
-        const monthOptions = Array.from({length: 12}, (_, i) => i + 1);
-        const dayOptions = Array.from({length: 31}, (_, i) => i + 1);
-        const yearOptions = Array.from({length: 121}, (_, i) => 1900 + i).reverse();
+        const [user, setUser] = useState({
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            gender: '',
+            address: '',
+            city: '',
+            province: '',
+            country: ''
+        });
 
-        const [firstname, setFirstname] = useState('');
-        const [lastname, setLastname] = useState('');
-        const [email, setEmail] = useState('');
-        const [month, setMonth] = useState('');
-        const [day, setDay] = useState('');
-        const [year, setYear] = useState('');
-        const [gender, setGender] = useState('');
-        
+        const handleInputChange = (e) => {
+            const { name, value } = e.target;
+            setUser({ ...user, [name]: value });
+        };
+
+        const handleReset = () => {
+            setUser({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                Address:'',
+                City:'',
+                Province:'',
+                Country:''
+            });
+        };
+
+        const handleAddModalClose = () => {
+            handleReset();
+            setShowAddPatientModal(false);
+        };
+
+        const handleAddPatient = (e) => {
+            e.preventDefault();
+            try {
+                createPatient(user);
+                toast.success('Patient added successfully');
+                handleAddModalClose();
+            }catch (error) {
+                toast.error('Failed to add patient');
+            }
+        };
+
         return (
-            <Modal title="Add New Patient" open={visible} onCancel={handleClose}>  
-            <Form layout="vertical">
-                {/* name */}
-                <Row className='mb-3'>
-                    <Col style={{marginRight:"5px"}}>
-                        <Form.Label>First Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter first name" value={firstname} onChange={(e) => setFirstname(e.target.value)}/>
-
-                    </Col> 
-                    <Col>
-                        <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter first name" value={lastname} onChange={(e) => setLastname(e.target.value)} />
-                    </Col>
-                </Row>
-
-                {/*email input and data of birth select  */}
-                <Row className='mb-3'>
-                    <Col style={{marginRight:"5px"}}>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </Col>
-                    <Col>
-                        <Form.Label>Date of Birth</Form.Label>
-                        <Row>
-                            <Col>
-                                <Form.Control as="select" value={month} onChange={(e) => setMonth(e.target.value)}>
-                                    <option value="">Month</option>
-                                    {monthOptions.map((month) => (
-                                        <option key={month} value={month}>
-                                            {month}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Col>
-                            <Col>
-                                <Form.Control as="select" value={day} onChange={(e) => setDay(e.target.value)}>
-                                    <option value="">Day</option>
-                                    {dayOptions.map((day) => (
-                                        <option key={day} value={day}>
-                                            {day}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Col>
-                            <Col>
-                                <Form.Control as="select" value={year} onChange={(e) => setYear(e.target.value)}>
-                                    <option value="">Year</option>
-                                    {yearOptions.map((year) => (
-                                        <option key={year} value={year}>
-                                            {year}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </Col>
-                        </Row>
-                    </Col>
-                </Row>
-                
-                {/* a show more button that will expand the modal when click */}
-                <Row className='mb-3'>
-                    <Col>
-                        <Collapse>
-                        <Panel header="Show More" key="1">
-                            {/* gender select and phone input on same Row*/}
-                            <Row className='mb-3'>
-                                <Col style={{marginRight:"3px"}}>
-                                <Form.Group controlId="formPatientGender">
-                                        <Form.Label>Gender</Form.Label>
-                                        <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
-                                            <option value="">Select Gender</option>
-                                            <option value="M">Male</option>
-                                            <option value="F">Female</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Label>Phone</Form.Label>
-                                    <Form.Control type="text" />
-                                </Col>
-                            </Row>
-
-                            {/* address and city */}
-                            <Row className='mb-3'>
-                                <Col style={{marginRight:"5px"}} xs={8}>
-                                    <Form.Label>Address</Form.Label>
-                                    <Form.Control type="text" />
-                                </Col>
-                                <Col xs={3}>
-                                    <Form.Label>City</Form.Label>
-                                    <Form.Control type="text" />
-                                </Col>
-                            </Row>
-                            {/* postal, province and country on same row margin 5px */}
-                            <Row className='mb-3'>
-                                <Col style={{marginRight:"5px"}}>
-                                    <Form.Label>Postal Code</Form.Label>
-                                    <Form.Control type="text" />
-                                </Col>
-                                <Col style={{marginRight:"5px"}}>
-                                    <Form.Label>Province</Form.Label>
-                                    <Form.Control type="text" />
-                                </Col>
-                                <Col>
-                                    <Form.Label>Country</Form.Label>
-                                    <Form.Control type="text" />
-                                </Col>
-                            </Row>
-                        </Panel>
-                        </Collapse>
-                    </Col>
-                </Row>
-                
-            </Form>
+            <Modal title="Add New Patient" open={visible} onCancel={handleClose} onOk={handleAddPatient} destroyOnClose={true}>  
+                <Form layout="vertical">
+                    <Row className='mb-3'>
+                        <Col style={{ marginRight: "5px" }}>
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter first name" name="firstName" value={user.firstName} onChange={handleInputChange} />
+                        </Col> 
+                        <Col>
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter last name" name="lastName" value={user.lastName} onChange={handleInputChange} />
+                        </Col>
+                    </Row>
+                    <Row className='mb-3'>
+                        <Col style={{ marginRight: "5px" }}>
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control type="email" placeholder="Enter email" name="email" value={user.email} onChange={handleInputChange} />
+                        </Col>
+                        <Col>
+                        </Col>
+                    </Row>
+                    <Row className='mb-3'>
+                        <Col>
+                            <Collapse>
+                                <Panel header="Show More" key="1">
+                                    <Row className='mb-3'>
+                                        <Col style={{ marginRight: "3px" }}>
+                                            <Form.Group controlId="formPatientGender">
+                                                <Form.Label>Gender</Form.Label>
+                                                <Form.Select aria-label="Gender select" name="gender" value={user.gender} onChange={handleInputChange}>
+                                                    <option value="">Select Gender</option>
+                                                    <option value="MALE">Male</option>
+                                                    <option value="FEMALE">Female</option>
+                                                    <option value="UNKNOWN">UNKNOWN</option>
+                                                </Form.Select>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col>
+                                            <Form.Label>Phone</Form.Label>
+                                            <Form.Control type="text" name="phone" value={user.phone} onChange={handleInputChange} />
+                                        </Col>
+                                    </Row>
+                                    <Row className='mb-3'>
+                                        <Col style={{ marginRight: "5px" }} xs={8}>
+                                            <Form.Label>Address</Form.Label>
+                                            <Form.Control type="text" name="address" value={user.address} onChange={handleInputChange} />
+                                        </Col>
+                                        <Col>
+                                            <Form.Label>City</Form.Label>
+                                            <Form.Control type="text" name="city" value={user.city} onChange={handleInputChange} />
+                                        </Col>
+                                    </Row>
+                                    <Row className='mb-3'>
+                                        <Col style={{ marginRight: "5px" }}>
+                                            <Form.Label>Province</Form.Label>
+                                            <Form.Control type="text" name="province" value={user.province} onChange={handleInputChange} />
+                                        </Col>
+                                        <Col>
+                                            <Form.Label>Country</Form.Label>
+                                            <Form.Control type="text" name="country" value={user.country} onChange={handleInputChange} />
+                                        </Col>
+                                    </Row>
+                                </Panel>
+                            </Collapse>
+                        </Col>
+                    </Row>
+                </Form>
             </Modal>
         );
-        };
-      
+    };
+
 
     const [events, setEvents] = useState([
         {   
@@ -267,6 +273,7 @@ const Appointments = () => {
             [e.target.name]: e.target.value
         });
     };
+    
 
     // Drag and Resize Event Handlers
     const onEventDrop = ({ event, start, end }) => {
@@ -300,12 +307,6 @@ const Appointments = () => {
     const handleAddPatient = () => {
         setShowAddPatientModal(true);
     }
-
-    // Log the showAddPatientModal value
-    useEffect(() => {
-        console.log('showAddPatientModal Value:', showAddPatientModal);
-    }, [showAddPatientModal]);
-
 
     return (
         <DashboardLayout>
@@ -434,23 +435,33 @@ const Appointments = () => {
             <Modal title="Book an Appointment" open={newEventModalVisible} onOk={handleOk} onCancel={handleCancel}>
                 {/* patient name input and addd new patient button */}
                 <Row className='mb-3 mt-4'>
-                    <Col style={{ marginRight: '20px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <div style={{ marginRight: '20px' }}>
+                    <Col>
+                        <Row>
+                            <Col span={8}>
                                 <p style={{ marginBottom: '7px' }}><FaUserInjured/> Patient</p>
-                                <Input
-                                    name="patient"
-                                    value={appointmentData.patient}
-                                    onChange={handleInputChange}
-                                    placeholder='Existing Patient...'
-                                />
-                            </div>
-                            <Button variant="light" style={{marginTop:'30px', marginLeft:'10px'}}onClick={handleAddPatient} >Add New Patient +</Button>
-                            <AddPatientModal visible={showAddPatientModal} handleClose={() => setShowAddPatientModal(false)} />
-
-                        </div>
+                                <Form.Group className="mb-3">
+                                    <Form.Control
+                                        type="text"
+                                        list="patient-list"
+                                        value={appointmentData.patient}
+                                        onChange={(e) => setAppointmentData({ ...appointmentData, patient: e.target.value })}
+                                        placeholder="Existing Patient..."
+                                    />
+                                    <datalist id="patient-list">
+                                        {patientOptions.map((option, index) => (
+                                            <option key={index} value={option.label} />
+                                        ))}
+                                    </datalist>
+                                </Form.Group>
+                            </Col>
+                            <Col span={4}>
+                                <Button variant="light" style={{marginTop:'30px', marginLeft:'10px'}} onClick={handleAddPatient}>Add New Patient +</Button>
+                                <AddPatientModal visible={showAddPatientModal} handleClose={() => setShowAddPatientModal(false)} />
+                            </Col>
+                        </Row>
                     </Col>
                 </Row>
+
 
                 {/* Date and time in same row */}
                 <Row className='mb-3'>
