@@ -44,6 +44,7 @@ const DoctorProfileSetting = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(profileData);
         try {
             await updateProfile(profileData).unwrap();
             message.success('Profile Updated Successfully');

@@ -2,17 +2,17 @@ import React, { useState, useEffect} from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import DashboardLayout from '../DashboardLayout/DashboardLayout';
-import { Modal, Input, Row, Select, Collapse} from 'antd';
+import { Modal, Input, Select, Collapse} from 'antd';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
+import {Row, Col} from 'react-bootstrap';
 import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools, FaBroadcastTower, FaNutritionix, FaDatabase, FaTimesCircle, FaUserTimes, FaExpand, FaNotesMedical } from 'react-icons/fa';
 import {useCreatePatientMutation, useGetAllPatientsQuery} from '../../../redux/api/patientApi';
+import { useGetAllServicesQuery ,useCreateServiceMutation} from '../../../redux/api/serviceApi';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import toast from 'react-hot-toast';
-import { set } from 'react-hook-form';
 
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
@@ -42,7 +42,6 @@ const Appointments = () => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
 
-    const [endDate, setEndDate] = useState(new Date());
     const [showAddPatientModal, setShowAddPatientModal] = useState(false);
 
     const { Option } = Select;
@@ -50,7 +49,6 @@ const Appointments = () => {
 
     const [createPatient] = useCreatePatientMutation();
 
-    const [patientName, setPatientName] = useState('');
     const [patientOptions, setPatientOptions] = useState([]);
     const { data: patients } = useGetAllPatientsQuery();
 
@@ -62,21 +60,9 @@ const Appointments = () => {
             })));
         }
     }, [patients]);
-    
-    const handleSelectNameChange = (event) => {
-        const value = event.target.value;
-        console.log(value);
-        setAppointmentData({ ...appointmentData, patient: value });
-    };
 
-    
-
-    // fake service data
-    const serviceOptions = [
-        "Initial Appointment-60mins",
-        "Follow-up Appointment-30mins",
-        "Follow-up Appointment-60mins",
-      ];
+    const serviceOptions = useGetAllServicesQuery().data?.map(service => service.name) || [];
+    const [createService] = useCreateServiceMutation();
 
     const AddPatientModal = ({ visible, handleClose }) => {
         const [user, setUser] = useState({
@@ -114,16 +100,17 @@ const Appointments = () => {
             setShowAddPatientModal(false);
         };
 
-        const handleAddPatient = (e) => {
+        const handleAddPatient = async(e) => {
             e.preventDefault();
             try {
-                createPatient(user);
+                await createPatient(user);
                 toast.success('Patient added successfully');
                 handleAddModalClose();
             }catch (error) {
                 toast.error('Failed to add patient');
             }
         };
+        
 
         return (
             <Modal title="Add New Patient" open={visible} onCancel={handleClose} onOk={handleAddPatient} destroyOnClose={true}>  
@@ -164,27 +151,27 @@ const Appointments = () => {
                                         </Col>
                                         <Col>
                                             <Form.Label>Phone</Form.Label>
-                                            <Form.Control type="text" name="phone" value={user.phone} onChange={handleInputChange} />
+                                            <Form.Control type="text" placeholder='Enter phone number' name="phone" value={user.phone} onChange={handleInputChange} />
                                         </Col>
                                     </Row>
                                     <Row className='mb-3'>
                                         <Col style={{ marginRight: "5px" }} xs={8}>
                                             <Form.Label>Address</Form.Label>
-                                            <Form.Control type="text" name="address" value={user.address} onChange={handleInputChange} />
+                                            <Form.Control type="text" name="address" placeholder='Enter Address' value={user.address} onChange={handleInputChange} />
                                         </Col>
                                         <Col>
                                             <Form.Label>City</Form.Label>
-                                            <Form.Control type="text" name="city" value={user.city} onChange={handleInputChange} />
+                                            <Form.Control type="text" placeholder='Enter City' name="city" value={user.city} onChange={handleInputChange} />
                                         </Col>
                                     </Row>
                                     <Row className='mb-3'>
                                         <Col style={{ marginRight: "5px" }}>
                                             <Form.Label>Province</Form.Label>
-                                            <Form.Control type="text" name="province" value={user.province} onChange={handleInputChange} />
+                                            <Form.Control type="text" name="province" placeholder='Enter Province' value={user.province} onChange={handleInputChange} />
                                         </Col>
                                         <Col>
                                             <Form.Label>Country</Form.Label>
-                                            <Form.Control type="text" name="country" value={user.country} onChange={handleInputChange} />
+                                            <Form.Control type="text" name="country" placeholder='Enter Country' value={user.country} onChange={handleInputChange} />
                                         </Col>
                                     </Row>
                                 </Panel>
@@ -201,11 +188,11 @@ const Appointments = () => {
         {   
             id: 1,  
             patient: 'John Doe',    
-            start: new Date(2024, 2, 8, 9, 0, 0),
-            end: new Date(2024, 2, 8, 11, 0, 0),
+            start: new Date(2024, 2, 28, 9, 0, 0),
+            end: new Date(2024, 2, 28, 11, 0, 0),
             title: 'Appointment for Mr Yock Zhang',
             content: 'meeting with Mr Yock Zhang for his regular checkup.',
-            service: 'Initial Appointment-60mins',
+            service: '泰式按摩-60mins',
             clinicName: 'york clinic',
             note: 'Please remind him to bring his medical report.',
             patientEmail: 'John@gmail.com',
@@ -216,11 +203,11 @@ const Appointments = () => {
         {
             id: 2,
             patient: 'Yu Guan',
-            start: new Date(2024, 2, 9, 11, 0, 0),
-            end: new Date(2024, 2, 9, 14, 0, 0),
+            start: new Date(2024, 2, 28, 11, 0, 0),
+            end: new Date(2024, 2, 28, 14, 0, 0),
             title: 'Appointment for Yu Guan',
             content: 'meeting with Yu Guan for her checkup.',
-            service: 'Follow-up Appointment-30mins',
+            service: '物理按摩-30mins',
             clinicName: 'yaya clinic',
             note: 'Please remind her to bring her medical report.',
             patientEmail: 'york@hotmail.com',
@@ -232,7 +219,13 @@ const Appointments = () => {
     ]);
 
     const handleSelectSlot = slotInfo => {
-        setSelectedSlot(slotInfo);
+        const start = moment(slotInfo.start);
+        const end = moment(slotInfo.end);
+
+        setStartDate(start.format('YYYY-MM-DD'));
+        setStartTime(start.format('HH:mm'));
+        setEndTime(end.format('HH:mm'));
+
         setNewEventModalVisible(true);
     }
 
@@ -303,10 +296,82 @@ const Appointments = () => {
         setEvents(nextEvents);
     };
 
+    const [showAddService, setShowAddService] = useState(false);
+
     // handle on click of add new patient button
     const handleAddPatient = () => {
         setShowAddPatientModal(true);
     }
+
+    const handleAddService = () => {
+        setShowAddService(true);
+    }
+
+    const [service, setService] = useState({
+        name: '',
+        duration: '',
+        rate: '',
+        taxRate: '',
+        active: true
+    });
+
+    const handleCancelServiceModal = () => {
+        setShowAddService(false);
+    };
+
+    const handleServiceOk = async (e) => {
+        e.preventDefault();
+        try {
+            await createService(service);
+            toast.success('Service added successfully');
+            setShowAddService(false);
+        }
+        catch (error) {
+            toast.error('Failed to add service');
+        }
+    };
+
+    const handleServiceInputChange = (e) => {
+            const { name, value } = e.target;
+            setService({ ...service, [name]: value });
+        };
+
+    const [showEditReminderModal, setShowEditReminderModal] = useState(false);
+    const [showEditDateTimeModal, setShowEditDateTimeModal] = useState(false);
+    const [reminder, setReminder] = useState(selectedEvent.note);
+    const [day, setDay] = useState(selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD'));
+    const [timeStart, setTimeStart] = useState(selectedEvent.start && moment(selectedEvent.start).format('HH:mm'));
+    const [timeEnd, setTimeEnd] = useState(selectedEvent.end && moment(selectedEvent.end).format('HH:mm'));
+
+    const handleEditReminder = () => {
+        // Update the reminder
+        setSelectedEvent({ ...selectedEvent, note: reminder });
+        setShowEditReminderModal(false);
+        toast.success('Reminder updated successfully');
+    }
+    const handleEditDateTime = () => {
+        // Update the reminder
+        setSelectedEvent({ ...selectedEvent, start: new Date(day + 'T' + timeStart), end: new Date(day + 'T' + timeEnd) });
+        setShowEditDateTimeModal(false);
+        toast.success('Date and Time updated successfully');
+    }
+
+    const [selectedAction, setSelectedAction] = useState('');
+
+    const handleRadioChange = (e) => {
+        setSelectedAction(e.target.value);
+    };
+
+    const handleConfirm = () => {
+        if (selectedAction) {
+            toast.success('Action confirmed');
+            // Add your logic here to handle the selected action
+        } else {
+            toast.error('Please select an action');
+        }
+    };
+
+
 
     return (
         <DashboardLayout>
@@ -326,6 +391,9 @@ const Appointments = () => {
                 max={maxTime} // Set the max time
                 timeslots={4} // Divide hour into 4 slots of 15 minutes each
             />
+
+            {/*  编辑 Reminder 的模态框 */}
+            
 
             {/* Event Detail Modal */}
             <Modal title="Appointment Details" open={visible} onCancel={handleCancel} width={800}>
@@ -359,7 +427,7 @@ const Appointments = () => {
                         </p>
                     </Col>
                     <Col xs={2} className="offset-4">
-                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
+                        <Button onClick={() => setShowEditReminderModal(true)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
                 </Row>
                 {/* draw a line to seprate */}
@@ -373,7 +441,7 @@ const Appointments = () => {
                     </p>
                     </Col>
                     <Col xs={2} className="offset-4">
-                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add +</Button>
+                        <Button onClick={handleAddService} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add +</Button>
                     </Col>
                 </Row>
                 
@@ -390,7 +458,7 @@ const Appointments = () => {
                         </p>
                     </Col>
                     <Col xs={2} className="offset-4">
-                        <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
+                        <Button onClick={() => setShowEditDateTimeModal(true)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
                 </Row>
 
@@ -398,11 +466,53 @@ const Appointments = () => {
                 <hr />
                 {/* Action includes Arrive,Late, Reschedule, NoShow and Cancel. all buttons*/}
                 <Row className='mb-3'>
-                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Arrive</Button>  
-                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Late</Button>
-                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Reschedule</Button>
-                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>No Show</Button>
-                    <Button variant="light" style={{border:"1px solid", marginRight:"5px"}}>Cancel</Button>
+                    <Form as={Row}>
+                        <Col className='d-flex  mr-3' xs={10}>
+                            <Form.Check
+                                type="radio"
+                                label="Arrive"
+                                value="Arrive"
+                                checked={selectedAction === 'Arrive'}
+                                onChange={handleRadioChange}
+                                className='me-3'
+                            />
+                            <Form.Check
+                                type="radio"
+                                label="Late"
+                                value="Late"
+                                checked={selectedAction === 'Late'}
+                                onChange={handleRadioChange}
+                                className='me-3'
+                            />
+                            <Form.Check
+                                type="radio"
+                                label="Reschedule"
+                                value="Reschedule"
+                                checked={selectedAction === 'Reschedule'}
+                                onChange={handleRadioChange}
+                                className='me-3'
+                            />
+                            <Form.Check
+                                type="radio"
+                                label="No Show"
+                                value="No Show"
+                                checked={selectedAction === 'No Show'}
+                                onChange={handleRadioChange}
+                                className='me-3'
+                            />
+                            <Form.Check
+                                type="radio"
+                                label="Cancel"
+                                value="Cancel"
+                                checked={selectedAction === 'Cancel'}
+                                onChange={handleRadioChange}
+                                className='me-3'
+                            />
+                        </Col>
+                        <Col  xs={2} >
+                            <Button variant="light" onClick={handleConfirm} style={{border:"1px solid", marginLeft:"20px"}}>Confirm</Button>
+                        </Col>
+                    </Form>
                 </Row>
                 
                 <h5>History</h5>
@@ -509,7 +619,7 @@ const Appointments = () => {
                             name="appointmentContent" 
                             value={appointmentData.appointmentContent || ''}  // Here
                         >
-                            <Option value="">Initial Appointment-30mins</Option>
+                            <Option value="">Select Service</Option>
                             {serviceOptions.map((service) => (
                                 <Option key={service} value={service.toLowerCase().replace(/\s+/g, '')}>
                                     {service}
@@ -519,11 +629,82 @@ const Appointments = () => {
                     </Col>
                     {/* add service plain button  */}
                     <Col>
-                        <Button variant="light" style={{marginTop: '30px',marginLeft:'10px'}}>Add Service +</Button>
+                        <Button onClick={handleAddService} variant="light" style={{marginTop: '30px',marginLeft:'10px'}}>Add Service +</Button>
                     </Col>
                 </Row>
                 
             </Modal>
+
+            {/* add service modal*/}
+            <Modal title="Add New Service" open={showAddService} onHide={() => setShowAddService(false)} onOk={handleServiceOk} onCancel={handleCancelServiceModal} destroyOnClose={true}>
+                <Form>
+                    <Row className='mb-3'>
+                        <Col>
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter service name" name="name" value={service.name} onChange={handleServiceInputChange} />
+                        </Col>
+                        <Col>
+                            <Form.Label>Duration (minutes)</Form.Label>
+                            <Form.Control type="number" placeholder="Enter duration" name="duration" value={service.duration} onChange={handleServiceInputChange} />
+                        </Col>
+                    </Row>
+                    <Row className='mb-3'>
+                        <Col>
+                            <Form.Label>Rate</Form.Label>
+                            <Form.Control type="number" placeholder="Enter rate" name="rate" value={service.rate} onChange={handleServiceInputChange} />
+                        </Col>
+                        <Col>
+                            <Form.Label>Tax Rate (%)</Form.Label>
+                            <Form.Control type="number" placeholder="Enter tax rate" name="taxRate" value={service.taxRate} onChange={handleServiceInputChange} />
+                        </Col>
+                    </Row>
+                    <Row className='mb-3'>
+                        <Col>
+                            <Form.Check 
+                                type="checkbox" 
+                                label="Active" 
+                                name="active" 
+                                checked={service.active} 
+                                onChange={(e) => setService({ ...service, active: e.target.checked })} 
+                            />
+                        </Col>
+                    </Row>
+                </Form>
+            </Modal>
+            {/* Edit reminder modal */}
+            <Modal title="Edit Reminder" open={showEditReminderModal} onHide={() => setShowEditReminderModal(false)} onOk={handleEditReminder} onCancel={()=>setShowEditReminderModal(false)} destroyOnClose={true}>
+                <Form>
+                    <Row className='mb-3'>
+                            <Form.Control type="text" placeholder="Enter service name" name="name" value="Please remind him to bring his medical report." onChange={handleServiceInputChange} />            
+                    </Row>
+                </Form>
+             </Modal>
+             {/* Edit date and time modal using Datapicker and timePicker */}
+                <Modal title="Edit Date and Time" open={showEditDateTimeModal} onHide={() => setShowEditDateTimeModal(false)} onOk={handleEditDateTime} onCancel={()=>setShowEditDateTimeModal(false)} destroyOnClose={true}>
+                    <Form>
+                        <Row className='mb-3'>
+                            <Col className='mr-3'>
+                                <Form.Label> <FaDatabase/> Date</Form.Label>
+                                <Form.Control type="date" value={day} onChange={(e) => setDay(e.target.value)} />
+                            </Col> 
+                        </Row>
+                        <Row className='mb-3 no-gutters'>
+                            <Col xs={5} >
+                                <Form.Label><FaUserTimes/> Start Time</Form.Label>
+                                <Form.Control type="time" value={timeStart} onChange={(e) => setTimeStart(e.target.value)} />
+                            </Col>
+                            {/* add Col xs=2 */}
+                            <Col xs={2}>
+                            </Col>
+                            <Col xs={5}>
+                                <Form.Label><FaExpand/> End Time</Form.Label>
+                                <Form.Control type="time" value={timeEnd} onChange={(e) => setTimeEnd(e.target.value)} />
+                            </Col>
+                        </Row>
+                    </Form>
+                </Modal>
+
+
         </DashboardLayout>
     )
 }
