@@ -92,31 +92,35 @@ const ServiceSetting = () => {
                     <Button variant="secondary" className='addButton' onClick={() => setShowModal(true)}>Add</Button>
                 </div>
                 {!isLoading && isError && <div>Loading...</div>}
-                    {!isLoading && !isError && data?.length === 0 && <div>Empty</div>}
-                    {!isLoading && !isError && data?.length > 0 && (
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Active</th>
-                            <th>Duration</th>
-                            <th>Rate</th>
-                            <th>Tax Rate</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((service) => (
-                            <tr key={service.typeId} onClick={()=>handleRowClick(service)}>
-                                <td>{service.name}</td>
-                                <td>{service.active === true ? 'Yes' : service.active === false ? 'No' : 'N/A'}</td>
-                                <td>{service.duration != null ? service.duration : 'N/A'}</td>
-                                <td>{service.rate}</td>
-                                <td>{service.taxRate}</td>
+                {!isLoading && !isError && (
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Active</th>
+                                <th>Duration</th>
+                                <th>Rate</th>
+                                <th>Tax Rate</th>
                             </tr>
-                        ))}
-                    </tbody>
-
-                </Table>
+                        </thead>
+                        <tbody>
+                            {data && data.length > 0 ? (
+                                data.map((service) => (
+                                    <tr key={service.typeId} onClick={() => handleRowClick(service)}>
+                                        <td>{service.name}</td>
+                                        <td>{service.active === true ? 'Yes' : service.active === false ? 'No' : 'N/A'}</td>
+                                        <td>{service.duration != null ? service.duration : 'N/A'}</td>
+                                        <td>{service.rate}</td>
+                                        <td>{service.taxRate}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" className="text-center">No Data</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
                 )}
         {/* 新增service modal */}
         <Modal show={showModal} onHide={() => setShowModal(false)}>

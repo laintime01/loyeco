@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import img from '../../images/John.jpg';
 import './DashboardSidebar.css';
 import {
@@ -24,8 +25,8 @@ const MyNavLink = ({ to, children, icon, onClick, active }) => {
     const handleClick = (event) => {
         if (to === '#') {
             event.preventDefault();
-            onClick();
         }
+        onClick && onClick(); // 总是调用 onClick 属性
     };
 
     return (
@@ -48,6 +49,7 @@ const SubNavLink = ({ to, children, icon }) => {
 const DashboardSidebar = () => {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const location = useLocation();
+    const navigate = useNavigate();
 
     const {data, isSuccess, isError, error, isLoading} = useGetProfileQuery();
     const fullName = data ? `${data.firstName} ${data.lastName}` : undefined;
@@ -63,6 +65,11 @@ const DashboardSidebar = () => {
     const handleClick = (menu) => {
         setSelectedMenu(prev => prev === menu ? null : menu);
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken');
+        window.location.href = '/';
+        }
     
 
     return (
@@ -144,7 +151,7 @@ const DashboardSidebar = () => {
                         )}
                     </li>
                     <li>
-                        <MyNavLink to={'/dashboard/logout'} icon={<FaSignOutAlt className="icon" />}>
+                        <MyNavLink onClick={handleLogout} icon={<FaSignOutAlt className="icon" />}>
                             Logout
                         </MyNavLink>
                     </li>
