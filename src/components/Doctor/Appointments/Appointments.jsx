@@ -10,6 +10,7 @@ import {Row, Col} from 'react-bootstrap';
 import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools, FaBroadcastTower, FaNutritionix, FaDatabase, FaTimesCircle, FaUserTimes, FaExpand, FaNotesMedical, FaAddressCard } from 'react-icons/fa';
 import {useCreatePatientMutation, useGetAllPatientsQuery} from '../../../redux/api/patientApi';
 import { useGetAllServicesQuery ,useCreateServiceMutation} from '../../../redux/api/serviceApi';
+import {useGetPatientAppointmentsQuery, useCreateAppointmentMutation} from '../../../redux/api/appointmentApi';
 import { useGetAllLocationsQuery } from '../../../redux/api/locationApi';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -35,14 +36,12 @@ const Appointments = () => {
     const [selectedEvent, setSelectedEvent] = useState({});
     const [selectedSlot, setSelectedSlot] = useState({});
     const [appointmentData, setAppointmentData] = useState({
-        patient: '',
-        note: '',
-        appointmentContent: '',
         patientId: '',
         locationId: '',
         startTime: '',
         finishTime: '',
-        generalNote: ''
+        generalNote: '',
+        services: []
     });
     console.log("appointmentData"+ JSON.stringify(appointmentData));
     const [startDate, setStartDate] = useState('');
@@ -243,24 +242,44 @@ const Appointments = () => {
         );
     };
 
+    // create appointment api
+    const [createAppointment] = useCreateAppointmentMutation();
+    // get all appointments
+    const { data: appointments } = useGetPatientAppointmentsQuery();
+    // set events to the appointments
+    const [events, setEvents] = useState([]);
 
-    const [events, setEvents] = useState([
-        {   
-            id: 1,  
-            patient: 'John Doe',    
-            start: new Date(2024, 2, 28, 9, 0, 0),
-            end: new Date(2024, 2, 28, 11, 0, 0),
-            title: 'Appointment for Mr Yock Zhang',
-            content: 'meeting with Mr Yock Zhang for his regular checkup.',
-            service: '泰式按摩-60mins',
-            clinicName: 'york clinic',
-            note: 'Please remind him to bring his medical report.',
-            patientEmail: 'John@gmail.com',
-            patientPhone: '123-456-7890',
-            clinicAddress: '1234, 5th Avenue, New York, NY 10001',
-            historyDate: '2023-03-08',   
-        },
-    ]);
+    useEffect(() => {
+        if (appointments) {
+            const formattedEvents = appointments.map((appointment) => {
+                // 解析日期和时间
+                const start = new Date(appointment.startTime);
+                const end = new Date(appointment.finishTime);
+    
+                // 组合服务名称和持续时间
+                const serviceName = appointment.services.map(service => service.name).join(', ');
+                const serviceDuration = appointment.services.map(service => service.duration).join(', ');
+    
+                return {
+                    id: appointment.id,
+                    patientId: `${appointment.patient.firstName} ${appointment.patient.lastName}`,
+                    start: start,
+                    end: end,
+                    title: `Appointment for ${appointment.patient.firstName} ${appointment.patient.lastName}`,
+                    content: `Meeting with ${appointment.patient.firstName} ${appointment.patient.lastName} for his regular checkup.`,
+                    service: `${serviceName}-${serviceDuration}`,
+                    clinicName: appointment.location.name,
+                    note: appointment.generalNote,
+                    patientEmail: appointment.patient.email,
+                    patientPhone: appointment.patient.phone,
+                    clinicAddress: `${appointment.location.address}, ${appointment.location.city}, ${appointment.location.province}, ${appointment.location.country}`,
+                    historyDate: '2023-03-08', // 根据需要调整
+                };
+            });
+    
+            setEvents(formattedEvents);
+        }
+    }, [appointments]);
 
     const handleSelectSlot = slotInfo => {
         const start = moment(slotInfo.start);
@@ -269,10 +288,6 @@ const Appointments = () => {
         setStartDate(start.format('YYYY-MM-DD'));
         setStartTime(start.format('HH:mm'));
         setEndTime(end.format('HH:mm'));
-
-        console.log("start date", start.format('YYYY-MM-DD'));
-        console.log("start time", start.format('HH:mm'));
-        console.log("end time", end.format('HH:mm'));
 
         setAppointmentData({
             ...appointmentData,
@@ -289,25 +304,15 @@ const Appointments = () => {
         setVisible(true);        
     }
 
-    const handleOk = () => {
-        if (!selectedSlot.start) return;
-        const newEvent = {
-            id: events.length + 1,
-            title: `Appointment for ${appointmentData.patient}`,
-            start: selectedSlot.start,
-            end: selectedSlot.end,
-            content: appointmentData.appointmentContent,
-            note: appointmentData.note,
-            allDay: false
-        };
-        setEvents([...events, newEvent]);
-        setAppointmentData({
-            patient: "",
-            appointmentContent: "",
-            content: appointmentData.appointmentContent,
-            note: ""
-        });
-        setNewEventModalVisible(false);
+    const handleOk = async(e) => {
+        e.preventDefault();
+        try {
+            await createAppointment(appointmentData);
+            toast.success('Appointment booked successfully');
+            setNewEventModalVisible(false);
+        } catch (error) {
+            toast.error('Failed to book appointment, Please try again later.');
+        }
     };
 
     const handleCancel = () => {
@@ -462,31 +467,15 @@ const Appointments = () => {
                 <h5>Patient Info</h5>
                 <hr />
                 {/* patient*/}
-                <Row className='mb-3'>
-                    <p>
-                        <strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}                
-                    </p>
-                </Row>
+                <Row className='mb-3'><p><strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}</p></Row>
                 {/* patient email and phone on same row margin 5px*/}
                 <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}
-                        </p>
-                    </Col>
-                    <Col>
-                        <p>
-                            <strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}
-                        </p>
-                    </Col>
+                    <Col><p><strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}</p></Col>
+                    <Col><p><strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}</p></Col>
                 </Row>
                 {/* reminder with in textarea with a edit icon on the right side*/}
                 <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}
-                        </p>
-                    </Col>
+                    <Col><p><strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}</p></Col>
                     <Col xs={2} className="offset-4">
                         <Button onClick={() => setShowEditReminderModal(true)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
@@ -496,11 +485,7 @@ const Appointments = () => {
                 <hr />
                 {/* service with add service button on the right*/}
                 <Row className='mt-3 mb-3'>
-                    <Col>
-                    <p>
-                        <strong><FaTools/> Service:</strong> {selectedEvent.service}
-                    </p>
-                    </Col>
+                    <Col><p><strong><FaTools/> Service:</strong> {selectedEvent.service}</p></Col>
                     <Col xs={2} className="offset-4">
                         <Button onClick={handleAddService} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add +</Button>
                     </Col>
@@ -508,21 +493,12 @@ const Appointments = () => {
                 
                 {/* date and time on same row edit button on the right*/}
                 <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
-                        </p>
-                    </Col>
-                    <Col>
-                        <p>
-                            <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
-                        </p>
-                    </Col>
+                    <Col><p><strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}</p></Col>
+                    <Col><p><strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}</p></Col>
                     <Col xs={2} className="offset-4">
                         <Button onClick={() => setShowEditDateTimeModal(true)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
                 </Row>
-
                 <h5>Actions</h5>
                 <hr />
                 {/* Action includes Arrive,Late, Reschedule, NoShow and Cancel. all buttons*/}
@@ -570,35 +546,18 @@ const Appointments = () => {
                                 className='me-3'
                             />
                         </Col>
-                        <Col  xs={2} >
+                        <Col xs={2} >
                             <Button variant="light" onClick={handleConfirm} style={{border:"1px solid", marginLeft:"20px"}}>Confirm</Button>
                         </Col>
                     </Form>
                 </Row>
-                
                 <h5>History</h5>
                 <hr />
                 {/* patient history with time, service and arrive status*/}
                 <Row className='mb-3'>
-                    {/* history date and time */}
-                    <Col>
-                        <p>
-                            {selectedEvent.historyDate || 'Not Available'}
-                        </p>
-                    </Col>
-                    {/* service */}
-                    <Col>
-                        <p>
-                            {selectedEvent.service || 'Not Available'}
-                        </p>
-                    </Col>
-                    {/* arrive status */}
-                    <Col>
-                        <p>
-                            Arrive OnTime
-                        </p>
-                    </Col>
-
+                    <Col><p>{selectedEvent.historyDate || 'Not Available'}</p></Col>
+                    <Col><p>{selectedEvent.service || 'Not Available'}</p></Col>
+                    <Col><p> Arrive OnTime</p></Col>
                 </Row>
             </Modal>
 

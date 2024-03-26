@@ -10,9 +10,6 @@ export const appointmentApi = baseApi.injectEndpoints({
             query: (data) => ({
                 url: APPOINTMENT_URL,
                 method: 'POST',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
                 data: data
             }),
             invalidatesTags: [tagTypes.appointments]
@@ -22,9 +19,6 @@ export const appointmentApi = baseApi.injectEndpoints({
             query: (data ) => ({
                 url: APPOINTMENT_URL,
                 method: 'PUT',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
                 data: data
             }),
             invalidatesTags: [tagTypes.appointments]
@@ -34,20 +28,14 @@ export const appointmentApi = baseApi.injectEndpoints({
             query: () => ({
                 url: APPOINTMENT_URL,
                 method: 'GET',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             providesTags: [tagTypes.appointments]
         }),
         // delet single appointment with id string /app?id={id}
-        getSingleAppointment: build.query({
+        deleteSingleAppointment: build.query({
             query: (id) => ({
                 url: `${APPOINTMENT_URL}?id=${id}`,
                 method: 'DELETE',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             providesTags: [tagTypes.appointments]
         }),
@@ -55,10 +43,7 @@ export const appointmentApi = baseApi.injectEndpoints({
         updateAppointmentStatus: build.mutation({
             query: (params) => ({
                 url: `${APPOINTMENT_URL}/status`,
-                method: 'PUT',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
+                method: 'PUT',    
                 params: params
             }),
             invalidatesTags: [tagTypes.appointments]
@@ -67,10 +52,7 @@ export const appointmentApi = baseApi.injectEndpoints({
         updateAppointmentService: build.mutation({
             query: (data) => ({
                 url: `${APPOINTMENT_URL}/service`,
-                method: 'PUT',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },        
+                method: 'PUT',      
                 data: data
             }),
             invalidatesTags: [tagTypes.appointments]
@@ -79,10 +61,7 @@ export const appointmentApi = baseApi.injectEndpoints({
         updateAppointmentSchedule: build.mutation({
             query: (data) => ({
                 url: `${APPOINTMENT_URL}/reschedule`,
-                method: 'PUT',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
+                method: 'PUT', 
                 data: data
             }),
             invalidatesTags: [tagTypes.appointments]
@@ -92,9 +71,6 @@ export const appointmentApi = baseApi.injectEndpoints({
             query: (params) => ({
                 url: `${APPOINTMENT_URL}/arrival`,
                 method: 'PUT',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
                 params: params
             }),
             invalidatesTags: [tagTypes.appointments]
@@ -104,9 +80,6 @@ export const appointmentApi = baseApi.injectEndpoints({
             query: (arg) => ({
                 url: `${APPOINTMENT_URL}/timetable`,
                 method: 'GET',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
                 params: arg
             }),
             providesTags: [tagTypes.appointments]
