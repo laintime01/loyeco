@@ -15,7 +15,9 @@ export const authApi = baseApi.injectEndpoints({
             async onQueryStarted(arg, { queryFulfilled, dispatch }) {
                 try {
                     const result = (await queryFulfilled).data;
-                    setUserInfo({ accessToken: result.accessToken });
+                    if (result) {
+                        localStorage.setItem("accessToken", result);
+                    }
                 } catch (error) {
                 }
             },

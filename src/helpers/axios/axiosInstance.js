@@ -15,8 +15,10 @@ instance.defaults.timeout = 6000;
 
 instance.interceptors.request.use(function (config) {
     const accessToken = getFromLocalStorage('accessToken');
+    console.log('accessToken', accessToken);
     if (accessToken) {
-        config.headers.Authorization = 'Bearer admin@123.com';
+        // set the Authorization header if token is available Bearer + accessToken
+        config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
 }, function (error) {

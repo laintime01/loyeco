@@ -1,4 +1,4 @@
-export const setUserInfo = ({accessToken}) =>{
+export const setUserInfo = (accessToken) =>{
     return setLocalStorage('accessToken',accessToken)
 }
 

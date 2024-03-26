@@ -15,14 +15,14 @@ const SignUp = ({ setSignUp }) => {
     const [page, setPage] = useState(1);
 
     const formField = {
-        firstname: '',
-        lastname: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         clinicAddress: '',
         clinicCity: '',
-        clinicProvince: '',
-        clinicPostalCode: '',
+        clinicName: '',
+        clinicLocationName: '',
     }
 
     const [user, setUser] = useState(formField);
@@ -115,11 +115,11 @@ const SignUp = ({ setSignUp }) => {
                 <>
                     <div className="input-field">
                         <span className="fIcon"><FaUser /></span>
-                        <input placeholder="First Name" name="firstname" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstname} />
+                        <input placeholder="First Name" name="firstName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.firstName} />
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaUser /></span>
-                        <input placeholder="Last Name" name="lastname" type="text" onChange={(e) => hanldeOnChange(e)} value={user.lastname} />
+                        <input placeholder="Last Name" name="lastName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.lastName} />
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaEnvelope /></span>
@@ -145,11 +145,11 @@ const SignUp = ({ setSignUp }) => {
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaMap /></span>
-                        <input placeholder="Province" name="clinicProvince" type="text" onChange={(e) => hanldeOnChange(e)} value={user.clinicProvince} />
+                        <input placeholder="Clinic Name" name="clinicName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.clinicName} />
                     </div>
                     <div className="input-field">
                         <span className="fIcon"><FaCode /></span>
-                        <input placeholder="Post Code" name="clinicPostalCode" type="text" onChange={(e) => hanldeOnChange(e)} value={user.clinicPostalCode} />
+                        <input placeholder="Location Name" name="clinicLocationName" type="text" onChange={(e) => hanldeOnChange(e)} value={user.clinicLocationName} />
                     </div>
                     <div className='button-container'>
                         <button className='button-back iBtn' type="button" onClick={handleBackClick}>Back</button>
