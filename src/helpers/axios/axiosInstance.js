@@ -4,6 +4,7 @@ import { getFromLocalStorage } from "../../utils/local-storage";
 export const instance = axios.create({
     baseURL: '/api',
     withCredentials: true,
+    // for quick testing will remove when aployed to production
     headers: {
         Authorization: 'Bearer admin@123.com'
     },
