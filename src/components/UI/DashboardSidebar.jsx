@@ -18,6 +18,8 @@ import {
     FaAd
 } from "react-icons/fa";
 
+import {useGetProfileQuery} from '../../redux/api/profileApi';
+
 const MyNavLink = ({ to, children, icon, onClick, active }) => {
     const handleClick = (event) => {
         if (to === '#') {
@@ -47,6 +49,9 @@ const DashboardSidebar = () => {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const location = useLocation();
 
+    const {data, isSuccess, isError, error, isLoading} = useGetProfileQuery();
+    const fullName = data ? `${data.firstName} ${data.lastName}` : undefined;
+    
     useEffect(() => {
         // add service,location,license and chart setting
         const settingsSubMenuPaths = ['/dashboard/profile-setting', '/dashboard/clinic-setting', '/dashboard/change-password', '/dashboard/service-setting', '/dashboard/location-setting', '/dashboard/chart-setting', '/dashboard/license-setting'];
@@ -58,6 +63,7 @@ const DashboardSidebar = () => {
     const handleClick = (menu) => {
         setSelectedMenu(prev => prev === menu ? null : menu);
     };
+    
 
     return (
         <div className="profile-sidebar p-3 rounded">
@@ -65,7 +71,7 @@ const DashboardSidebar = () => {
                 <div className="profile-info text-center">
                     <NavLink to={'/'}><img src={img} alt="" /></NavLink>
                     <div className='profile-details'>
-                        <h5 className='mb-0'>John Snow</h5>
+                        <h5 className='mb-0'>{fullName}</h5>
                     </div>
                 </div>
             </div>
@@ -105,11 +111,6 @@ const DashboardSidebar = () => {
                                 <li>
                                     <SubNavLink to={'/dashboard/profile-setting'} icon={<FaTools className="icon" />}>
                                         Profile
-                                    </SubNavLink>
-                                </li>
-                                <li>
-                                    <SubNavLink to={'/dashboard/clinic-setting'} icon={<FaSlidersH className="icon" />}>
-                                        Clinic
                                     </SubNavLink>
                                 </li>
                                 <li>
