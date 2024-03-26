@@ -467,31 +467,15 @@ const Appointments = () => {
                 <h5>Patient Info</h5>
                 <hr />
                 {/* patient*/}
-                <Row className='mb-3'>
-                    <p>
-                        <strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}                
-                    </p>
-                </Row>
+                <Row className='mb-3'><p><strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}</p></Row>
                 {/* patient email and phone on same row margin 5px*/}
                 <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}
-                        </p>
-                    </Col>
-                    <Col>
-                        <p>
-                            <strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}
-                        </p>
-                    </Col>
+                    <Col><p><strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}</p></Col>
+                    <Col><p><strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}</p></Col>
                 </Row>
                 {/* reminder with in textarea with a edit icon on the right side*/}
                 <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}
-                        </p>
-                    </Col>
+                    <Col><p><strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}</p></Col>
                     <Col xs={2} className="offset-4">
                         <Button onClick={() => setShowEditReminderModal(true)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
@@ -501,11 +485,7 @@ const Appointments = () => {
                 <hr />
                 {/* service with add service button on the right*/}
                 <Row className='mt-3 mb-3'>
-                    <Col>
-                    <p>
-                        <strong><FaTools/> Service:</strong> {selectedEvent.service}
-                    </p>
-                    </Col>
+                    <Col><p><strong><FaTools/> Service:</strong> {selectedEvent.service}</p></Col>
                     <Col xs={2} className="offset-4">
                         <Button onClick={handleAddService} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add +</Button>
                     </Col>
@@ -513,21 +493,12 @@ const Appointments = () => {
                 
                 {/* date and time on same row edit button on the right*/}
                 <Row className='mb-3'>
-                    <Col>
-                        <p>
-                            <strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}
-                        </p>
-                    </Col>
-                    <Col>
-                        <p>
-                            <strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}
-                        </p>
-                    </Col>
+                    <Col><p><strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}</p></Col>
+                    <Col><p><strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}</p></Col>
                     <Col xs={2} className="offset-4">
                         <Button onClick={() => setShowEditDateTimeModal(true)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
                 </Row>
-
                 <h5>Actions</h5>
                 <hr />
                 {/* Action includes Arrive,Late, Reschedule, NoShow and Cancel. all buttons*/}
@@ -575,35 +546,18 @@ const Appointments = () => {
                                 className='me-3'
                             />
                         </Col>
-                        <Col  xs={2} >
+                        <Col xs={2} >
                             <Button variant="light" onClick={handleConfirm} style={{border:"1px solid", marginLeft:"20px"}}>Confirm</Button>
                         </Col>
                     </Form>
                 </Row>
-                
                 <h5>History</h5>
                 <hr />
                 {/* patient history with time, service and arrive status*/}
                 <Row className='mb-3'>
-                    {/* history date and time */}
-                    <Col>
-                        <p>
-                            {selectedEvent.historyDate || 'Not Available'}
-                        </p>
-                    </Col>
-                    {/* service */}
-                    <Col>
-                        <p>
-                            {selectedEvent.service || 'Not Available'}
-                        </p>
-                    </Col>
-                    {/* arrive status */}
-                    <Col>
-                        <p>
-                            Arrive OnTime
-                        </p>
-                    </Col>
-
+                    <Col><p>{selectedEvent.historyDate || 'Not Available'}</p></Col>
+                    <Col><p>{selectedEvent.service || 'Not Available'}</p></Col>
+                    <Col><p> Arrive OnTime</p></Col>
                 </Row>
             </Modal>
 
