@@ -7,9 +7,10 @@ import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {Row, Col} from 'react-bootstrap';
-import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools, FaBroadcastTower, FaNutritionix, FaDatabase, FaTimesCircle, FaUserTimes, FaExpand, FaNotesMedical } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools, FaBroadcastTower, FaNutritionix, FaDatabase, FaTimesCircle, FaUserTimes, FaExpand, FaNotesMedical, FaAddressCard } from 'react-icons/fa';
 import {useCreatePatientMutation, useGetAllPatientsQuery} from '../../../redux/api/patientApi';
 import { useGetAllServicesQuery ,useCreateServiceMutation} from '../../../redux/api/serviceApi';
+import { useGetAllLocationsQuery } from '../../../redux/api/locationApi';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import toast from 'react-hot-toast';
@@ -36,11 +37,52 @@ const Appointments = () => {
     const [appointmentData, setAppointmentData] = useState({
         patient: '',
         note: '',
-        appointmentContent: ''
+        appointmentContent: '',
+        patientId: '',
+        locationId: '',
+        startTime: '',
+        finishTime: '',
+        generalNote: ''
     });
+    console.log("appointmentData"+ JSON.stringify(appointmentData));
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
+    const handleDateChange = (date) => {
+        setStartDate(date);
+        // 如果 startTime 和 endTime 已经被设置，更新 appointmentData
+        if (startTime && endTime) {
+            setAppointmentData({
+                ...appointmentData,
+                startTime: `${date} ${startTime}:00`,
+                finishTime: `${date} ${endTime}:00`
+            });
+        }
+    };
+    
+    const handleStartTimeChange = (time) => {
+        setStartTime(time);
+        // 如果 startDate 和 endTime 已经被设置，更新 appointmentData
+        if (startDate && endTime) {
+            setAppointmentData({
+                ...appointmentData,
+                startTime: `${startDate} ${time}:00`,
+                finishTime: `${startDate} ${endTime}:00`
+            });
+        }
+    };
+    
+    const handleEndTimeChange = (time) => {
+        setEndTime(time);
+        // 如果 startDate 和 startTime 已经被设置，更新 appointmentData
+        if (startDate && startTime) {
+            setAppointmentData({
+                ...appointmentData,
+                startTime: `${startDate} ${startTime}:00`,
+                finishTime: `${startDate} ${time}:00`
+            });
+        }
+    };
 
     const [showAddPatientModal, setShowAddPatientModal] = useState(false);
 
@@ -56,10 +98,28 @@ const Appointments = () => {
         if (patients) {
             setPatientOptions(patients.map(patient => ({
                 label: patient.firstName + ' ' + patient.lastName,
-                value: patient.patientId
+                value: patient.id
             })));
         }
     }, [patients]);
+
+    const [selectedLocation, setSelectedLocation] = useState('');
+    const [locationOptions, setLocationOptions] = useState([]);
+    const { data: locations } = useGetAllLocationsQuery();
+
+    useEffect(() => {
+        if (locations) {
+            setLocationOptions(locations.map(location => ({
+                label: location.name,
+                value: location.id
+            })));
+        }
+    }, [locations]);
+
+    const handleChangeLocation = (value) => {
+        setSelectedLocation(value);
+        setAppointmentData({ ...appointmentData, locationId: value });
+    };
 
     const serviceOptions = useGetAllServicesQuery().data?.map(service => service.name) || [];
     const [createService] = useCreateServiceMutation();
@@ -200,22 +260,6 @@ const Appointments = () => {
             clinicAddress: '1234, 5th Avenue, New York, NY 10001',
             historyDate: '2023-03-08',   
         },
-        {
-            id: 2,
-            patient: 'Yu Guan',
-            start: new Date(2024, 2, 28, 11, 0, 0),
-            end: new Date(2024, 2, 28, 14, 0, 0),
-            title: 'Appointment for Yu Guan',
-            content: 'meeting with Yu Guan for her checkup.',
-            service: '物理按摩-30mins',
-            clinicName: 'yaya clinic',
-            note: 'Please remind her to bring her medical report.',
-            patientEmail: 'york@hotmail.com',
-            patientPhone: '123-456-7890',
-            clinicAddress: '1234, 5th Avenue, New York, NY 10001',
-            historyDate: '2022-03-08',
-
-        }
     ]);
 
     const handleSelectSlot = slotInfo => {
@@ -226,12 +270,23 @@ const Appointments = () => {
         setStartTime(start.format('HH:mm'));
         setEndTime(end.format('HH:mm'));
 
+        console.log("start date", start.format('YYYY-MM-DD'));
+        console.log("start time", start.format('HH:mm'));
+        console.log("end time", end.format('HH:mm'));
+
+        setAppointmentData({
+            ...appointmentData,
+            startTime: `${start.format('YYYY-MM-DD')} ${start.format('HH:mm')}:00`,
+            finishTime: `${start.format('YYYY-MM-DD')} ${end.format('HH:mm')}:00`
+        });
+
+
         setNewEventModalVisible(true);
     }
 
     const handleSelectEvent = event => {
         setSelectedEvent(event);
-        setVisible(true);
+        setVisible(true);        
     }
 
     const handleOk = () => {
@@ -371,6 +426,15 @@ const Appointments = () => {
         }
     };
 
+    const [selectedPatientLabel, setSelectedPatientLabel] = useState('');
+    const [selectedPatientId, setSelectedPatientId] = useState('');
+
+    const handleChangeSelectPatient = (e) => {
+        setSelectedPatientId(e.target.value);
+        console.log("Selected patient ID:", e.target.value);
+    };
+
+
 
 
     return (
@@ -391,9 +455,6 @@ const Appointments = () => {
                 max={maxTime} // Set the max time
                 timeslots={4} // Divide hour into 4 slots of 15 minutes each
             />
-
-            {/*  编辑 Reminder 的模态框 */}
-            
 
             {/* Event Detail Modal */}
             <Modal title="Appointment Details" open={visible} onCancel={handleCancel} width={800}>
@@ -553,13 +614,24 @@ const Appointments = () => {
                                     <Form.Control
                                         type="text"
                                         list="patient-list"
-                                        value={appointmentData.patient}
-                                        onChange={(e) => setAppointmentData({ ...appointmentData, patient: e.target.value })}
+                                        value={selectedPatientLabel}
+                                        onChange={(e) => {
+                                            const selectedOption = patientOptions.find(option => option.label === e.target.value);
+                                            if (selectedOption) {
+                                                setAppointmentData({ ...appointmentData, patientId: selectedOption.value });
+                                                setSelectedPatientLabel(selectedOption.label);
+                                                console.log(selectedOption.value);
+                                            } else {
+                                                // 当用户删除或修改选项时，清除 patientId 和 selectedPatientLabel
+                                                setAppointmentData({ ...appointmentData, patientId: '' });
+                                                setSelectedPatientLabel('');
+                                            }
+                                        }}
                                         placeholder="Existing Patient..."
                                     />
                                     <datalist id="patient-list">
                                         {patientOptions.map((option, index) => (
-                                            <option key={index} value={option.label} />
+                                            <option key={index} value={option.label} data-value={option.value} />
                                         ))}
                                     </datalist>
                                 </Form.Group>
@@ -577,20 +649,20 @@ const Appointments = () => {
                 <Row className='mb-3'>
                     <Col className='mr-3'>
                         <Form.Label> <FaDatabase/> Date</Form.Label>
-                        <Form.Control type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                        <Form.Control type="date" value={startDate} onChange={(e) => handleDateChange(e.target.value)} />
                     </Col> 
                 </Row>
                 <Row className='mb-3 no-gutters'>
                     <Col xs={5} >
                         <Form.Label><FaUserTimes/> Start Time</Form.Label>
-                        <Form.Control type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                        <Form.Control type="time" value={startTime} onChange={(e) => handleStartTimeChange(e.target.value)} />
                     </Col>
                     {/* add Col xs=2 */}
                     <Col xs={2}>
                     </Col>
                     <Col xs={5}>
                         <Form.Label><FaExpand/> End Time</Form.Label>
-                        <Form.Control type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                        <Form.Control type="time" value={endTime} onChange={(e) => handleEndTimeChange(e.target.value)} />
                     </Col>
                 </Row>
 
@@ -606,6 +678,33 @@ const Appointments = () => {
                             onChange={handleInputChange}
                             rows={4}
                         />
+                    </Col>
+                </Row>
+
+                {/* select location*/}
+                <Row className='mb-3 mt-4'>
+                    <Col>
+                        <p style={{ marginBottom: '7px' }}><FaAddressCard/> Clinic Location</p>
+                        <Select
+                            showSearch
+                            style={{ width: 300 }}
+                            value={selectedLocation}
+                            onChange={handleChangeLocation}
+                            placeholder="Select Clinic"
+                            filterOption={(input, option) =>
+                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                        >
+                            <Option value="">Select Clinic Location</Option>
+                            {locationOptions.map((option, index) => (
+                                <Option key={index} value={option.value}>
+                                    {option.label}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Col>
+                    {/* add service plain button  */}
+                    <Col>
                     </Col>
                 </Row>
 
