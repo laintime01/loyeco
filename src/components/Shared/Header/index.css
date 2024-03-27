@@ -162,19 +162,18 @@
     visibility: visible;
 }
 
-@media (max-width: 1366px) {
-    .navbar .dropdown .dropdown ul {
-        left: -90%;
-    }
-
-    .navbar .dropdown .dropdown:hover>ul {
-        left: -100%;
-    }
-}
-
 /**
   * Mobile Navigation 
   */
+@media (max-width: 991px) {
+.navbar-nav {
+    display: none;
+}
+
+.nav-expanded {
+    display: block;
+}
+}
 .mobile-nav-toggle {
     color: #2c4964;
     font-size: 28px;
@@ -308,4 +307,51 @@
         margin: 0 15px 0 0;
         padding: 6px 18px;
     }
+}
+
+/* Custom styles for react-bootstrap Navbar */
+.navbar-light .navbar-toggler {
+    border: none;
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-image: none;
+}
+
+.mobile-nav-toggle {
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.navbar-collapse {
+    justify-content: flex-end;
+}
+
+.navbar-nav .nav-link {
+    color: #333;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-nav .nav-link.active {
+    color: #007bff;
+}
+
+.navbar-brand img {
+    max-height: 40px;
+}
+
+.profileImage {
+    max-width: 40px;
+    border-radius: 50%;
+}
+
+.stickyHeader {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
 }
