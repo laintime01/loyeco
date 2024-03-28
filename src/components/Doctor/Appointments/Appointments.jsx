@@ -102,7 +102,7 @@ const Appointments = () => {
         }
     }, [patients]);
 
-    const [selectedLocation, setSelectedLocation] = useState('');
+    const [selectedLocation, setSelectedLocation] = useState(null);
     const [locationOptions, setLocationOptions] = useState([]);
     const { data: locations } = useGetAllLocationsQuery();
 
@@ -120,7 +120,7 @@ const Appointments = () => {
         setAppointmentData({ ...appointmentData, locationId: value });
     };
 
-    const serviceOptions = useGetAllServicesQuery().data?.map(service => service.name) || [];
+    const serviceData = useGetAllServicesQuery().data || [];
     const [createService] = useCreateServiceMutation();
 
     const AddPatientModal = ({ visible, handleClose }) => {
@@ -318,6 +318,17 @@ const Appointments = () => {
     const handleCancel = () => {
         setVisible(false);
         setNewEventModalVisible(false);
+        // clear the appointment data
+        setAppointmentData({
+            patientId: '',
+            locationId: '',
+            startTime: '',
+            finishTime: '',
+            generalNote: '',
+            services: []
+        });
+        setSelectedLocation(null);
+        setSelectedPatientLabel('');
     };
 
     const handleInputChange = e => {
@@ -342,7 +353,7 @@ const Appointments = () => {
     const handleSelectChange = (value) => {
         setAppointmentData(prevState => ({
             ...prevState,
-            appointmentContent: value
+            services: value
         }));
     }
 
@@ -434,11 +445,10 @@ const Appointments = () => {
     const [selectedPatientLabel, setSelectedPatientLabel] = useState('');
     const [selectedPatientId, setSelectedPatientId] = useState('');
 
-    const handleChangeSelectPatient = (e) => {
-        setSelectedPatientId(e.target.value);
-        console.log("Selected patient ID:", e.target.value);
-    };
-
+    const [selectedService, setSelectedService] = useState('');
+    const handleSelectService = (value) => {
+        setSelectedService(value);
+    }
 
 
 
@@ -579,7 +589,6 @@ const Appointments = () => {
                                             if (selectedOption) {
                                                 setAppointmentData({ ...appointmentData, patientId: selectedOption.value });
                                                 setSelectedPatientLabel(selectedOption.label);
-                                                console.log(selectedOption.value);
                                             } else {
                                                 // 当用户删除或修改选项时，清除 patientId 和 selectedPatientLabel
                                                 setAppointmentData({ ...appointmentData, patientId: '' });
@@ -654,7 +663,6 @@ const Appointments = () => {
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                             }
                         >
-                            <Option value="">Select Clinic Location</Option>
                             {locationOptions.map((option, index) => (
                                 <Option key={index} value={option.value}>
                                     {option.label}
@@ -672,25 +680,21 @@ const Appointments = () => {
                     <Col>
                         <p style={{ marginBottom: '7px' }}><FaNutritionix/> Service</p>
                         <Select 
+                            mode='multiple'
                             style={{ width: 300 }} 
                             onChange={handleSelectChange} 
                             name="appointmentContent" 
-                            value={appointmentData.appointmentContent || ''}  // Here
+                            placeholder="Select Service(multiple)"
+                            value={appointmentData.services || []}  // Here
                         >
-                            <Option value="">Select Service</Option>
-                            {serviceOptions.map((service) => (
-                                <Option key={service} value={service.toLowerCase().replace(/\s+/g, '')}>
-                                    {service}
+                            {serviceData.map((service) => (
+                                <Option key={service.typeId} value={service.typeId}>
+                                    {service.name +'-'+service.duration+'mins'}
                                 </Option>
                             ))}
                         </Select>
                     </Col>
-                    {/* add service plain button  */}
-                    <Col>
-                        <Button onClick={handleAddService} variant="light" style={{marginTop: '30px',marginLeft:'10px'}}>Add Service +</Button>
-                    </Col>
                 </Row>
-                
             </Modal>
 
             {/* add service modal*/}
