@@ -170,6 +170,8 @@ const MyPatients = () => {
                 <div className="col-md-12">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <Button variant="secondary" className="addButton" onClick={handleShow}>ADD</Button>
+                        {/* add a clear button that clear the search result and refetch all patient */}
+                        <Button variant="secondary" className="addButton" onClick={() => {setSearchData(null); refetch()}}>CLEAR</Button>
                         <InputGroup className="mb-3 d-flex justify-content-center" style={{ marginLeft: "40px",marginRight:"100px" }}>
                             <Form.Control
                             placeholder="Please enter patient name or email to search"
@@ -398,6 +400,7 @@ const MyPatients = () => {
                                 <tr>
                                     <th>Last Name</th>
                                     <th>First Name</th>
+                                    <th>Preferred Name</th>
                                     <th>Phone</th>
                                     <th>Gender</th>
                                     <th>VisitStatus</th>
@@ -408,6 +411,7 @@ const MyPatients = () => {
                                     <tr key={item.id} onClick={() => handlePatientClick(item)}>
                                         <td>{item.lastName}</td>
                                         <td>{item.firstName}</td>
+                                        <td>{item.preferredName}</td>
                                         <td>{item.phone}</td>
                                         <td>{item.gender}</td>
                                         <td>{item.visitStatus}</td>
