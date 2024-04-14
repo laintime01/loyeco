@@ -89,9 +89,31 @@ const MyPatients = () => {
         setIsEditing(true);
     };
 
+    // clear the add patient modal form
+    const clearAddPatientForm = () => {
+        setFirstname("");
+        setLastname("");
+        setPhone("");
+        setEmail("");
+        setGender("");
+        setPreferredName("");
+        setOccupation("");
+        setEmergencyContactName("");
+        setEmergencyContactRelationship("");
+        setEmergencyContactPhone("");
+        setAddress("");
+        setCity("");
+        setProvince("");
+        setPostal("");
+        setCountry("");
+        setFamilyDoctorName("");
+        setFamilyDoctorPhone("");
+    };
+
     const handleSaveClick = async () => {
         try {
             await updatePatient(selectedPatient).unwrap();
+            clearAddPatientForm();
             toast.success('Update Patient Successful');
             refetch();
         } catch(err) {
@@ -111,7 +133,11 @@ const MyPatients = () => {
         setIsEditing(false);
     };
 
-    const handleClose = () => setShowModal(false);
+    const handleClose = () => {
+        clearAddPatientForm();
+        setShowModal(false);
+
+    }
     const handleShow = () => setShowModal(true);
     const handleCloseDeleteModal = () => setShowDeleteModal(false);
     const handleShowDeleteModal = (id) => {
@@ -335,11 +361,11 @@ const MyPatients = () => {
                         </Modal.Body>
 
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={handleAddPatient}>
-                                Confirm
-                            </Button>
-                            <Button variant="primary" onClick={handleClose}>
+                            <Button variant="secondary" onClick={handleClose}>
                                 Close
+                            </Button>
+                            <Button variant="success" onClick={handleAddPatient}>
+                                Save
                             </Button>
                         </Modal.Footer>
                     </Modal>
