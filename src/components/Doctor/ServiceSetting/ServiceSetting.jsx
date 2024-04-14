@@ -122,7 +122,7 @@ const ServiceSetting = () => {
                         </tbody>
                     </Table>
                 )}
-        {/* 新增service modal */}
+        {/* Add service modal */}
         <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Add New Service</Modal.Title>
@@ -181,7 +181,7 @@ const ServiceSetting = () => {
             </Modal.Footer>
         </Modal>
 
-        {/* 编辑service Modal */}
+        {/* Edit service Modal */}
         <Modal show={showServiceModal} onHide={() => setShowServiceModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Service Info</Modal.Title>
