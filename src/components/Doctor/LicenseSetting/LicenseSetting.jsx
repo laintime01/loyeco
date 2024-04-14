@@ -5,17 +5,21 @@ import toast from 'react-hot-toast';
 import {
     useGetLicenseTypesQuery, useCreateLicenseMutation, useDeleteLicenseMutation
 } from '../../../redux/api/licenseApi';
-import { set } from 'react-hook-form';
+import { useGetProfileQuery, useUpdateProfileMutation } from '../../../redux/api/profileApi';
 
 const LicenseSetting = () => {
-    const { data, isLoading, isError, refetch } = useGetLicenseTypesQuery();
-    const typeOptions = data?.map((type) => ({ value: type.id, label: type.name }));
+    const { data } = useGetLicenseTypesQuery();
+    // make a select dropdown for license types using data
+    const { data: profileData,isLoading, isError, refetch } = useGetProfileQuery();
+    const licenses = profileData?.licenses;
+    const typeOptions = data?.map((type) => ({ value: type.name, label: type.name }));
     const [showModal, setShowModal] = useState(false);
     const [selectedLicense, setSelectedLicense] = useState({});
     const [showEditModal, setShowEditModal] = useState(false);
 
     const [newLicense, setNewLicense] = useState({
-        name: '',
+        id: '',
+        type: '',
         suffix: ''
     });
     const [createLicense] = useCreateLicenseMutation();
@@ -49,11 +53,13 @@ const LicenseSetting = () => {
 
     const handleRowClick = (license) => {
         setSelectedLicense(license);
+        console.log(selectedLicense);
         setShowEditModal(true);
     };
 
     // for future use
     const handleEdit = async () => {
+        
         
         console.log(selectedLicense);
     };
@@ -81,17 +87,17 @@ const LicenseSetting = () => {
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Suffix</th>
+                                <th>License Id</th>
+                                <th>License Type</th>
+                                <th>Type Suffix</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((license) => (
-                                <tr key={license.id} onClick={() => handleRowClick(license)}>
-                                    <td>{license.id}</td>
-                                    <td>{license.name}</td>
-                                    <td>{license.suffix !== null ? license.suffix : "NULL"}</td>
+                            {licenses.map((license) => (
+                                <tr key={license.licenseId} onClick={() => handleRowClick(license)}>
+                                    <td>{license.licenseId}</td>
+                                    <td>{license.licenseType}</td>
+                                    <td>{license.typeSuffix !== null ? license.typeSuffix : "NULL"}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -119,18 +125,12 @@ const LicenseSetting = () => {
                         <Form.Group as={Row} className="mb-3">
                             <Form.Label column sm="4" className="text-right">Type ID:</Form.Label>
                             <Col sm="8">
-                                {/* an dropdown select with typeOption inside as newLicense.typeId value */}
-                                <Form.Control
-                                    as="select"
-                                    name="typeId"
-                                    value={newLicense.typeId}
-                                    onChange={handleChange}
-                                >
+                                <Form.Select as="select" name="typeId" value={newLicense.typeId} onChange={handleChange}>
                                     <option value="">Select Type</option>
                                     {typeOptions?.map((type) => (
                                         <option key={type.value} value={type.value}>{type.label}</option>
                                     ))}
-                                </Form.Control>
+                                </Form.Select>
                             </Col>
                         </Form.Group>
                     </Form>
@@ -160,13 +160,26 @@ const LicenseSetting = () => {
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3">
-                            <Form.Label column sm="4" className="text-right">Type ID:</Form.Label>
+                            <Form.Label column sm="4" className="text-right">Type:</Form.Label>
+                            <Col sm="8">
+                                <Form.Select 
+                                    value={selectedLicense.licenseType} 
+                                    onChange={(e) => setSelectedLicense({ ...selectedLicense, licenseType: e.target.value })}
+                                >
+                                    {typeOptions?.map((type) => (
+                                        <option key={type.value} value={type.label}>{type.label}</option>
+                                    ))}
+                                </Form.Select>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm="4" className="text-right">Type Suffix:</Form.Label>
                             <Col sm="8">
                                 <Form.Control
-                                    type="number"
-                                    name="typeId"
-                                    value={selectedLicense.typeId}
-                                    onChange={(e) => setSelectedLicense({ ...selectedLicense, typeId: e.target.value })}
+                                    type="text"
+                                    name="typeSuffix"
+                                    value={selectedLicense.typeSuffix !== null ? selectedLicense.typeSuffix : ""}
+                                    onChange={handleLicenseChange}
                                 />
                             </Col>
                         </Form.Group>
@@ -178,7 +191,6 @@ const LicenseSetting = () => {
                     <Button variant="danger" onClick={handleDelete}>Delete</Button>
                 </Modal.Footer>
             </Modal>
-
 
             </div>
         </DashboardLayout>
