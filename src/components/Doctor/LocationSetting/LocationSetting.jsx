@@ -106,12 +106,12 @@ const LocationSetting = () => {
                                     <td>{location.name}</td>
                                     <td>{location.address}</td>
                                     <td>{location.city}</td>
-                                    <td>{location.country}</td>
+                                    <td>{location.province}</td>
                                     <td>{location.postalCode}</td>
+                                    <td>{location.country}</td>
                                     <td>{location.phone}</td>
                                     <td>{location.email}</td>
                                     <td>{location.status}</td>
-                                    <td>{location.province}</td>
                                 </tr>
                             ))
                         ) : (
@@ -172,20 +172,103 @@ const LocationSetting = () => {
                     <Modal.Body>
                         {selectedLocation && (
                             <Form>
-                                {Object.entries(selectedLocation).map(([key, value]) => (
-                                    <Form.Group className="mb-3" key={key}>
-                                        <Form.Label>{key.charAt(0).toUpperCase() + key.slice(1)}:</Form.Label>
-                                        <Form.Control type="text" name={key} value={value} onChange={handleLocationChange} />
-                                    </Form.Group>
-                                ))}
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Name:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="name" value={selectedLocation.name} onChange={handleLocationChange} />
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Address:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="address" value={selectedLocation.address} onChange={handleLocationChange} />
+                                    </Col>
+                                </Form.Group>
+
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        City:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="city" value={selectedLocation.city} onChange={handleLocationChange} />
+                                    </Col>       
+                                </Form.Group>
+                                {/* province */}
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Province:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="province" value={selectedLocation.province} onChange={handleLocationChange} />
+                                    </Col>
+                                </Form.Group>
+
+                                {/* postcode */}
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Postal Code:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="postalCode" value={selectedLocation.postalCode} onChange={handleLocationChange} />
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Country:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="country" value={selectedLocation.country} onChange={handleLocationChange} />
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Phone:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="phone" value={selectedLocation.phone} onChange={handleLocationChange} />
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Email:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Control type="text" name="email" value={selectedLocation.email} onChange={handleLocationChange} />
+                                    </Col>
+                                </Form.Group>
+
+                                <Form.Group as={Row} className="mb-3">
+                                    <Form.Label column sm="4" className="text-right">
+                                        Status:
+                                    </Form.Label>
+                                    <Col sm="8">
+                                        <Form.Select name="status" value={selectedLocation.status} onChange={handleLocationChange}>
+                                            <option>Select Status</option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">InActive</option>
+                                        </Form.Select>
+                                    </Col>
+                                </Form.Group>
+
+                                
                             </Form>
                         )}
                     </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowLocationModal(false)}>Close</Button>
-                        <Button variant="primary" onClick={handleEdit}>Edit</Button>
-                        <Button variant="danger" onClick={handleDelete}>Delete</Button>
+                    {/* delete button on the left */}
+                    <Modal.Footer className="d-flex justify-content-between">
+                        <div>
+                            <Button variant="danger" onClick={handleDelete}>Delete</Button>
+                        </div>
+                        <div>
+                            <Button variant="secondary" style={{marginRight:"10px"}} onClick={() => setShowLocationModal(false)}>Close</Button>
+                            <Button variant="success" onClick={handleEdit}>Save</Button>
+                        </div>
                     </Modal.Footer>
+
                 </Modal>
         </DashboardLayout>
     );
