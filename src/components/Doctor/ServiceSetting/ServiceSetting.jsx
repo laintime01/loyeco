@@ -217,13 +217,43 @@ const ServiceSetting = () => {
                                 <Form.Label>Tax Rate</Form.Label>
                                 <Form.Control type="text" name="taxRate" value={selectedService.taxRate} onChange={handleServiceChange} />
                             </Form.Group>
+
+                            <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm="4" className="text-right">
+                                Status:
+                            </Form.Label>
+                            <Col sm="8">
+                                <Form.Check 
+                                type="radio" 
+                                name="status" 
+                                label="Active" 
+                                value="true"  // 设置为布尔类型的字符串表示
+                                checked={selectedService.status === true} // 直接比较布尔值
+                                onChange={() => handleServiceChange(true)}  // 传递布尔值true
+                                id="activeStatusRadio"
+                                />
+                                <Form.Check 
+                                type="radio" 
+                                name="status" 
+                                label="Inactive" 
+                                value="false" // 设置为布尔类型的字符串表示
+                                checked={selectedService.status === false} // 直接比较布尔值
+                                onChange={() => handleServiceChange(false)}  // 传递布尔值false
+                                id="inactiveStatusRadio"
+                                />
+                            </Col>
+                            </Form.Group>
                         </Form>
                     )}
                 </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={() => setShowServiceModal(false)}>Close</Button>
-                {/* <Button variant="primary" onClick={handleEdit}>Edit</Button> */}
-                <Button variant="danger" onClick={handleDelete}>Delete</Button>
+            <Modal.Footer className="d-flex justify-content-between">
+                <div>
+                    <Button variant="danger" onClick={handleDelete}>Delete</Button>
+                </div>
+                <div>
+                    <Button variant="primary" style={{marginRight:"10px"}} onClick={handleEdit}>Save</Button>
+                    <Button variant="secondary" onClick={() => setShowServiceModal(false)}>Close</Button>
+                </div>
             </Modal.Footer>
         </Modal>
 
