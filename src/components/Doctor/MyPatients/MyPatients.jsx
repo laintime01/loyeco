@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace, faCamera, faAddressCard, faBacon, faBahai, faHeart, faFire, faHandHolding, faAddressBook, faCity, faBuilding, faCode, faAt, faMap, faFemale, faHeading, faUserTie, faUserPlus} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
-import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon, FaFire, FaNimblr} from 'react-icons/fa';
+import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon, FaFire, FaNimblr, FaHeart, FaBuilding, FaMap, FaCodepen, FaCodeBranch, FaFreeCodeCamp, FaFileCode, FaUserAlt, FaUserTie, FaFireAlt, FaUserFriends} from 'react-icons/fa';
 
 const MyPatients = () => {
     // search related
@@ -49,6 +49,15 @@ const MyPatients = () => {
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
+    // validate user input before adding a new patient firstname, lastname, email and gender are required
+    const isAddPatientValid = () => {
+        if (firstName === "" || lastName === "" || email === "" || gender === "") {
+            toast.error('First Name, Last Name, Email and Gender are required');
+            return false;
+        }
+        return true;
+    };
+
     // handle delete patient
     const handleDelete = async () => {
         try {
@@ -66,6 +75,9 @@ const MyPatients = () => {
     };
 
     const handleAddPatient = async () => {
+        if (!isAddPatientValid()) {
+            return;
+        }
         try {
             await createPatient({firstName, lastName, phone, email,gender,preferredName,occupation,
                 emergencyContactName,emergencyContactPhone, emergencyContactRelationship,
@@ -491,7 +503,7 @@ const MyPatients = () => {
                                                         <Form.Group>
                                                             <Form.Label>Preferred Name</Form.Label>
                                                             <InputGroup>
-                                                                <InputGroup.Text><FaDice /></InputGroup.Text>
+                                                                <InputGroup.Text><FaHeart /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={selectedPatient?.preferredName}
@@ -534,7 +546,7 @@ const MyPatients = () => {
                                                         <Form.Group>
                                                             <Form.Label>City</Form.Label>
                                                             <InputGroup>
-                                                                <InputGroup.Text><FaAddressCard /></InputGroup.Text>
+                                                                <InputGroup.Text><FaBuilding /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={selectedPatient?.city}
@@ -563,7 +575,7 @@ const MyPatients = () => {
                                                         <Form.Group>
                                                             <Form.Label>Postal Code</Form.Label>
                                                             <InputGroup>
-                                                                <InputGroup.Text><FaAddressCard /></InputGroup.Text>
+                                                                <InputGroup.Text><FaFileCode /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={selectedPatient?.postalCode}
@@ -579,7 +591,7 @@ const MyPatients = () => {
                                                         <Form.Group>
                                                             <Form.Label>Country</Form.Label>
                                                             <InputGroup>
-                                                                <InputGroup.Text><FaBahai /></InputGroup.Text>
+                                                                <InputGroup.Text><FaMap /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={selectedPatient?.country}
@@ -592,7 +604,7 @@ const MyPatients = () => {
                                                         <Form.Group>
                                                             <Form.Label>Family Doctor Name</Form.Label>
                                                             <InputGroup>
-                                                                <InputGroup.Text><FaBacon /></InputGroup.Text>
+                                                                <InputGroup.Text><FaUserTie /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={selectedPatient?.familyDoctorName}
@@ -609,7 +621,7 @@ const MyPatients = () => {
                                                         <Form.Group>
                                                             <Form.Label>Emergency Contact Name</Form.Label>
                                                             <InputGroup>
-                                                                <InputGroup.Text><FaPeace /></InputGroup.Text>
+                                                                <InputGroup.Text><FaFireAlt /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={selectedPatient?.emergencyContactName}
@@ -638,7 +650,7 @@ const MyPatients = () => {
                                                         <Form.Group>
                                                             <Form.Label>Emergency Contact Relationship</Form.Label>
                                                             <InputGroup>
-                                                                <InputGroup.Text><FaCamera /></InputGroup.Text>
+                                                                <InputGroup.Text><FaUserFriends /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={selectedPatient?.emergencyContactRelationship}
