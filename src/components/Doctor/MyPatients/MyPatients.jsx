@@ -38,7 +38,7 @@ const MyPatients = () => {
     const [address, setAddress] = useState("");
     const [city, setCity] = useState("");
     const [province, setProvince] = useState("");
-    const [postal, setPostal] = useState("");
+    const [postalCode, setPostalCode] = useState("");
     const [country, setCountry] = useState("");
     const [familyDoctorName, setFamilyDoctorName] = useState("");
     const [familyDoctorPhone, setFamilyDoctorPhone] = useState("");
@@ -69,7 +69,7 @@ const MyPatients = () => {
         try {
             await createPatient({firstName, lastName, phone, email,gender,preferredName,occupation,
                 emergencyContactName,emergencyContactPhone, emergencyContactRelationship,
-                address,city,province,postal,country,familyDoctorName,familyDoctorPhone
+                address,city,province,postalCode,country,familyDoctorName,familyDoctorPhone
             }).unwrap();
             handleClose();
             toast.success('Add Patient Successful');
@@ -104,7 +104,7 @@ const MyPatients = () => {
         setAddress("");
         setCity("");
         setProvince("");
-        setPostal("");
+        setPostalCode("");
         setCountry("");
         setFamilyDoctorName("");
         setFamilyDoctorPhone("");
@@ -324,7 +324,7 @@ const MyPatients = () => {
                                         <Form.Group controlId="formPatientPostal">
                                             <InputGroup>
                                                 <InputGroup.Text><FontAwesomeIcon icon={faAt} /></InputGroup.Text>
-                                            <Form.Control type="text" placeholder="Enter postal" value={postal} onChange={(e) => setPostal(e.target.value)}/>
+                                            <Form.Control type="text" placeholder="Enter postal" value={postalCode} onChange={(e) => setPostalCode(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
                                     </Col>
@@ -566,8 +566,8 @@ const MyPatients = () => {
                                                                 <InputGroup.Text><FaAddressCard /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
-                                                                    value={selectedPatient?.postal}
-                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, postal: e.target.value })}
+                                                                    value={selectedPatient?.postalCode}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, postalCode: e.target.value })}
                                                                 />
                                                             </InputGroup>
                                                         </Form.Group>
@@ -727,7 +727,7 @@ const MyPatients = () => {
                                                                     </Col>
                                                                     <Col>
                                                                         <Card.Text>
-                                                                            <strong>Postal Code:</strong> {selectedPatient?.postal}
+                                                                            <strong>Postal Code:</strong> {selectedPatient?.postalCode}
                                                                         </Card.Text>
                                                                     </Col>
                                                                 </Row>
