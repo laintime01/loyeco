@@ -8,6 +8,25 @@ import { useGetAllServicesQuery,
          useDeleteServiceMutation,
          useServiceStatusMutation, } from '../../../redux/api/serviceApi';
 
+// 确认Modal
+const ConfirmModal = ({show,onHide,onConfirm,message}) => {
+    return (
+        <Modal show={show} onHide={onHide}>
+            <Modal.Header closeButton>
+                <Modal.Title>Confirm Action</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>{message}</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onHide}>Cancel</Button>
+                <Button variant="primary" onClick={onConfirm}>Confirm</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+            
+
 const ServiceSetting = () => {
     const { data, isLoading, isError, refetch} = useGetAllServicesQuery();
     const [showModal, setShowModal] = useState(false);
@@ -23,6 +42,8 @@ const ServiceSetting = () => {
     const [createService] = useCreateServiceMutation();
     const [updateService] = useUpdateServiceMutation();
     const [deleteService] = useDeleteServiceMutation();
+
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const clearService = () => {
         setNewService({
@@ -45,18 +66,21 @@ const ServiceSetting = () => {
             refetch();
         }catch(error){
             console.log(error);
+            toast.error(`Failed to add patient: ${error.message || 'Unknown error, please try again later!'}`);
         }
     };
     const handleChange = (e) => {
         const { name, value } = e.target;
         let updatedValue = value;
-    
-        // 根据字段名转换类型
+        
         if (name === 'active' || name === 'duration' || name === 'taxRate') {
-            updatedValue = parseInt(value, 10) || 0; // 转换为整数，如果转换失败则默认为 0
+            const parsedValue = parseInt(value, 10);
+            updatedValue = isNaN(parsedValue) ? 0 : parsedValue;  // 只有在解析失败时才使用 0
         } else if (name === 'rate') {
-            updatedValue = parseFloat(value) || 0.00; // 转换为小数，如果转换失败则默认为 0.0
+            const parsedValue = parseFloat(value);
+            updatedValue = isNaN(parsedValue) ? 0.00 : parsedValue;  // 只有在解析失败时才使用 0.0
         }
+    
         setNewService({ ...newService, [name]: updatedValue });
     };
     const handleServiceChange = (e) => {
@@ -84,6 +108,7 @@ const ServiceSetting = () => {
 
     // 删除service逻辑
     const handleDelete = async () => {
+        setShowConfirm(false);
         try {
             await deleteService(selectedService.typeId).unwrap();
             setShowServiceModal(false);
@@ -91,6 +116,7 @@ const ServiceSetting = () => {
             refetch();
         } catch (error) {
             console.log(error);
+            toast.error(`Failed to delete service: ${error.message || 'Failed to delete service, please try again later!'}`);
         }
     }
     
@@ -132,6 +158,13 @@ const ServiceSetting = () => {
                         </tbody>
                     </Table>
                 )}
+        {/* 确认Modal */}
+         <ConfirmModal 
+            show={showConfirm} 
+            onHide={() => setShowConfirm(false)} 
+            onConfirm={handleDelete}
+            message="Are you sure you want to delete this service?"
+        />
         {/* Add service modal */}
         <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
@@ -233,7 +266,7 @@ const ServiceSetting = () => {
             <Modal.Footer>
                 <Button variant="secondary" onClick={() => setShowServiceModal(false)}>Close</Button>
                 {/* <Button variant="primary" onClick={handleEdit}>Edit</Button> */}
-                <Button variant="danger" onClick={handleDelete}>Delete</Button>
+                <Button variant="danger" onClick={()=>setShowConfirm(true)}>Delete</Button>
             </Modal.Footer>
         </Modal>
 
