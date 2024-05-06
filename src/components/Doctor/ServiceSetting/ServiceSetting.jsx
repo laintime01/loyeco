@@ -24,13 +24,23 @@ const ServiceSetting = () => {
     const [updateService] = useUpdateServiceMutation();
     const [deleteService] = useDeleteServiceMutation();
 
+    const clearService = () => {
+        setNewService({
+            name: '',
+            active: '',
+            duration: '',
+            rate: '',
+            taxRate: ''
+        });
+    }
+
     // service 保存
     const handleSave = async () => {
-        console.log(newService);
         // save new service
         try{
             await createService(newService).unwrap();
             setShowModal(false);
+            clearService();
             toast.success('Add Patient Successful');
             refetch();
         }catch(error){
