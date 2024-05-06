@@ -38,3 +38,7 @@
 .patient-img img:hover {
     transform: scale(1.1);
 }
+
+.rbc-timeslot-group {
+    min-height: 50px; /* 调整为期望的最小高度 */
+}

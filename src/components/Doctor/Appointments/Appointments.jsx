@@ -265,7 +265,7 @@ const Appointments = () => {
                     patientId: `${appointment.patient.firstName} ${appointment.patient.lastName}`,
                     start: start,
                     end: end,
-                    title: `Appointment for ${appointment.patient.firstName} ${appointment.patient.lastName}`,
+                    title: `${appointment.patient.firstName} ${appointment.patient.lastName} 's appointment for ${serviceName}`,
                     content: `Meeting with ${appointment.patient.firstName} ${appointment.patient.lastName} for his regular checkup.`,
                     service: `${serviceName}-${serviceDuration}`,
                     clinicName: appointment.location.name,
@@ -459,7 +459,7 @@ const Appointments = () => {
                 defaultDate={new Date()}
                 defaultView="week"
                 events={events}
-                style={{ height: "80vh" }}
+                style={{ height: "150vh" }}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
                 onEventDrop={onEventDrop}
@@ -469,6 +469,7 @@ const Appointments = () => {
                 min={minTime} // Set the min time
                 max={maxTime} // Set the max time
                 timeslots={4} // Divide hour into 4 slots of 15 minutes each
+                step={15} // 15 minutes slot
             />
 
             {/* Event Detail Modal */}
