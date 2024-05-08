@@ -52,7 +52,7 @@ const CaseModal = ({ isVisible, onClose, onSubmit }) => {
         <Modal title="Add New Case" open={isVisible} onCancel={onClose} onOk={onSubmit} width={800}>
             <Form layout="vertical">
                 <Row gutter={16}>
-                    <Col span={24}>
+                    <Col span={12}>
                         <Form.Item label="Chief Complaint">
                             <Select value={chiefComplaintOption} onChange={handleChiefComplaintChange}>
                                 {chiefComplaintOptions.map(option => (
@@ -81,7 +81,7 @@ const CaseModal = ({ isVisible, onClose, onSubmit }) => {
                 <Row>
                     <Col span={24}>
                         <Form.Item label="Generated Text">
-                            <TextArea value={text} onChange={handleTextChange} autoSize={{ minRows: 4, maxRows: 8 }} />
+                            <TextArea value={text} onChange={handleTextChange} autoSize={{ minRows: 12, maxRows: 8 }} />
                         </Form.Item>
                     </Col>
                 </Row>

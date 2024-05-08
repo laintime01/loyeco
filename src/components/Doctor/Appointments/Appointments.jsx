@@ -17,6 +17,7 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import toast from 'react-hot-toast';
 
 import CaseModal from '../Case/CaseModal';
+import CaseHistory from '../Case/CaseHistory';
 
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
@@ -49,6 +50,8 @@ const Appointments = () => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
 
+    const [caseHistoryModalVisible, setCaseHistoryModalVisible] = useState(false);
+
     const handleOpenCaseModal = () => {
         setIsCaseModalVisible(true); //打开病例模态框
         console.log('Open Case Modal');
@@ -57,6 +60,14 @@ const Appointments = () => {
     const handleCloseCaseModal = () => {
         setIsCaseModalVisible(false); //关闭病例模态框
     };
+
+    const handleOpenCaseHistoryModal = () =>{
+        setCaseHistoryModalVisible(true);
+    }
+
+    const handleCloseCaseHistoryModal = () =>{
+        setCaseHistoryModalVisible(false);
+    }
 
     const handleDateChange = (date) => {
         setStartDate(date);
@@ -505,7 +516,7 @@ const Appointments = () => {
                 <Row className='mt-3 mb-3'>
                     <Col><p><strong><FaTools/> Service:</strong> {selectedEvent.service}</p></Col>
                     <Col xs={2} className="offset-4">
-                        <Button onClick={handleAddService} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add +</Button>
+                        <Button onClick={handleAddService} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add</Button>
                     </Col>
                 </Row>
                 
@@ -572,8 +583,9 @@ const Appointments = () => {
                         <h5>Case</h5>
                         <hr />
                         <Button onClick={handleOpenCaseModal} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Case</Button>
-                        <Button variant="light" style={{border:"1px solid"}}>Show Case History</Button>
+                        <Button variant="light" style={{border:"1px solid"}} onClick={handleOpenCaseHistoryModal}>Show Case History</Button>
                         <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} />
+                        <CaseHistory isVisible={caseHistoryModalVisible} onClose={handleCloseCaseHistoryModal} onSubmit={handleCloseCaseHistoryModal} />
                     </Col>
                 </Row>
                 <h5>History</h5>
