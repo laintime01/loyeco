@@ -29,7 +29,7 @@ const MyPatients = () => {
     const [lastName, setLastname] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
-    const [gender, setGender] = useState("");
+    const [gender, setGender] = useState("UNKNOWN");
     const [preferredName, setPreferredName] = useState("");
     const [occupation, setOccupation] = useState("");
     const [emergencyContactName, setEmergencyContactName] = useState("");
@@ -257,7 +257,6 @@ const MyPatients = () => {
                                             <InputGroup>
                                                 <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
                                             <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
-                                                <option value="">Select Gender</option>
                                                 <option value="MALE">MALE</option>
                                                 <option value="FEMALE">FEMALE</option>
                                                 <option value="UNKNOWN">UNKNOWN</option>
@@ -507,7 +506,6 @@ const MyPatients = () => {
                                                                     value={selectedPatient?.gender}
                                                                     onChange={(e)=> setSelectedPatient({...selectedPatient, gender:e.target.value})}
                                                                     >
-                                                                    <option value="">Select Gender</option>
                                                                     <option value="MALE">MALE</option>
                                                                     <option value="FEMALE">FEMALE</option>
                                                                     <option value="UNKNOWN">UNKNOWN</option>                       

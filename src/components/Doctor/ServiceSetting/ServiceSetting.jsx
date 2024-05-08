@@ -35,7 +35,7 @@ const ServiceSetting = () => {
     const [newService, setNewService] = useState({
         name: '',
         active: '',
-        duration: '',
+        duration: '15',
         rate: '',
         taxRate: ''
     });

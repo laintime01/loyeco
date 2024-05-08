@@ -91,7 +91,7 @@ const Appointments = () => {
     const [createPatient] = useCreatePatientMutation();
 
     const [patientOptions, setPatientOptions] = useState([]);
-    const { data: patients } = useGetAllPatientsQuery();
+    const { data: patients, refetch: refetchPatients } = useGetAllPatientsQuery();
 
     useEffect(() => {
         if (patients) {
@@ -129,7 +129,7 @@ const Appointments = () => {
             lastName: '',
             email: '',
             phone: '',
-            gender: '',
+            gender: 'UNKNOWN',
             address: '',
             city: '',
             province: '',
@@ -157,6 +157,7 @@ const Appointments = () => {
         const handleAddModalClose = () => {
             handleReset();
             setShowAddPatientModal(false);
+            refetchPatients();
         };
 
         const handleAddPatient = async(e) => {
@@ -164,15 +165,15 @@ const Appointments = () => {
             try {
                 await createPatient(user);
                 toast.success('Patient added successfully');
-                handleAddModalClose();
             }catch (error) {
                 toast.error('Failed to add patient');
             }
+            handleAddModalClose();
         };
         
 
         return (
-            <Modal title="Add New Patient" open={visible} onCancel={handleClose} onOk={handleAddPatient} destroyOnClose={true}>  
+            <Modal title="Add New Patient" open={visible} onCancel={handleClose} onOk={handleAddPatient}>  
                 <Form layout="vertical">
                     <Row className='mb-3'>
                         <Col style={{ marginRight: "5px" }}>
@@ -186,8 +187,8 @@ const Appointments = () => {
                     </Row>
                     <Row className='mb-3'>
                         <Col style={{ marginRight: "5px" }}>
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" name="email" value={user.email} onChange={handleInputChange} />
+                            <Form.Label>Phone</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Phone Number" name="phone" value={user.phone} onChange={handleInputChange} />
                         </Col>
                         <Col>
                         </Col>
@@ -201,7 +202,6 @@ const Appointments = () => {
                                             <Form.Group controlId="formPatientGender">
                                                 <Form.Label>Gender</Form.Label>
                                                 <Form.Select aria-label="Gender select" name="gender" value={user.gender} onChange={handleInputChange}>
-                                                    <option value="">Select Gender</option>
                                                     <option value="MALE">Male</option>
                                                     <option value="FEMALE">Female</option>
                                                     <option value="UNKNOWN">UNKNOWN</option>
@@ -209,8 +209,8 @@ const Appointments = () => {
                                             </Form.Group>
                                         </Col>
                                         <Col>
-                                            <Form.Label>Phone</Form.Label>
-                                            <Form.Control type="text" placeholder='Enter phone number' name="phone" value={user.phone} onChange={handleInputChange} />
+                                            <Form.Label>Email</Form.Label>
+                                            <Form.Control type="email" placeholder='Enter Email' name="email" value={user.email} onChange={handleInputChange} />
                                         </Col>
                                     </Row>
                                     <Row className='mb-3'>
