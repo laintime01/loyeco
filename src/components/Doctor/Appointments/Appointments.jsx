@@ -16,6 +16,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import toast from 'react-hot-toast';
 
+import CaseModal from '../Case/CaseModal';
+
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
 
@@ -32,9 +34,9 @@ maxTime.setHours(22, 0, 0);
 
 const Appointments = () => {
     const [visible, setVisible] = useState(false);
+    const [isCaseModalVisible, setIsCaseModalVisible] = useState(false);
     const [newEventModalVisible, setNewEventModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
-    const [selectedSlot, setSelectedSlot] = useState({});
     const [appointmentData, setAppointmentData] = useState({
         patientId: '',
         locationId: '',
@@ -43,10 +45,19 @@ const Appointments = () => {
         generalNote: '',
         services: []
     });
-    console.log("appointmentData"+ JSON.stringify(appointmentData));
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
+
+    const handleOpenCaseModal = () => {
+        setIsCaseModalVisible(true); //打开病例模态框
+        console.log('Open Case Modal');
+    };
+
+    const handleCloseCaseModal = () => {
+        setIsCaseModalVisible(false); //关闭病例模态框
+    };
+
     const handleDateChange = (date) => {
         setStartDate(date);
         // 如果 startTime 和 endTime 已经被设置，更新 appointmentData
@@ -474,17 +485,14 @@ const Appointments = () => {
 
             {/* Event Detail Modal */}
             <Modal title="Appointment Details" open={visible} onCancel={handleCancel} width={800}>
-                {/* draw a line to seprate */}
                 <h5>Patient Info</h5>
                 <hr />
                 {/* patient*/}
                 <Row className='mb-3'><p><strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}</p></Row>
-                {/* patient email and phone on same row margin 5px*/}
                 <Row className='mb-3'>
                     <Col><p><strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}</p></Col>
                     <Col><p><strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}</p></Col>
                 </Row>
-                {/* reminder with in textarea with a edit icon on the right side*/}
                 <Row className='mb-3'>
                     <Col><p><strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}</p></Col>
                     <Col xs={2} className="offset-4">
@@ -494,7 +502,6 @@ const Appointments = () => {
                 {/* draw a line to seprate */}
                 <h5>Appointment Info</h5>
                 <hr />
-                {/* service with add service button on the right*/}
                 <Row className='mt-3 mb-3'>
                     <Col><p><strong><FaTools/> Service:</strong> {selectedEvent.service}</p></Col>
                     <Col xs={2} className="offset-4">
@@ -502,7 +509,6 @@ const Appointments = () => {
                     </Col>
                 </Row>
                 
-                {/* date and time on same row edit button on the right*/}
                 <Row className='mb-3'>
                     <Col><p><strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}</p></Col>
                     <Col><p><strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}</p></Col>
@@ -512,7 +518,6 @@ const Appointments = () => {
                 </Row>
                 <h5>Actions</h5>
                 <hr />
-                {/* Action includes Arrive,Late, Reschedule, NoShow and Cancel. all buttons*/}
                 <Row className='mb-3'>
                     <Form as={Row}>
                         <Col className='d-flex  mr-3' xs={10}>
@@ -562,9 +567,17 @@ const Appointments = () => {
                         </Col>
                     </Form>
                 </Row>
+                <Row className='mb-3'>
+                    <Col>
+                        <h5>Case</h5>
+                        <hr />
+                        <Button onClick={handleOpenCaseModal} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Case</Button>
+                        <Button variant="light" style={{border:"1px solid"}}>Show Case History</Button>
+                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} />
+                    </Col>
+                </Row>
                 <h5>History</h5>
                 <hr />
-                {/* patient history with time, service and arrive status*/}
                 <Row className='mb-3'>
                     <Col><p>{selectedEvent.historyDate || 'Not Available'}</p></Col>
                     <Col><p>{selectedEvent.service || 'Not Available'}</p></Col>

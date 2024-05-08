@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace, faCamera, faAddressCard, faBacon, faBahai} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
 import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon} from 'react-icons/fa';
+import {CaseModal} from '../Case/CaseModal';
 
 const MyPatients = () => {
     // search related
@@ -48,6 +49,17 @@ const MyPatients = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+
+    const [isCaseModalVisible, setIsCaseModalVisible] = useState(false);
+
+    // handle case modal
+    const openCaseModal = () => {
+        setIsCaseModalVisible(true);
+    };
+
+    const closeCaseModal = () => {
+        setIsCaseModalVisible(false);
+    };
 
     // handle delete patient
     const handleDelete = async () => {
