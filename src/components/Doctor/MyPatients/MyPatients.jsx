@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace, faCamera, faAddressCard, faBacon, faBahai} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
 import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon} from 'react-icons/fa';
-import {CaseModal} from '../Case/CaseModal';
+import CaseModal from '../Case/CaseModal';
+import CaseHistory from '../Case/CaseHistory';
 
 const MyPatients = () => {
     // search related
@@ -51,6 +52,7 @@ const MyPatients = () => {
     const [isEditing, setIsEditing] = useState(false);
 
     const [isCaseModalVisible, setIsCaseModalVisible] = useState(false);
+    const [isCaseHistoryModalVisible, setIsCaseHistoryModalVisible] = useState(false);
 
     // handle case modal
     const openCaseModal = () => {
@@ -59,6 +61,15 @@ const MyPatients = () => {
 
     const closeCaseModal = () => {
         setIsCaseModalVisible(false);
+    };
+
+    // handle case history modal
+    const openCaseHistoryModal = () => {
+        setIsCaseHistoryModalVisible(true);
+    };
+
+    const closeCaseHistoryModal = () => {
+        setIsCaseHistoryModalVisible(false);
     };
 
     // handle delete patient
@@ -201,6 +212,7 @@ const MyPatients = () => {
                             </Button>
                         </InputGroup>
                     </div>
+                    {/* Add New Patient Modal */}
                     <Modal show={showModal} onHide={handleClose} size="lg">
                         <Modal.Header closeButton>
                             <Modal.Title>Add New Patient</Modal.Title>
@@ -382,8 +394,6 @@ const MyPatients = () => {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-
-
                     {/* confirm delete modal */}
                     <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                         <Modal.Header closeButton>
@@ -401,7 +411,9 @@ const MyPatients = () => {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-
+                    {/* CaseModal and CaseHistoryModal */}
+                    <CaseModal isVisible={isCaseModalVisible} onClose={closeCaseModal} />
+                    <CaseHistory isVisible={isCaseHistoryModalVisible} onClose={closeCaseHistoryModal} />
                     {/* use searchDate if its not null otherwise use data */}
                     {!isLoading && isError && <div>Loading...</div>}
                     {!isLoading && !isError && dataList?.length === 0 && <div>Empty</div>}
@@ -415,20 +427,41 @@ const MyPatients = () => {
                                     <th>Phone</th>
                                     <th>Gender</th>
                                     <th>VisitStatus</th>
+                                    <th>Case</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {dataList.map((item) => (
-                                    <tr key={item.id} onClick={() => handlePatientClick(item)}>
-                                        <td>{item.lastName}</td>
-                                        <td>{item.firstName}</td>
-                                        <td>{item.preferredName}</td>
-                                        <td>{item.phone}</td>
-                                        <td>{item.gender}</td>
-                                        <td>{item.visitStatus}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
+                            {dataList.map((item) => (
+                                <tr key={item.id} onClick={() => handlePatientClick(item)}>
+                                    <td>{item.lastName}</td>
+                                    <td>{item.firstName}</td>
+                                    <td>{item.preferredName}</td>
+                                    <td>{item.phone}</td>
+                                    <td>{item.gender}</td>
+                                    <td>{item.visitStatus}</td>
+                                    <td>
+                                        <Button 
+                                            variant="secondary" 
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // 阻止事件冒泡
+                                                openCaseModal(); // 假设我们要传递当前项到函数,就用openCaseModal(item)
+                                            }} 
+                                            style={{marginRight:"5px"}}>
+                                            Add
+                                        </Button>
+                                        <Button 
+                                            variant="secondary" 
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // 阻止事件冒泡
+                                                openCaseHistoryModal(); // 假设我们要传递当前项到函数，就用openCaseHistoryModal(item)
+                                            }}>
+                                            History
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+
                         </Table>
                     )}
 
@@ -660,12 +693,7 @@ const MyPatients = () => {
                                                     <Col>
                                                     </Col>
                                                 </Row>
-
-
-
-                                                
-                                            </Form>
-                                                
+                                            </Form>                      
                                                 ) : (
                                                     // Render the patient info
                                                     <div>
@@ -740,8 +768,7 @@ const MyPatients = () => {
                                                                             <strong>Postal Code:</strong> {selectedPatient?.postal}
                                                                         </Card.Text>
                                                                     </Col>
-                                                                </Row>
-                                                            
+                                                                </Row>                                      
                                                                 <Row className="mb-3">
                                                                     <Col>
                                                                         <Card.Text>
@@ -780,10 +807,7 @@ const MyPatients = () => {
                                                                 </Row>
                                                                 <Card.Text>
                                                                     <strong>VisitStatus:</strong> {selectedPatient?.visitStatus}
-                                                                </Card.Text>
-
-
-                                                               
+                                                               </Card.Text>
                                                             </Card.Body>
                                                         </Card>
                                                     </div>
@@ -796,7 +820,8 @@ const MyPatients = () => {
                                                     <Button variant="success" onClick={handleSaveClick}>Save</Button>
                                                 ) : (
                                                     <>
-                                                    <Button variant="primary" onClick={handleEditClick}>Edit</Button></>
+                                                    <Button variant="primary" onClick={handleEditClick}>Edit</Button>
+                                                    </>
                                                 )}
                                                 <Button variant="danger" onClick={() => handleShowDeleteModal(selectedPatient?.id)}>Delete</Button>
                                                 </div>

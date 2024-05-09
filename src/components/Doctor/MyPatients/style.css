@@ -72,3 +72,22 @@
 .border-top-custom {
     border-top: 20px solid #cccccc !important; /* Change '2px' to the thickness you want */
 }
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;  /* 根据需要调整内边距 */
+}
+
+.modal-footer div {
+    display: flex;
+    gap: 5px; /* 按钮之间的间隔 */
+}
+
+.modal-footer .btn-group {
+    display: flex;
+    align-items: center;
+}
+
+/* 可以根据需要添加更多的样式来细化视觉效果 */
