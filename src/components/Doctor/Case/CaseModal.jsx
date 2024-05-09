@@ -48,8 +48,20 @@ const CaseModal = ({ isVisible, onClose, onSubmit }) => {
         setText(e.target.value);
     }
 
+    const handleClose = () => {
+        setChiefComplaintOption('');
+        setDifferentialOptions([]);
+        setDifferentialOption('');
+        setInputValue('');
+        setText('');
+        // Call onClose prop if it's a function
+        if (typeof onClose === 'function') {
+            onClose();
+        }
+    }
+
     return (
-        <Modal title="Add New Case" open={isVisible} onCancel={onClose} onOk={onSubmit} width={800}>
+        <Modal title="Add New Case" open={isVisible} onCancel={handleClose} onOk={onSubmit} width={800}>
             <Form layout="vertical">
                 <Row gutter={16}>
                     <Col span={12}>
