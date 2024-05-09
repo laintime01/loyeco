@@ -8,6 +8,25 @@ import { useGetAllServicesQuery,
          useDeleteServiceMutation,
          useServiceStatusMutation, } from '../../../redux/api/serviceApi';
 
+// 确认Modal
+const ConfirmModal = ({show,onHide,onConfirm,message}) => {
+    return (
+        <Modal show={show} onHide={onHide}>
+            <Modal.Header closeButton>
+                <Modal.Title>Confirm Action</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>{message}</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={onHide}>Cancel</Button>
+                <Button variant="primary" onClick={onConfirm}>Confirm</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+            
+
 const ServiceSetting = () => {
     const { data, isLoading, isError, refetch} = useGetAllServicesQuery();
     const [showModal, setShowModal] = useState(false);
@@ -16,7 +35,7 @@ const ServiceSetting = () => {
     const [newService, setNewService] = useState({
         name: '',
         active: '',
-        duration: '',
+        duration: '15',
         rate: '',
         taxRate: ''
     });
@@ -24,29 +43,44 @@ const ServiceSetting = () => {
     const [updateService] = useUpdateServiceMutation();
     const [deleteService] = useDeleteServiceMutation();
 
+    const [showConfirm, setShowConfirm] = useState(false);
+
+    const clearService = () => {
+        setNewService({
+            name: '',
+            active: '',
+            duration: '',
+            rate: '',
+            taxRate: ''
+        });
+    }
+
     // service 保存
     const handleSave = async () => {
-        console.log(newService);
         // save new service
         try{
             await createService(newService).unwrap();
             setShowModal(false);
+            clearService();
             toast.success('Add Patient Successful');
             refetch();
         }catch(error){
             console.log(error);
+            toast.error(`Failed to add patient: ${error.message || 'Unknown error, please try again later!'}`);
         }
     };
     const handleChange = (e) => {
         const { name, value } = e.target;
         let updatedValue = value;
-    
-        // 根据字段名转换类型
+        
         if (name === 'active' || name === 'duration' || name === 'taxRate') {
-            updatedValue = parseInt(value, 10) || 0; // 转换为整数，如果转换失败则默认为 0
+            const parsedValue = parseInt(value, 10);
+            updatedValue = isNaN(parsedValue) ? 0 : parsedValue;  // 只有在解析失败时才使用 0
         } else if (name === 'rate') {
-            updatedValue = parseFloat(value) || 0.00; // 转换为小数，如果转换失败则默认为 0.0
+            const parsedValue = parseFloat(value);
+            updatedValue = isNaN(parsedValue) ? 0.00 : parsedValue;  // 只有在解析失败时才使用 0.0
         }
+    
         setNewService({ ...newService, [name]: updatedValue });
     };
     const handleServiceChange = (e) => {
@@ -74,6 +108,7 @@ const ServiceSetting = () => {
 
     // 删除service逻辑
     const handleDelete = async () => {
+        setShowConfirm(false);
         try {
             await deleteService(selectedService.typeId).unwrap();
             setShowServiceModal(false);
@@ -81,6 +116,7 @@ const ServiceSetting = () => {
             refetch();
         } catch (error) {
             console.log(error);
+            toast.error(`Failed to delete service: ${error.message || 'Failed to delete service, please try again later!'}`);
         }
     }
     
@@ -122,6 +158,13 @@ const ServiceSetting = () => {
                         </tbody>
                     </Table>
                 )}
+        {/* 确认Modal */}
+         <ConfirmModal 
+            show={showConfirm} 
+            onHide={() => setShowConfirm(false)} 
+            onConfirm={handleDelete}
+            message="Are you sure you want to delete this service?"
+        />
         {/* Add service modal */}
         <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
@@ -217,43 +260,13 @@ const ServiceSetting = () => {
                                 <Form.Label>Tax Rate</Form.Label>
                                 <Form.Control type="text" name="taxRate" value={selectedService.taxRate} onChange={handleServiceChange} />
                             </Form.Group>
-
-                            <Form.Group as={Row} className="mb-3">
-                            <Form.Label column sm="4" className="text-right">
-                                Status:
-                            </Form.Label>
-                            <Col sm="8">
-                                <Form.Check 
-                                type="radio" 
-                                name="status" 
-                                label="Active" 
-                                value="true"  // 设置为布尔类型的字符串表示
-                                checked={selectedService.status === true} // 直接比较布尔值
-                                onChange={() => handleServiceChange(true)}  // 传递布尔值true
-                                id="activeStatusRadio"
-                                />
-                                <Form.Check 
-                                type="radio" 
-                                name="status" 
-                                label="Inactive" 
-                                value="false" // 设置为布尔类型的字符串表示
-                                checked={selectedService.status === false} // 直接比较布尔值
-                                onChange={() => handleServiceChange(false)}  // 传递布尔值false
-                                id="inactiveStatusRadio"
-                                />
-                            </Col>
-                            </Form.Group>
                         </Form>
                     )}
                 </Modal.Body>
-            <Modal.Footer className="d-flex justify-content-between">
-                <div>
-                    <Button variant="danger" onClick={handleDelete}>Delete</Button>
-                </div>
-                <div>
-                    <Button variant="primary" style={{marginRight:"10px"}} onClick={handleEdit}>Save</Button>
-                    <Button variant="secondary" onClick={() => setShowServiceModal(false)}>Close</Button>
-                </div>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowServiceModal(false)}>Close</Button>
+                {/* <Button variant="primary" onClick={handleEdit}>Edit</Button> */}
+                <Button variant="danger" onClick={()=>setShowConfirm(true)}>Delete</Button>
             </Modal.Footer>
         </Modal>
 

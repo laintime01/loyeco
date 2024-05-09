@@ -16,6 +16,9 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import toast from 'react-hot-toast';
 
+import CaseModal from '../Case/CaseModal';
+import CaseHistory from '../Case/CaseHistory';
+
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
 
@@ -32,9 +35,9 @@ maxTime.setHours(22, 0, 0);
 
 const Appointments = () => {
     const [visible, setVisible] = useState(false);
+    const [isCaseModalVisible, setIsCaseModalVisible] = useState(false);
     const [newEventModalVisible, setNewEventModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
-    const [selectedSlot, setSelectedSlot] = useState({});
     const [appointmentData, setAppointmentData] = useState({
         patientId: '',
         locationId: '',
@@ -43,10 +46,29 @@ const Appointments = () => {
         generalNote: '',
         services: []
     });
-    console.log("appointmentData"+ JSON.stringify(appointmentData));
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
+
+    const [caseHistoryModalVisible, setCaseHistoryModalVisible] = useState(false);
+
+    const handleOpenCaseModal = () => {
+        setIsCaseModalVisible(true); //打开病例模态框
+        console.log('Open Case Modal');
+    };
+
+    const handleCloseCaseModal = () => {
+        setIsCaseModalVisible(false); //关闭病例模态框
+    };
+
+    const handleOpenCaseHistoryModal = () =>{
+        setCaseHistoryModalVisible(true);
+    }
+
+    const handleCloseCaseHistoryModal = () =>{
+        setCaseHistoryModalVisible(false);
+    }
+
     const handleDateChange = (date) => {
         setStartDate(date);
         // 如果 startTime 和 endTime 已经被设置，更新 appointmentData
@@ -91,7 +113,7 @@ const Appointments = () => {
     const [createPatient] = useCreatePatientMutation();
 
     const [patientOptions, setPatientOptions] = useState([]);
-    const { data: patients } = useGetAllPatientsQuery();
+    const { data: patients, refetch: refetchPatients } = useGetAllPatientsQuery();
 
     useEffect(() => {
         if (patients) {
@@ -129,7 +151,7 @@ const Appointments = () => {
             lastName: '',
             email: '',
             phone: '',
-            gender: '',
+            gender: 'UNKNOWN',
             address: '',
             city: '',
             province: '',
@@ -157,6 +179,7 @@ const Appointments = () => {
         const handleAddModalClose = () => {
             handleReset();
             setShowAddPatientModal(false);
+            refetchPatients();
         };
 
         const handleAddPatient = async(e) => {
@@ -164,15 +187,15 @@ const Appointments = () => {
             try {
                 await createPatient(user);
                 toast.success('Patient added successfully');
-                handleAddModalClose();
             }catch (error) {
                 toast.error('Failed to add patient');
             }
+            handleAddModalClose();
         };
         
 
         return (
-            <Modal title="Add New Patient" open={visible} onCancel={handleClose} onOk={handleAddPatient} destroyOnClose={true}>  
+            <Modal title="Add New Patient" open={visible} onCancel={handleClose} onOk={handleAddPatient}>  
                 <Form layout="vertical">
                     <Row className='mb-3'>
                         <Col style={{ marginRight: "5px" }}>
@@ -186,8 +209,8 @@ const Appointments = () => {
                     </Row>
                     <Row className='mb-3'>
                         <Col style={{ marginRight: "5px" }}>
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" name="email" value={user.email} onChange={handleInputChange} />
+                            <Form.Label>Phone</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Phone Number" name="phone" value={user.phone} onChange={handleInputChange} />
                         </Col>
                         <Col>
                         </Col>
@@ -201,7 +224,6 @@ const Appointments = () => {
                                             <Form.Group controlId="formPatientGender">
                                                 <Form.Label>Gender</Form.Label>
                                                 <Form.Select aria-label="Gender select" name="gender" value={user.gender} onChange={handleInputChange}>
-                                                    <option value="">Select Gender</option>
                                                     <option value="MALE">Male</option>
                                                     <option value="FEMALE">Female</option>
                                                     <option value="UNKNOWN">UNKNOWN</option>
@@ -209,8 +231,8 @@ const Appointments = () => {
                                             </Form.Group>
                                         </Col>
                                         <Col>
-                                            <Form.Label>Phone</Form.Label>
-                                            <Form.Control type="text" placeholder='Enter phone number' name="phone" value={user.phone} onChange={handleInputChange} />
+                                            <Form.Label>Email</Form.Label>
+                                            <Form.Control type="email" placeholder='Enter Email' name="email" value={user.email} onChange={handleInputChange} />
                                         </Col>
                                     </Row>
                                     <Row className='mb-3'>
@@ -265,7 +287,7 @@ const Appointments = () => {
                     patientId: `${appointment.patient.firstName} ${appointment.patient.lastName}`,
                     start: start,
                     end: end,
-                    title: `Appointment for ${appointment.patient.firstName} ${appointment.patient.lastName}`,
+                    title: `${appointment.patient.firstName} ${appointment.patient.lastName} 's appointment for ${serviceName}`,
                     content: `Meeting with ${appointment.patient.firstName} ${appointment.patient.lastName} for his regular checkup.`,
                     service: `${serviceName}-${serviceDuration}`,
                     clinicName: appointment.location.name,
@@ -459,7 +481,7 @@ const Appointments = () => {
                 defaultDate={new Date()}
                 defaultView="week"
                 events={events}
-                style={{ height: "80vh" }}
+                style={{ height: "150vh" }}
                 onSelectSlot={handleSelectSlot}
                 onSelectEvent={handleSelectEvent}
                 onEventDrop={onEventDrop}
@@ -469,21 +491,19 @@ const Appointments = () => {
                 min={minTime} // Set the min time
                 max={maxTime} // Set the max time
                 timeslots={4} // Divide hour into 4 slots of 15 minutes each
+                step={15} // 15 minutes slot
             />
 
             {/* Event Detail Modal */}
             <Modal title="Appointment Details" open={visible} onCancel={handleCancel} width={800}>
-                {/* draw a line to seprate */}
                 <h5>Patient Info</h5>
                 <hr />
                 {/* patient*/}
                 <Row className='mb-3'><p><strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}</p></Row>
-                {/* patient email and phone on same row margin 5px*/}
                 <Row className='mb-3'>
                     <Col><p><strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}</p></Col>
                     <Col><p><strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}</p></Col>
                 </Row>
-                {/* reminder with in textarea with a edit icon on the right side*/}
                 <Row className='mb-3'>
                     <Col><p><strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}</p></Col>
                     <Col xs={2} className="offset-4">
@@ -493,15 +513,13 @@ const Appointments = () => {
                 {/* draw a line to seprate */}
                 <h5>Appointment Info</h5>
                 <hr />
-                {/* service with add service button on the right*/}
                 <Row className='mt-3 mb-3'>
                     <Col><p><strong><FaTools/> Service:</strong> {selectedEvent.service}</p></Col>
                     <Col xs={2} className="offset-4">
-                        <Button onClick={handleAddService} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add +</Button>
+                        <Button onClick={handleAddService} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add</Button>
                     </Col>
                 </Row>
                 
-                {/* date and time on same row edit button on the right*/}
                 <Row className='mb-3'>
                     <Col><p><strong>Day:</strong> {selectedEvent.start && moment(selectedEvent.start).format('YYYY-MM-DD')}</p></Col>
                     <Col><p><strong>Time:</strong> {selectedEvent.start && `${moment(selectedEvent.start).format('HH:mm')} - ${moment(selectedEvent.end).format('HH:mm')}`}</p></Col>
@@ -511,7 +529,6 @@ const Appointments = () => {
                 </Row>
                 <h5>Actions</h5>
                 <hr />
-                {/* Action includes Arrive,Late, Reschedule, NoShow and Cancel. all buttons*/}
                 <Row className='mb-3'>
                     <Form as={Row}>
                         <Col className='d-flex  mr-3' xs={10}>
@@ -561,9 +578,18 @@ const Appointments = () => {
                         </Col>
                     </Form>
                 </Row>
+                <Row className='mb-3'>
+                    <Col>
+                        <h5>Case</h5>
+                        <hr />
+                        <Button onClick={handleOpenCaseModal} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Case</Button>
+                        <Button variant="light" style={{border:"1px solid"}} onClick={handleOpenCaseHistoryModal}>Show Case History</Button>
+                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} />
+                        <CaseHistory isVisible={caseHistoryModalVisible} onClose={handleCloseCaseHistoryModal} onSubmit={handleCloseCaseHistoryModal} />
+                    </Col>
+                </Row>
                 <h5>History</h5>
                 <hr />
-                {/* patient history with time, service and arrive status*/}
                 <Row className='mb-3'>
                     <Col><p>{selectedEvent.historyDate || 'Not Available'}</p></Col>
                     <Col><p>{selectedEvent.service || 'Not Available'}</p></Col>

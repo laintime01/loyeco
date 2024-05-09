@@ -7,9 +7,11 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace, faCamera, faAddressCard, faBacon, faBahai, faHeart, faFire, faHandHolding, faAddressBook, faCity, faBuilding, faCode, faAt, faMap, faFemale, faHeading, faUserTie, faUserPlus} from '@fortawesome/free-solid-svg-icons';
+import { faUser, faPhone, faEnvelope, faChild, faDice, faPeace, faCamera, faAddressCard, faBacon, faBahai} from '@fortawesome/free-solid-svg-icons';
 import './style.css';
-import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon, FaFire, FaNimblr} from 'react-icons/fa';
+import { FaAddressBook, FaAddressCard, FaContao, FaUser,FaPhone, FaEnvelope, FaDice,FaChild, FaPeace,FaCamera, FaBahai, FaBacon} from 'react-icons/fa';
+import CaseModal from '../Case/CaseModal';
+import CaseHistory from '../Case/CaseHistory';
 
 const MyPatients = () => {
     // search related
@@ -29,7 +31,7 @@ const MyPatients = () => {
     const [lastName, setLastname] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
-    const [gender, setGender] = useState("");
+    const [gender, setGender] = useState("UNKNOWN");
     const [preferredName, setPreferredName] = useState("");
     const [occupation, setOccupation] = useState("");
     const [emergencyContactName, setEmergencyContactName] = useState("");
@@ -38,7 +40,7 @@ const MyPatients = () => {
     const [address, setAddress] = useState("");
     const [city, setCity] = useState("");
     const [province, setProvince] = useState("");
-    const [postalCode, setPostalCode] = useState("");
+    const [postal, setPostal] = useState("");
     const [country, setCountry] = useState("");
     const [familyDoctorName, setFamilyDoctorName] = useState("");
     const [familyDoctorPhone, setFamilyDoctorPhone] = useState("");
@@ -48,6 +50,27 @@ const MyPatients = () => {
     const [selectedPatient, setSelectedPatient] = useState(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+
+    const [isCaseModalVisible, setIsCaseModalVisible] = useState(false);
+    const [isCaseHistoryModalVisible, setIsCaseHistoryModalVisible] = useState(false);
+
+    // handle case modal
+    const openCaseModal = () => {
+        setIsCaseModalVisible(true);
+    };
+
+    const closeCaseModal = () => {
+        setIsCaseModalVisible(false);
+    };
+
+    // handle case history modal
+    const openCaseHistoryModal = () => {
+        setIsCaseHistoryModalVisible(true);
+    };
+
+    const closeCaseHistoryModal = () => {
+        setIsCaseHistoryModalVisible(false);
+    };
 
     // handle delete patient
     const handleDelete = async () => {
@@ -69,7 +92,7 @@ const MyPatients = () => {
         try {
             await createPatient({firstName, lastName, phone, email,gender,preferredName,occupation,
                 emergencyContactName,emergencyContactPhone, emergencyContactRelationship,
-                address,city,province,postalCode,country,familyDoctorName,familyDoctorPhone
+                address,city,province,postal,country,familyDoctorName,familyDoctorPhone
             }).unwrap();
             handleClose();
             toast.success('Add Patient Successful');
@@ -104,7 +127,7 @@ const MyPatients = () => {
         setAddress("");
         setCity("");
         setProvince("");
-        setPostalCode("");
+        setPostal("");
         setCountry("");
         setFamilyDoctorName("");
         setFamilyDoctorPhone("");
@@ -189,6 +212,7 @@ const MyPatients = () => {
                             </Button>
                         </InputGroup>
                     </div>
+                    {/* Add New Patient Modal */}
                     <Modal show={showModal} onHide={handleClose} size="lg">
                         <Modal.Header closeButton>
                             <Modal.Title>Add New Patient</Modal.Title>
@@ -237,7 +261,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formPreferredName">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faHeart} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter preferred name" value={preferredName} onChange={(e) => setPreferredName(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -257,7 +281,6 @@ const MyPatients = () => {
                                             <InputGroup>
                                                 <InputGroup.Text><FontAwesomeIcon icon={faChild} /></InputGroup.Text>
                                             <Form.Select aria-label="Gender select" value={gender} onChange={(e) => setGender(e.target.value)}>
-                                                <option value="">Select Gender</option>
                                                 <option value="MALE">MALE</option>
                                                 <option value="FEMALE">FEMALE</option>
                                                 <option value="UNKNOWN">UNKNOWN</option>
@@ -269,7 +292,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formEmergencyContactName">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faFire} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faPeace} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter emergency contact name" value={emergencyContactName} onChange={(e) => setEmergencyContactName(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -279,7 +302,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formEmergencyContactRelationship">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faUserPlus} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faCamera} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter emergency contact relationship" value={emergencyContactRelationship} onChange={(e) => setEmergencyContactRelationship(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -297,7 +320,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formPatientAddress">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faAddressBook} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faEnvelope} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter address" value={address} onChange={(e) => setAddress(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -305,7 +328,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formPatientCity">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faBuilding} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faAddressCard} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter city" value={city} onChange={(e) => setCity(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -315,7 +338,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formPatientProvince">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faCity} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faAddressCard} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter province" value={province} onChange={(e) => setProvince(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -323,8 +346,8 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formPatientPostal">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faAt} /></InputGroup.Text>
-                                            <Form.Control type="text" placeholder="Enter postal" value={postalCode} onChange={(e) => setPostalCode(e.target.value)}/>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faAddressCard} /></InputGroup.Text>
+                                            <Form.Control type="text" placeholder="Enter postal" value={postal} onChange={(e) => setPostal(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
                                     </Col>
@@ -333,7 +356,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formPatientCountry">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faMap} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faBahai} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter country" value={country} onChange={(e) => setCountry(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -341,7 +364,7 @@ const MyPatients = () => {
                                     <Col>
                                         <Form.Group controlId="formFamilyDoctorName">
                                             <InputGroup>
-                                                <InputGroup.Text><FontAwesomeIcon icon={faUserTie} /></InputGroup.Text>
+                                                <InputGroup.Text><FontAwesomeIcon icon={faBacon} /></InputGroup.Text>
                                             <Form.Control type="text" placeholder="Enter family doctor name" value={familyDoctorName} onChange={(e) => setFamilyDoctorName(e.target.value)}/>
                                             </InputGroup>
                                         </Form.Group>
@@ -371,8 +394,6 @@ const MyPatients = () => {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-
-
                     {/* confirm delete modal */}
                     <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
                         <Modal.Header closeButton>
@@ -390,7 +411,9 @@ const MyPatients = () => {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-
+                    {/* CaseModal and CaseHistoryModal */}
+                    <CaseModal isVisible={isCaseModalVisible} onClose={closeCaseModal} />
+                    <CaseHistory isVisible={isCaseHistoryModalVisible} onClose={closeCaseHistoryModal} />
                     {/* use searchDate if its not null otherwise use data */}
                     {!isLoading && isError && <div>Loading...</div>}
                     {!isLoading && !isError && dataList?.length === 0 && <div>Empty</div>}
@@ -404,20 +427,41 @@ const MyPatients = () => {
                                     <th>Phone</th>
                                     <th>Gender</th>
                                     <th>VisitStatus</th>
+                                    <th>Case</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {dataList.map((item) => (
-                                    <tr key={item.id} onClick={() => handlePatientClick(item)}>
-                                        <td>{item.lastName}</td>
-                                        <td>{item.firstName}</td>
-                                        <td>{item.preferredName}</td>
-                                        <td>{item.phone}</td>
-                                        <td>{item.gender}</td>
-                                        <td>{item.visitStatus}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
+                            {dataList.map((item) => (
+                                <tr key={item.id} onClick={() => handlePatientClick(item)}>
+                                    <td>{item.lastName}</td>
+                                    <td>{item.firstName}</td>
+                                    <td>{item.preferredName}</td>
+                                    <td>{item.phone}</td>
+                                    <td>{item.gender}</td>
+                                    <td>{item.visitStatus}</td>
+                                    <td>
+                                        <Button 
+                                            variant="secondary" 
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // 阻止事件冒泡
+                                                openCaseModal(); // 假设我们要传递当前项到函数,就用openCaseModal(item)
+                                            }} 
+                                            style={{marginRight:"5px"}}>
+                                            Add
+                                        </Button>
+                                        <Button 
+                                            variant="secondary" 
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // 阻止事件冒泡
+                                                openCaseHistoryModal(); // 假设我们要传递当前项到函数，就用openCaseHistoryModal(item)
+                                            }}>
+                                            History
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+
                         </Table>
                     )}
 
@@ -507,7 +551,6 @@ const MyPatients = () => {
                                                                     value={selectedPatient?.gender}
                                                                     onChange={(e)=> setSelectedPatient({...selectedPatient, gender:e.target.value})}
                                                                     >
-                                                                    <option value="">Select Gender</option>
                                                                     <option value="MALE">MALE</option>
                                                                     <option value="FEMALE">FEMALE</option>
                                                                     <option value="UNKNOWN">UNKNOWN</option>                       
@@ -566,8 +609,8 @@ const MyPatients = () => {
                                                                 <InputGroup.Text><FaAddressCard /></InputGroup.Text>
                                                                 <Form.Control
                                                                     type="text"
-                                                                    value={selectedPatient?.postalCode}
-                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, postalCode: e.target.value })}
+                                                                    value={selectedPatient?.postal}
+                                                                    onChange={(e) => setSelectedPatient({ ...selectedPatient, postal: e.target.value })}
                                                                 />
                                                             </InputGroup>
                                                         </Form.Group>
@@ -650,12 +693,7 @@ const MyPatients = () => {
                                                     <Col>
                                                     </Col>
                                                 </Row>
-
-
-
-                                                
-                                            </Form>
-                                                
+                                            </Form>                      
                                                 ) : (
                                                     // Render the patient info
                                                     <div>
@@ -727,11 +765,10 @@ const MyPatients = () => {
                                                                     </Col>
                                                                     <Col>
                                                                         <Card.Text>
-                                                                            <strong>Postal Code:</strong> {selectedPatient?.postalCode}
+                                                                            <strong>Postal Code:</strong> {selectedPatient?.postal}
                                                                         </Card.Text>
                                                                     </Col>
-                                                                </Row>
-                                                            
+                                                                </Row>                                      
                                                                 <Row className="mb-3">
                                                                     <Col>
                                                                         <Card.Text>
@@ -770,10 +807,7 @@ const MyPatients = () => {
                                                                 </Row>
                                                                 <Card.Text>
                                                                     <strong>VisitStatus:</strong> {selectedPatient?.visitStatus}
-                                                                </Card.Text>
-
-
-                                                               
+                                                               </Card.Text>
                                                             </Card.Body>
                                                         </Card>
                                                     </div>
@@ -786,7 +820,8 @@ const MyPatients = () => {
                                                     <Button variant="success" onClick={handleSaveClick}>Save</Button>
                                                 ) : (
                                                     <>
-                                                    <Button variant="primary" onClick={handleEditClick}>Edit</Button></>
+                                                    <Button variant="primary" onClick={handleEditClick}>Edit</Button>
+                                                    </>
                                                 )}
                                                 <Button variant="danger" onClick={() => handleShowDeleteModal(selectedPatient?.id)}>Delete</Button>
                                                 </div>

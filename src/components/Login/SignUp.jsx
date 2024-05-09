@@ -5,8 +5,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import swal from 'sweetalert';
 import { useSignUpMutation } from '../../redux/api/authApi';
 
-import {instance} from '../../helpers/axios/axiosInstance';
-
 const SignUp = ({ setSignUp }) => {
     const [error, setError] = useState({});
     const [infoError, setInfoError] = useState('');
@@ -93,6 +91,7 @@ const SignUp = ({ setSignUp }) => {
 
     const hanldeOnSubmit = async (e) => {
         e.preventDefault();
+        console.log('user', user);
         userSignUp(user);
     };
 
