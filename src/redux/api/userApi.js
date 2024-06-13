@@ -8,9 +8,6 @@ export const userApi = baseApi.injectEndpoints({
             query: () => ({
                 url: '/profile',
                 method: 'GET',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             providesTags: [tagTypes.user]
         }),
@@ -20,9 +17,6 @@ export const userApi = baseApi.injectEndpoints({
                 url: '/profile',
                 method: 'PUT',
                 data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.user]
         }),
@@ -32,9 +26,6 @@ export const userApi = baseApi.injectEndpoints({
                 url: '/password',
                 method: 'PUT',
                 data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.user]
         }),
@@ -44,9 +35,6 @@ export const userApi = baseApi.injectEndpoints({
                 url: '/avatar',
                 method: 'PUT',
                 data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.user]
         }),
@@ -57,9 +45,6 @@ export const userApi = baseApi.injectEndpoints({
                 url: '/upload',
                 method: 'POST',
                 data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.user]
         }),
@@ -68,9 +53,6 @@ export const userApi = baseApi.injectEndpoints({
             query: (fileName) => ({
                 url: `/avatar/${fileName}`,
                 method: 'GET',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             providesTags: [tagTypes.user]
         }),
