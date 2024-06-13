@@ -31,6 +31,7 @@ import ChartSetting from './components/Doctor/ChartSetting/ChartSetting';
 import ServiceSetting from './components/Doctor/ServiceSetting/ServiceSetting';
 import LocationSetting from './components/Doctor/LocationSetting/LocationSetting';
 import LicenseSetting from './components/Doctor/LicenseSetting/LicenseSetting';
+import PrivateRoute from './utils/PrivateRoute';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -41,41 +42,38 @@ const router = createBrowserRouter([
 
 
   
-  { path: '/dashboard', element: <Dashboard /> },
-  { path: '/dashboard/my-patients', element: <MyPatients /> },
-  { path: '/dashboard/schedule', element: <Schedule /> },
-  { path: '/dashboard/appointments', element: <Appointments /> },
-  { path: '/dashboard/change-password', element: <ChangePassword /> },
-  { path: '/dashboard/profile-setting', element: <ProfileSetting /> },
-  { path: '/dashboard/clinic-setting', element: <ClinicSetting /> },
-  { path: '/dashboard/invoices', element: <DoctorInvoice /> },
-  { path: '/dashboard/cases', element: <Report /> },
-  { path: '/dashboard/service-setting', element: <ServiceSetting /> },
-  { path: '/dashboard/location-setting', element: <LocationSetting /> },
-  { path: '/dashboard/chart-setting', element: <ChartSetting /> },
-  { path: '/dashboard/license-setting', element: <LicenseSetting />},
+  { path: '/dashboard', element: <PrivateRoute><Dashboard /></PrivateRoute> },
+  { path: '/dashboard/my-patients', element: <PrivateRoute><MyPatients /></PrivateRoute> },
+  { path: '/dashboard/schedule', element: <PrivateRoute><Schedule /></PrivateRoute> },
+  { path: '/dashboard/appointments', element: <PrivateRoute><Appointments /></PrivateRoute> },
+  { path: '/dashboard/change-password', element: <PrivateRoute><ChangePassword /></PrivateRoute> },
+  { path: '/dashboard/profile-setting', element: <PrivateRoute><ProfileSetting /></PrivateRoute> },
+  { path: '/dashboard/clinic-setting', element: <PrivateRoute><ClinicSetting /></PrivateRoute> },
+  { path: '/dashboard/invoices', element: <PrivateRoute><DoctorInvoice /></PrivateRoute> },
+  { path: '/dashboard/cases', element: <PrivateRoute><Report /></PrivateRoute> },
+  { path: '/dashboard/service-setting', element: <PrivateRoute><ServiceSetting /></PrivateRoute> },
+  { path: '/dashboard/location-setting', element: <PrivateRoute><LocationSetting /></PrivateRoute> },
+  { path: '/dashboard/chart-setting', element: <PrivateRoute><ChartSetting /></PrivateRoute> },
+  { path: '/dashboard/license-setting', element: <PrivateRoute><LicenseSetting /></PrivateRoute> },
 
+  { path: '/booking/:doctorId', element: <PrivateRoute><DoctorBooking /></PrivateRoute> },
+  { path: '/booking/success/', element: <PrivateRoute><BookingSuccess /></PrivateRoute> },
+  { path: '/booking/invoice/:id', element: <PrivateRoute><BookingInvoice /></PrivateRoute> },
 
-  { path: '/booking/:doctorId', element: <DoctorBooking /> },
-  { path: '/booking/success/', element: <BookingSuccess /> },
-  { path: '/booking/invoice/:id', element: <BookingInvoice /> },
+  { path: '/admin/dashboard', element: <PrivateRoute><AdminDashboard /></PrivateRoute> },
+  { path: '/admin/appointments', element: <PrivateRoute><AdminAppointments /></PrivateRoute> },
+  { path: '/admin/doctors', element: <PrivateRoute><Doctors /></PrivateRoute> },
+  { path: '/admin/patients', element: <PrivateRoute><Patients /></PrivateRoute> },
+  { path: '/admin/profile', element: <PrivateRoute><Profile /></PrivateRoute> },
+  { path: '/admin/transaction', element: <PrivateRoute><Transactions /></PrivateRoute> },
+  { path: '/admin/specialites', element: <PrivateRoute><Specialites /></PrivateRoute> },
+]);
 
-  // Dashboard
-  { path: '/admin/dashboard', element: <AdminDashboard /> },
-  { path: '/admin/appointments', element: <AdminAppointments /> },
-  { path: '/admin/doctors', element: <Doctors /> },
-  { path: '/admin/patients', element: <Patients /> },
-  { path: '/admin/profile', element: <Profile /> },
-  { path: '/admin/transaction', element: <Transactions /> },
-  { path: '/admin/specialites', element: <Specialites /> },
-
-  // { path: '/appointment', element: <PrivateRoute><AppointMent /></PrivateRoute> },
-])
 
 function App() {
   return (
     <div>
-      <Toaster /> {/* Add Toase  */}
+      <Toaster /> {/* Add Toaster */}
       <RouterProvider router={router} />
     </div>
   );

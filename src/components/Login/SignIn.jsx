@@ -28,6 +28,7 @@ const SignIn = ({ handleResponse }) => {
             setInfoError(error?.data?.message)
         }
         if(isSuccess){
+            sessionStorage.setItem('accessToken', data);
             swal({
                 icon: 'success',
                 text: `Successfully Logged In`,
