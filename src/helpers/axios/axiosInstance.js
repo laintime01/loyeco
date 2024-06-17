@@ -1,24 +1,24 @@
 import axios from "axios";
-import { getFromLocalStorage } from "../../utils/local-storage";
+import { getFromSessionStorage } from "../../utils/session-storage";
 
 export const instance = axios.create({
     baseURL: '/api',
-    withCredentials: true,
-// for quick testing will remove when aployed to production
-    headers: {
-        Authorization: 'Bearer admin@123.com'
-    },
+    withCredentials: true
 });
 
 instance.defaults.headers.post['Accept'] = 'application/json';
 instance.defaults.timeout = 6000;
 
 instance.interceptors.request.use(function (config) {
-    const accessToken = getFromLocalStorage('accessToken');
-    console.log('accessToken', accessToken);
-    if (accessToken) {
+    const accessToken = getFromSessionStorage('accessToken');
+    // check if the request is sign up or login
+    const isAuthRequest = config.url.includes('login') || config.url.includes('signup');
+    if (accessToken && !isAuthRequest){
         // set the Authorization header if token is available Bearer + accessToken
         config.headers.Authorization = `Bearer ${accessToken}`;
+    }else{
+        // remove the Authorization header if token is not available
+        delete config.headers.Authorization;
     }
     return config;
 }, function (error) {
@@ -28,9 +28,9 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
 const responseData = response.data;
     const responseObj = {
-        data: responseData.content || responseData, // 如果没有content字段，则直接使用responseData
+        data: responseData.content || responseData, // use content field if available
         content: responseData,
-        meta: responseData.meta || null // 如果没有meta字段，则设为null
+        meta: responseData.meta || null // use null if meta field is not available
     };
         return responseObj;
 }, function (error) {

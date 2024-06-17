@@ -68,6 +68,7 @@ const DashboardSidebar = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
+        sessionStorage.removeItem('accessToken');
         window.location.href = '/';
         }
     
