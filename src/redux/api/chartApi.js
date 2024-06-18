@@ -74,9 +74,8 @@ export const {
     useGetAllChartsQuery,
     useCreateChartMutation,
     useUpdateChartMutation,
-    useDeleteChartMutation,
     useChartStatusMutation,
     useGetAllChartServicesQuery,
     useGetChartServicesSubtypesQuery,
-    useGetTempChartQuery
+    useGetTempChartQuery,
 } = chartApi
