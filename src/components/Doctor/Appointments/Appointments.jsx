@@ -59,9 +59,13 @@ const Appointments = () => {
     const [selectedSecondLevel, setSelectedSecondLevel] = useState(null);
     const [selectedThirdLevel, setSelectedThirdLevel] = useState(null);
 
-    const { data: firstLevelChartOptions } = useGetAllChartsQuery();
-    const { data: secondLevelChartOptions } = useGetChartServicesSubtypesQuery(selectedFirstLevel);
-    const { data: thirdLevelChartOptions } = useGetTempChartQuery(selectedSecondLevel);
+    const { data: firstLevelChartOptions } = useGetAllChartServicesQuery();
+    const { data: secondLevelChartOptions } = useGetChartServicesSubtypesQuery(selectedFirstLevel, {
+        skip: !selectedFirstLevel,
+    });
+    const { data: thirdLevelChartOptions } = useGetTempChartQuery(selectedSecondLevel, {
+        skip: !selectedSecondLevel,
+    });
 
     // handle first level options
     useEffect(() => {
@@ -82,7 +86,6 @@ const Appointments = () => {
                 value: option.id
             }));
             setSecondLevelOptions(secondOptions);
-            console.log(secondOptions);
         }
     }, [secondLevelChartOptions]);
 
@@ -94,15 +97,11 @@ const Appointments = () => {
                 value: option.id
             }));
             setThirdLevelOptions(thirdOptions);
-            console.log(thirdOptions);
         }
     }, [thirdLevelChartOptions]);
 
     const handleOpenCaseModal = (appointmentId) => {
         setIsCaseModalVisible(true);
-        // pass the appointment id to the case modal
-        setSelectedAppointmentId(appointmentId);
-
     };
 
     const handleCloseCaseModal = () => {
@@ -374,8 +373,8 @@ const Appointments = () => {
 
     const handleSelectEvent = event => {
         setSelectedEvent(event);
-        console.log(selectedEvent);
-        setVisible(true);        
+        setVisible(true);
+        setSelectedAppointmentId(event.id);
     }
 
     const handleOk = async(e) => {
@@ -636,7 +635,7 @@ const Appointments = () => {
                         <hr />
                         <Button onClick={()=>handleOpenCaseModal(selectedEvent.id)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Chart</Button>
                         <Button variant="light" style={{border:"1px solid"}} onClick={handleOpenCaseHistoryModal}>Show Chart History</Button>
-                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} />
+                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} appointmentId={selectedAppointmentId}/>
                         <CaseHistory isVisible={caseHistoryModalVisible} onClose={handleCloseCaseHistoryModal} onSubmit={handleCloseCaseHistoryModal} />
                     </Col>
                 </Row>

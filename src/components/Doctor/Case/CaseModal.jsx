@@ -1,73 +1,123 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Form, Select, Input, Row, Col } from 'antd';
+import { useGetAllChartServicesQuery, useGetChartServicesSubtypesQuery, useGetTempChartQuery } from '../../../redux/api/chartApi';
+
 const { Option } = Select;
 const { TextArea } = Input;
 
-// Mock data for options in select
-const chiefComplaintOptions = [
-    { label: 'Pain', value: 'pain' },
-    { label: 'Difficulty Breathing', value: 'difficulty_breathing' },
-    { label: 'Changes in Vision', value: 'changes_in_vision' },
-    { label: 'Symptoms of Infection', value: 'symptoms_of_infection' },
-    { label: 'Other', value: 'other' }
-];
-const differentialDiagnosisOptions = {
-    pain: ['Acute Appendicitis', 'Pulmonary Embolism', 'Gastric Ulcer'],
-    difficulty_breathing: ['Asthma', 'COPD Exacerbation', 'Pneumothorax'],
-    changes_in_vision: ['Glaucoma', 'Macular Degeneration', 'Diabetic Retinopathy'],
-    symptoms_of_infection: ['Sepsis', 'Cellulitis', 'Urinary Tract Infection'],
-    other: ['Other Conditions']
-};
-
-const CaseModal = ({ isVisible, onClose, onSubmit }) => {
-    const [chiefComplaintOption, setChiefComplaintOption] = useState('');
-    const [differentialOptions, setDifferentialOptions] = useState([]);  // Ensure state for options is set correctly
-    const [differentialOption, setDifferentialOption] = useState('');   // State for the selected option
-    const [inputValue, setInputValue] = useState('');
+const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
+    const [selectedFirstLevel, setSelectedFirstLevel] = useState(null);
+    const [selectedSecondLevel, setSelectedSecondLevel] = useState(null);
+    const [selectedThirdLevel, setSelectedThirdLevel] = useState(null);
+    const [firstLevelOptions, setFirstLevelOptions] = useState([]);
+    const [secondLevelOptions, setSecondLevelOptions] = useState([]);
+    const [thirdLevelOptions, setThirdLevelOptions] = useState([]);
     const [text, setText] = useState('');
+    const [inputValue, setInputValue] = useState('');
 
-    const handleChiefComplaintChange = value => {
-        setChiefComplaintOption(value);
-        setDifferentialOptions(differentialDiagnosisOptions[value] || []);
-        setDifferentialOption('');  // Reset selected differential diagnosis
+    const { data: firstLevelChartOptions } = useGetAllChartServicesQuery();
+    const { data: secondLevelChartOptions } = useGetChartServicesSubtypesQuery(selectedFirstLevel, {
+        skip: !selectedFirstLevel,
+    });
+    const { data: thirdLevelChartOptions } = useGetTempChartQuery(selectedSecondLevel, {
+        skip: !selectedSecondLevel,
+    });
+
+    // handle first level options
+    useEffect(() => {
+        if (firstLevelChartOptions) {
+            const firstOptions = firstLevelChartOptions.map(option => ({
+                label: option.name,
+                value: option.id
+            }));
+            setFirstLevelOptions(firstOptions);
+        }
+    }, [firstLevelChartOptions]);
+
+    // handle second level options
+    useEffect(() => {
+        if (secondLevelChartOptions) {
+            const secondOptions = secondLevelChartOptions.map(option => ({
+                label: option.name,
+                value: option.id
+            }));
+            setSecondLevelOptions(secondOptions);
+        }
+    }, [secondLevelChartOptions]);
+
+    // handle third level options
+    useEffect(() => {
+        if (thirdLevelChartOptions) {
+            const thirdOptions = thirdLevelChartOptions.map(option => ({
+                label: option.name,
+                value: option.id
+            }));
+            setThirdLevelOptions(thirdOptions);
+        }
+    }, [thirdLevelChartOptions]);
+
+    const handleFirstLevelChange = value => {
+        setSelectedFirstLevel(value);
+        setSelectedSecondLevel(null); // Reset second level
+        setSelectedThirdLevel(null); // Reset third level
+        setSecondLevelOptions([]);
+        setThirdLevelOptions([]);
         setText('');  // Reset the text
     };
 
-    const handleDifferentialChange = value => {
-        setDifferentialOption(value);
+    const handleSecondLevelChange = value => {
+        setSelectedSecondLevel(value);
+        setSelectedThirdLevel(null); // Reset third level
+        setThirdLevelOptions([]);
+        setText('');  // Reset the text
+    };
+
+    const handleThirdLevelChange = value => {
+        setSelectedThirdLevel(value);
         generateText(value);  // Generate text based on new selection
     };
 
-    const generateText = (value) => {
-        if (chiefComplaintOption && value) {
-            setText(`Generated text based on ${chiefComplaintOption} and ${value}.`);
+    const generateText = value => {
+        if (selectedFirstLevel && selectedSecondLevel && value) {
+            setText(`Generated text based on First Level: ${selectedFirstLevel}, Second Level: ${selectedSecondLevel}, and Third Level: ${value}.`);
         }
     };
 
     const handleTextChange = e => {
         setText(e.target.value);
-    }
+    };
 
     const handleClose = () => {
-        setChiefComplaintOption('');
-        setDifferentialOptions([]);
-        setDifferentialOption('');
-        setInputValue('');
+        setSelectedFirstLevel(null);
+        setSelectedSecondLevel(null);
+        setSelectedThirdLevel(null);
+        setFirstLevelOptions([]);
+        setSecondLevelOptions([]);
+        setThirdLevelOptions([]);
         setText('');
-        // Call onClose prop if it's a function
+        setInputValue('');
         if (typeof onClose === 'function') {
             onClose();
         }
-    }
+    };
 
     return (
         <Modal title="Add New Case" open={isVisible} onCancel={handleClose} onOk={onSubmit} width={800}>
             <Form layout="vertical">
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Chief Complaint">
-                            <Select value={chiefComplaintOption} onChange={handleChiefComplaintChange}>
-                                {chiefComplaintOptions.map(option => (
+                        <Form.Item label="First Level Option">
+                            <Select value={selectedFirstLevel} onChange={handleFirstLevelChange}>
+                                {firstLevelOptions.map(option => (
+                                    <Option key={option.value} value={option.value}>{option.label}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Second Level Option">
+                            <Select value={selectedSecondLevel} onChange={handleSecondLevelChange} disabled={!selectedFirstLevel}>
+                                {secondLevelOptions.map(option => (
                                     <Option key={option.value} value={option.value}>{option.label}</Option>
                                 ))}
                             </Select>
@@ -76,10 +126,10 @@ const CaseModal = ({ isVisible, onClose, onSubmit }) => {
                 </Row>
                 <Row gutter={16}>
                     <Col span={12}>
-                        <Form.Item label="Differential Diagnosis">
-                            <Select value={differentialOption} onChange={handleDifferentialChange} placeholder="Select a diagnosis">
-                                {differentialOptions.map(option => (
-                                    <Option key={option} value={option}>{option}</Option>
+                        <Form.Item label="Third Level Option">
+                            <Select value={selectedThirdLevel} onChange={handleThirdLevelChange} disabled={!selectedSecondLevel}>
+                                {thirdLevelOptions.map(option => (
+                                    <Option key={option.value} value={option.value}>{option.label}</Option>
                                 ))}
                             </Select>
                         </Form.Item>
@@ -94,6 +144,13 @@ const CaseModal = ({ isVisible, onClose, onSubmit }) => {
                     <Col span={24}>
                         <Form.Item label="Generated Text">
                             <TextArea value={text} onChange={handleTextChange} autoSize={{ minRows: 12, maxRows: 8 }} />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <Form.Item label="Appointment ID">
+                            <span>{appointmentId}</span>
                         </Form.Item>
                     </Col>
                 </Row>
