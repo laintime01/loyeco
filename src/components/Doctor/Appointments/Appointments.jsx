@@ -29,13 +29,10 @@ const maxTime = new Date();
 maxTime.setHours(22, 0, 0);
 
 // custom time gutter for the calendar
-
-
-
-
 const Appointments = () => {
     const [visible, setVisible] = useState(false);
     const [isCaseModalVisible, setIsCaseModalVisible] = useState(false);
+    const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
     const [newEventModalVisible, setNewEventModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
     const [appointmentData, setAppointmentData] = useState({
@@ -52,13 +49,18 @@ const Appointments = () => {
 
     const [caseHistoryModalVisible, setCaseHistoryModalVisible] = useState(false);
 
-    const handleOpenCaseModal = () => {
-        setIsCaseModalVisible(true); //打开病例模态框
-        console.log('Open Case Modal');
+    const handleOpenCaseModal = (appointmentId) => {
+        setIsCaseModalVisible(true);
+        // pass the appointment id to the case modal
+        setSelectedAppointmentId(appointmentId);
+
     };
 
     const handleCloseCaseModal = () => {
-        setIsCaseModalVisible(false); //关闭病例模态框
+        setIsCaseModalVisible(false);
+        // clear the appointmentId
+        setSelectedAppointmentId(null);
+
     };
 
     const handleOpenCaseHistoryModal = () =>{
@@ -323,6 +325,7 @@ const Appointments = () => {
 
     const handleSelectEvent = event => {
         setSelectedEvent(event);
+        console.log(selectedEvent);
         setVisible(true);        
     }
 
@@ -582,8 +585,8 @@ const Appointments = () => {
                     <Col>
                         <h5>Case</h5>
                         <hr />
-                        <Button onClick={handleOpenCaseModal} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Case</Button>
-                        <Button variant="light" style={{border:"1px solid"}} onClick={handleOpenCaseHistoryModal}>Show Case History</Button>
+                        <Button onClick={()=>handleOpenCaseModal(selectedEvent.id)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Chart</Button>
+                        <Button variant="light" style={{border:"1px solid"}} onClick={handleOpenCaseHistoryModal}>Show Chart History</Button>
                         <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} />
                         <CaseHistory isVisible={caseHistoryModalVisible} onClose={handleCloseCaseHistoryModal} onSubmit={handleCloseCaseHistoryModal} />
                     </Col>
