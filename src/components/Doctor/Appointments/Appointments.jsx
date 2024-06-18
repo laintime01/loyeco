@@ -11,11 +11,12 @@ import { FaEnvelope, FaPhone, FaUserInjured, FaUser, FaTools, FaBroadcastTower, 
 import {useCreatePatientMutation, useGetAllPatientsQuery} from '../../../redux/api/patientApi';
 import { useGetAllServicesQuery ,useCreateServiceMutation} from '../../../redux/api/serviceApi';
 import {useGetPatientAppointmentsQuery, useCreateAppointmentMutation} from '../../../redux/api/appointmentApi';
+import {useGetAllChartsQuery,useCreateChartMutation,useUpdateChartMutation,useChartStatusMutation,
+    useGetAllChartServicesQuery,useGetChartServicesSubtypesQuery,useGetTempChartQuery} from '../../../redux/api/chartApi';
 import { useGetAllLocationsQuery } from '../../../redux/api/locationApi';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import toast from 'react-hot-toast';
-
 import CaseModal from '../Case/CaseModal';
 import CaseHistory from '../Case/CaseHistory';
 
@@ -49,11 +50,58 @@ const Appointments = () => {
 
     const [caseHistoryModalVisible, setCaseHistoryModalVisible] = useState(false);
 
+    // chart options
+    const [firstLevelOptions, setFirstLevelOptions] = useState([]);
+    const [secondLevelOptions, setSecondLevelOptions] = useState([]);
+    const [thirdLevelOptions, setThirdLevelOptions] = useState([]);
+
+    const [selectedFirstLevel, setSelectedFirstLevel] = useState(null);
+    const [selectedSecondLevel, setSelectedSecondLevel] = useState(null);
+    const [selectedThirdLevel, setSelectedThirdLevel] = useState(null);
+
+    const { data: firstLevelChartOptions } = useGetAllChartServicesQuery();
+    const { data: secondLevelChartOptions } = useGetChartServicesSubtypesQuery(selectedFirstLevel, {
+        skip: !selectedFirstLevel,
+    });
+    const { data: thirdLevelChartOptions } = useGetTempChartQuery(selectedSecondLevel, {
+        skip: !selectedSecondLevel,
+    });
+
+    // handle first level options
+    useEffect(() => {
+        if (firstLevelChartOptions) {
+            const firstOptions = firstLevelChartOptions.map(option => ({
+                label: option.name,
+                value: option.id
+            }));
+            setFirstLevelOptions(firstOptions);
+        }
+    }, [firstLevelChartOptions]);
+
+    // handle second level options
+    useEffect(() => {
+        if (secondLevelChartOptions) {
+            const secondOptions = secondLevelChartOptions.map(option => ({
+                label: option.name,
+                value: option.id
+            }));
+            setSecondLevelOptions(secondOptions);
+        }
+    }, [secondLevelChartOptions]);
+
+    // handle third level options
+    useEffect(() => {
+        if (thirdLevelChartOptions) {
+            const thirdOptions = thirdLevelChartOptions.map(option => ({
+                label: option.name,
+                value: option.id
+            }));
+            setThirdLevelOptions(thirdOptions);
+        }
+    }, [thirdLevelChartOptions]);
+
     const handleOpenCaseModal = (appointmentId) => {
         setIsCaseModalVisible(true);
-        // pass the appointment id to the case modal
-        setSelectedAppointmentId(appointmentId);
-
     };
 
     const handleCloseCaseModal = () => {
@@ -325,8 +373,8 @@ const Appointments = () => {
 
     const handleSelectEvent = event => {
         setSelectedEvent(event);
-        console.log(selectedEvent);
-        setVisible(true);        
+        setVisible(true);
+        setSelectedAppointmentId(event.id);
     }
 
     const handleOk = async(e) => {
@@ -587,7 +635,7 @@ const Appointments = () => {
                         <hr />
                         <Button onClick={()=>handleOpenCaseModal(selectedEvent.id)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Chart</Button>
                         <Button variant="light" style={{border:"1px solid"}} onClick={handleOpenCaseHistoryModal}>Show Chart History</Button>
-                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} />
+                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} appointmentId={selectedAppointmentId}/>
                         <CaseHistory isVisible={caseHistoryModalVisible} onClose={handleCloseCaseHistoryModal} onSubmit={handleCloseCaseHistoryModal} />
                     </Col>
                 </Row>

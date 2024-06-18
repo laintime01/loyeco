@@ -42,10 +42,10 @@ export const chartApi = baseApi.injectEndpoints({
         }),
         // get chart services subtyes
         getChartServicesSubtypes: build.query({
-            query: (params) => ({
+            query: (id) => ({
                 url: `${CHA_URL}/subtype`,
                 method: 'GET',
-                params: params
+                params: { id: id }
             }),
             providesTags: [tagTypes.chart]
         }),
@@ -74,9 +74,8 @@ export const {
     useGetAllChartsQuery,
     useCreateChartMutation,
     useUpdateChartMutation,
-    useDeleteChartMutation,
     useChartStatusMutation,
     useGetAllChartServicesQuery,
     useGetChartServicesSubtypesQuery,
-    useGetTempChartQuery
+    useGetTempChartQuery,
 } = chartApi
