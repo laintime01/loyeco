@@ -12,10 +12,11 @@ const LicenseSetting = () => {
     // make a select dropdown for license types using data
     const { data: profileData,isLoading, isError, refetch } = useGetProfileQuery();
     const licenses = profileData?.licenses;
-    const typeOptions = data?.map((type) => ({ value: type.name, label: type.name }));
+    const typeOptions = data?.map((type) => ({ value: type.id, label: type.name }));
     const [showModal, setShowModal] = useState(false);
     const [selectedLicense, setSelectedLicense] = useState({});
     const [showEditModal, setShowEditModal] = useState(false);
+    const update = useUpdateProfileMutation();
 
     const [newLicense, setNewLicense] = useState({
         id: '',
@@ -38,6 +39,7 @@ const LicenseSetting = () => {
             refetch();
         } catch (error) {
             console.log(error);
+            toast.error('Error Adding License, please try again.');
         }
     };
 
@@ -53,15 +55,20 @@ const LicenseSetting = () => {
 
     const handleRowClick = (license) => {
         setSelectedLicense(license);
-        console.log(selectedLicense);
         setShowEditModal(true);
     };
 
     // for future use
     const handleEdit = async () => {
-        
-        
-        console.log(selectedLicense);
+        try {
+            await update.mutateAsync(selectedLicense);
+            setShowEditModal(false);
+            toast.success('License Updated Successfully');
+            refetch();
+        } catch (error) {
+            console.log(error);
+            toast.error('Error Updating License, please try again.');
+        }
     };
 
     const handleDelete = async () => {
@@ -185,10 +192,16 @@ const LicenseSetting = () => {
                         </Form.Group>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowEditModal(false)}>Close</Button>
-                    <Button variant="primary" onClick={handleEdit}>Edit</Button>
-                    <Button variant="danger" onClick={handleDelete}>Delete</Button>
+                {/* delete on the left side  other two on the right side */}
+                <Modal.Footer className="d-flex justify-content-between" >
+                    <div>
+                     <Button variant="danger" onClick={handleDelete}>Delete</Button>
+                    </div>
+                    <div>
+                    <Button variant="success" onClick={handleEdit}>SAVE</Button>
+                    <Button variant="secondary" style={{marginLeft:"10px"}} onClick={() => setShowEditModal(false)}>Close</Button>
+                    </div>
+                   
                 </Modal.Footer>
             </Modal>
 

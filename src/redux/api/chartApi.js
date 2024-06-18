@@ -6,12 +6,11 @@ export const chartApi = baseApi.injectEndpoints({
     endpoints: (build) => ({
         // get all charts
         getAllCharts: build.query({
-            query: () => ({
+            query: (params) => ({
                 url: CHA_URL,
                 method: 'GET',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
+                params: params
+
             }),
             providesTags: [tagTypes.chart]
         }),
@@ -21,9 +20,6 @@ export const chartApi = baseApi.injectEndpoints({
                 url: CHA_URL,
                 method: 'POST',
                 data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.chart]
         }),
@@ -33,32 +29,41 @@ export const chartApi = baseApi.injectEndpoints({
                 url: CHA_URL,
                 method: 'PUT',
                 data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
             }),
             invalidatesTags: [tagTypes.chart]
         }),
-        // delete chart
-        deleteChart: build.mutation({
-            query: (id) => ({
-                url: `${CHA_URL}/${id}`,
-                method: 'DELETE',
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
+        // get all chart services
+        getAllChartServices: build.query({
+            query: () => ({
+                url: `${CHA_URL}/services`,
+                method: 'GET',
             }),
-            invalidatesTags: [tagTypes.chart]
+            providesTags: [tagTypes.chart]
+        }),
+        // get chart services subtyes
+        getChartServicesSubtypes: build.query({
+            query: (params) => ({
+                url: `${CHA_URL}/subtype`,
+                method: 'GET',
+                params: params
+            }),
+            providesTags: [tagTypes.chart]
+        }),
+        // get temp chart by subtype id
+        getTempChart: build.query({
+            query: (subtype_id) => ({
+                url: `${CHA_URL}/temp`,
+                method: 'GET',
+                params: { id: subtype_id }
+            }),
+            providesTags: [tagTypes.chart]
         }),
         // chart status pass id and status values : Draft, Finalized
         chartStatus: build.mutation({
-            query: (data) => ({
+            query: (params) => ({
                 url: `${CHA_URL}/status`,
                 method: 'PUT',
-                data: data,
-                headers: {
-                    Authorization: 'Bearer admin@123.com'
-                },
+                params: params,
             }),
             invalidatesTags: [tagTypes.chart]
         }),
@@ -71,4 +76,7 @@ export const {
     useUpdateChartMutation,
     useDeleteChartMutation,
     useChartStatusMutation,
+    useGetAllChartServicesQuery,
+    useGetChartServicesSubtypesQuery,
+    useGetTempChartQuery
 } = chartApi
