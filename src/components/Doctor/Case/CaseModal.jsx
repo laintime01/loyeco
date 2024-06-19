@@ -14,6 +14,7 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId, appointmentPat
     const [thirdLevelOptions, setThirdLevelOptions] = useState([]);
     const [text, setText] = useState('');
     const [inputValue, setInputValue] = useState('');
+    const [disableOk, setDisableOk] = useState(true);
 
     const [selectedFirstLabel, setSelectedFirstLabel] = useState('');
     const [selectedSecondLabel, setSelectedSecondLabel] = useState('');
@@ -28,34 +29,51 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId, appointmentPat
     });
 
     useEffect(() => {
-        if (firstLevelChartOptions) {
-            const firstOptions = firstLevelChartOptions.map(option => ({
-                label: option.name,
-                value: option.id
-            }));
-            setFirstLevelOptions(firstOptions);
+        if (isVisible) {
+            if (firstLevelChartOptions) {
+                const firstOptions = firstLevelChartOptions.map(option => ({
+                    label: option.name,
+                    value: option.id
+                }));
+                setFirstLevelOptions(firstOptions);
+            }
+            if (selectedFirstLevel && secondLevelChartOptions) {
+                const secondOptions = secondLevelChartOptions.map(option => ({
+                    label: option.name,
+                    value: option.id
+                }));
+                setSecondLevelOptions(secondOptions);
+            }
+            if (selectedSecondLevel && thirdLevelChartOptions) {
+                const thirdOptions = thirdLevelChartOptions.map(option => ({
+                    label: option.name,
+                    value: option.id
+                }));
+                setThirdLevelOptions(thirdOptions);
+            }
+        } else {
+            resetState();
         }
-    }, [firstLevelChartOptions]);
+    }, [isVisible, firstLevelChartOptions, secondLevelChartOptions, thirdLevelChartOptions]);
 
     useEffect(() => {
-        if (secondLevelChartOptions) {
-            const secondOptions = secondLevelChartOptions.map(option => ({
-                label: option.name,
-                value: option.id
-            }));
-            setSecondLevelOptions(secondOptions);
-        }
-    }, [secondLevelChartOptions]);
+        setDisableOk(text.trim() === '');
+    }, [text]);
 
-    useEffect(() => {
-        if (thirdLevelChartOptions) {
-            const thirdOptions = thirdLevelChartOptions.map(option => ({
-                label: option.name,
-                value: option.id
-            }));
-            setThirdLevelOptions(thirdOptions);
-        }
-    }, [thirdLevelChartOptions]);
+    const resetState = () => {
+        setSelectedFirstLevel(null);
+        setSelectedSecondLevel(null);
+        setSelectedThirdLevel(null);
+        setFirstLevelOptions([]);
+        setSecondLevelOptions([]);
+        setThirdLevelOptions([]);
+        setSelectedFirstLabel('');
+        setSelectedSecondLabel('');
+        setSelectedThirdLabel('');
+        setText('');
+        setInputValue('');
+        setDisableOk(true);
+    };
 
     const handleFirstLevelChange = value => {
         const selectedOption = firstLevelOptions.find(option => option.value === value);
@@ -74,19 +92,20 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId, appointmentPat
         setSelectedSecondLabel(selectedOption ? selectedOption.label : '');
         setSelectedThirdLevel(null);
         setThirdLevelOptions([]);
-        setText('');
+        generateText(selectedFirstLabel, selectedOption ? selectedOption.label : '');
     };
 
     const handleThirdLevelChange = value => {
         const selectedOption = thirdLevelOptions.find(option => option.value === value);
         setSelectedThirdLevel(value);
         setSelectedThirdLabel(selectedOption ? selectedOption.label : '');
-        generateText(selectedOption ? selectedOption.label : '');
+        generateText(selectedFirstLabel, selectedSecondLabel, selectedOption ? selectedOption.label : '');
     };
 
-    const generateText = label => {
-        if (selectedFirstLabel && selectedSecondLabel && label) {
-            setText(`Generated text based on First Level: ${selectedFirstLabel}, Second Level: ${selectedSecondLabel}, and Third Level: ${label}.`);
+    const generateText = (firstLabel, secondLabel, thirdLabel = '') => {
+        if (firstLabel && secondLabel) {
+            const note = `Generated text based on First Level: ${firstLabel}, Second Level: ${secondLabel}${thirdLabel ? `, and Third Level: ${thirdLabel}` : ''}.`;
+            setText(note);
         }
     };
 
@@ -95,21 +114,14 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId, appointmentPat
     };
 
     const handleClose = () => {
-        setSelectedFirstLevel(null);
-        setSelectedSecondLevel(null);
-        setSelectedThirdLevel(null);
-        setFirstLevelOptions([]);
-        setSecondLevelOptions([]);
-        setThirdLevelOptions([]);
-        setText('');
-        setInputValue('');
+        resetState();
         if (typeof onClose === 'function') {
             onClose();
         }
     };
 
     const handleSubmit = () => {
-        const chart = `${appointmentPatient} patient ${selectedFirstLabel} ${selectedSecondLabel} ${selectedThirdLabel} level case`;
+        const chart = `${appointmentPatient} patient ${selectedFirstLabel} ${selectedSecondLabel} ${selectedThirdLabel || ''} level case`.trim();
         const caseData = {
             appointmentId: appointmentId,
             chart: chart,
@@ -122,7 +134,14 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId, appointmentPat
     };
 
     return (
-        <Modal title="Add New Case" open={isVisible} onCancel={handleClose} onOk={handleSubmit} width={800}>
+        <Modal
+            title="Add New Case"
+            open={isVisible}
+            onCancel={handleClose}
+            onOk={handleSubmit}
+            width={800}
+            okButtonProps={{ disabled: disableOk }}
+        >
             <Form layout="vertical">
                 <Row gutter={16}>
                     <Col span={12}>
