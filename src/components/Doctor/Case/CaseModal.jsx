@@ -5,7 +5,7 @@ import { useGetAllChartServicesQuery, useGetChartServicesSubtypesQuery, useGetTe
 const { Option } = Select;
 const { TextArea } = Input;
 
-const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
+const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId, appointmentPatient }) => {
     const [selectedFirstLevel, setSelectedFirstLevel] = useState(null);
     const [selectedSecondLevel, setSelectedSecondLevel] = useState(null);
     const [selectedThirdLevel, setSelectedThirdLevel] = useState(null);
@@ -15,6 +15,10 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
     const [text, setText] = useState('');
     const [inputValue, setInputValue] = useState('');
 
+    const [selectedFirstLabel, setSelectedFirstLabel] = useState('');
+    const [selectedSecondLabel, setSelectedSecondLabel] = useState('');
+    const [selectedThirdLabel, setSelectedThirdLabel] = useState('');
+
     const { data: firstLevelChartOptions } = useGetAllChartServicesQuery();
     const { data: secondLevelChartOptions } = useGetChartServicesSubtypesQuery(selectedFirstLevel, {
         skip: !selectedFirstLevel,
@@ -23,7 +27,6 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
         skip: !selectedSecondLevel,
     });
 
-    // handle first level options
     useEffect(() => {
         if (firstLevelChartOptions) {
             const firstOptions = firstLevelChartOptions.map(option => ({
@@ -34,7 +37,6 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
         }
     }, [firstLevelChartOptions]);
 
-    // handle second level options
     useEffect(() => {
         if (secondLevelChartOptions) {
             const secondOptions = secondLevelChartOptions.map(option => ({
@@ -45,7 +47,6 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
         }
     }, [secondLevelChartOptions]);
 
-    // handle third level options
     useEffect(() => {
         if (thirdLevelChartOptions) {
             const thirdOptions = thirdLevelChartOptions.map(option => ({
@@ -57,29 +58,35 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
     }, [thirdLevelChartOptions]);
 
     const handleFirstLevelChange = value => {
+        const selectedOption = firstLevelOptions.find(option => option.value === value);
         setSelectedFirstLevel(value);
-        setSelectedSecondLevel(null); // Reset second level
-        setSelectedThirdLevel(null); // Reset third level
+        setSelectedFirstLabel(selectedOption ? selectedOption.label : '');
+        setSelectedSecondLevel(null);
+        setSelectedThirdLevel(null);
         setSecondLevelOptions([]);
         setThirdLevelOptions([]);
-        setText('');  // Reset the text
+        setText('');
     };
 
     const handleSecondLevelChange = value => {
+        const selectedOption = secondLevelOptions.find(option => option.value === value);
         setSelectedSecondLevel(value);
-        setSelectedThirdLevel(null); // Reset third level
+        setSelectedSecondLabel(selectedOption ? selectedOption.label : '');
+        setSelectedThirdLevel(null);
         setThirdLevelOptions([]);
-        setText('');  // Reset the text
+        setText('');
     };
 
     const handleThirdLevelChange = value => {
+        const selectedOption = thirdLevelOptions.find(option => option.value === value);
         setSelectedThirdLevel(value);
-        generateText(value);  // Generate text based on new selection
+        setSelectedThirdLabel(selectedOption ? selectedOption.label : '');
+        generateText(selectedOption ? selectedOption.label : '');
     };
 
-    const generateText = value => {
-        if (selectedFirstLevel && selectedSecondLevel && value) {
-            setText(`Generated text based on First Level: ${selectedFirstLevel}, Second Level: ${selectedSecondLevel}, and Third Level: ${value}.`);
+    const generateText = label => {
+        if (selectedFirstLabel && selectedSecondLabel && label) {
+            setText(`Generated text based on First Level: ${selectedFirstLabel}, Second Level: ${selectedSecondLabel}, and Third Level: ${label}.`);
         }
     };
 
@@ -101,8 +108,21 @@ const CaseModal = ({ isVisible, onClose, onSubmit, appointmentId }) => {
         }
     };
 
+    const handleSubmit = () => {
+        const chart = `${appointmentPatient} patient ${selectedFirstLabel} ${selectedSecondLabel} ${selectedThirdLabel} level case`;
+        const caseData = {
+            appointmentId: appointmentId,
+            chart: chart,
+            generalNote: text,
+        };
+        if (typeof onSubmit === 'function') {
+            onSubmit(caseData);
+        }
+        handleClose();
+    };
+
     return (
-        <Modal title="Add New Case" open={isVisible} onCancel={handleClose} onOk={onSubmit} width={800}>
+        <Modal title="Add New Case" open={isVisible} onCancel={handleClose} onOk={handleSubmit} width={800}>
             <Form layout="vertical">
                 <Row gutter={16}>
                     <Col span={12}>

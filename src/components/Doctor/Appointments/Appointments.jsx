@@ -19,6 +19,7 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import toast from 'react-hot-toast';
 import CaseModal from '../Case/CaseModal';
 import CaseHistory from '../Case/CaseHistory';
+import { set } from 'react-hook-form';
 
 const localizer = momentLocalizer(moment);
 const DraggableCalendar = withDragAndDrop(Calendar);
@@ -34,6 +35,7 @@ const Appointments = () => {
     const [visible, setVisible] = useState(false);
     const [isCaseModalVisible, setIsCaseModalVisible] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+    const [selectedPatientName, setSelectedPatientName] = useState('');
     const [newEventModalVisible, setNewEventModalVisible] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState({});
     const [appointmentData, setAppointmentData] = useState({
@@ -49,6 +51,8 @@ const Appointments = () => {
     const [endTime, setEndTime] = useState('');
 
     const [caseHistoryModalVisible, setCaseHistoryModalVisible] = useState(false);
+
+    const [createChart] = useCreateChartMutation();
 
     // chart options
     const [firstLevelOptions, setFirstLevelOptions] = useState([]);
@@ -108,7 +112,18 @@ const Appointments = () => {
         setIsCaseModalVisible(false);
         // clear the appointmentId
         setSelectedAppointmentId(null);
+        setSelectedPatientName('');
 
+    };
+
+    const handleAddCase = async (caseData) => {
+        try {
+            console.log("caseData-->"+caseData);
+            await createChart(caseData);
+            toast.success('Chart added successfully');
+        } catch (error) {
+            toast.error('Failed to add chart');
+        }
     };
 
     const handleOpenCaseHistoryModal = () =>{
@@ -373,8 +388,10 @@ const Appointments = () => {
 
     const handleSelectEvent = event => {
         setSelectedEvent(event);
+        console.log(event);
         setVisible(true);
         setSelectedAppointmentId(event.id);
+        setSelectedPatientName(event.patientId);
     }
 
     const handleOk = async(e) => {
@@ -550,13 +567,13 @@ const Appointments = () => {
                 <h5>Patient Info</h5>
                 <hr />
                 {/* patient*/}
-                <Row className='mb-3'><p><strong><FaUserInjured/> Patient:</strong> {selectedEvent.title?.split('for ')[1]}</p></Row>
+                <Row className='mb-3'><p><strong><FaUserInjured/> Patient:</strong> {selectedEvent.patientId}</p></Row>
                 <Row className='mb-3'>
                     <Col><p><strong><FaEnvelope/> Email:</strong> {selectedEvent.patientEmail}</p></Col>
                     <Col><p><strong><FaPhone/> Phone:</strong> {selectedEvent.patientPhone}</p></Col>
                 </Row>
                 <Row className='mb-3'>
-                    <Col><p><strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.note}</p></Col>
+                    <Col><p><strong><FaNotesMedical/> Reminder:</strong> {selectedEvent.content}</p></Col>
                     <Col xs={2} className="offset-4">
                         <Button onClick={() => setShowEditReminderModal(true)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Edit</Button>
                     </Col>
@@ -635,7 +652,7 @@ const Appointments = () => {
                         <hr />
                         <Button onClick={()=>handleOpenCaseModal(selectedEvent.id)} variant="light" style={{border:"1px solid", marginRight:"5px"}}>Add Chart</Button>
                         <Button variant="light" style={{border:"1px solid"}} onClick={handleOpenCaseHistoryModal}>Show Chart History</Button>
-                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleCloseCaseModal} appointmentId={selectedAppointmentId}/>
+                        <CaseModal isVisible={isCaseModalVisible} onClose={handleCloseCaseModal} onSubmit={handleAddCase} appointmentId={selectedAppointmentId} appointmentPatient = {selectedPatientName}  />
                         <CaseHistory isVisible={caseHistoryModalVisible} onClose={handleCloseCaseHistoryModal} onSubmit={handleCloseCaseHistoryModal} />
                     </Col>
                 </Row>
