@@ -427,7 +427,6 @@ const MyPatients = () => {
                                     <th>Phone</th>
                                     <th>Gender</th>
                                     <th>VisitStatus</th>
-                                    <th>Case</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -439,7 +438,7 @@ const MyPatients = () => {
                                     <td>{item.phone}</td>
                                     <td>{item.gender}</td>
                                     <td>{item.visitStatus}</td>
-                                    <td>
+                                    {/* <td>
                                         <Button 
                                             variant="secondary" 
                                             onClick={(e) => {
@@ -457,7 +456,7 @@ const MyPatients = () => {
                                             }}>
                                             History
                                         </Button>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             ))}
                         </tbody>
