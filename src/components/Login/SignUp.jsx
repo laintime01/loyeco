@@ -9,7 +9,6 @@ const SignUp = ({ setSignUp }) => {
     const [error, setError] = useState({});
     const [infoError, setInfoError] = useState('');
     const [loading, setLoading] = useState(false);
-
     const [page, setPage] = useState(1);
 
     const formField = {
@@ -21,7 +20,7 @@ const SignUp = ({ setSignUp }) => {
         clinicCity: '',
         clinicName: '',
         clinicLocationName: '',
-    }
+    };
 
     const [user, setUser] = useState(formField);
     const [userSignUp, { data: dData, isSuccess: dIsSuccess, isError: dIsError, error: dError, isLoading: dIsLoading }] = useSignUpMutation();
@@ -43,7 +42,12 @@ const SignUp = ({ setSignUp }) => {
     useEffect(() => {
         if (dIsError && dError) {
             setLoading(false);
-            setInfoError(dError.data.message);
+            setInfoError(dError.data.message || "Registration failed, please try again later.");
+            swal({
+                icon: 'error',
+                text: 'Registration failed, please try again later.',
+                timer: 2000
+            });
         }
         if (!dIsError && dIsSuccess) {
             handleSignUpSuccess();
@@ -152,7 +156,7 @@ const SignUp = ({ setSignUp }) => {
                     </div>
                     <div className='button-container'>
                         <button className='button-back iBtn' type="button" onClick={handleBackClick}>Back</button>
-                        <button className='button-submit iBtn' type="submit">{loading ? <Spinner animation="border" variant="info" /> : "Submit"}</button>
+                        <button className='button-submit iBtn' type="submit">{loading || dIsLoading ? <Spinner animation="border" variant="info" /> : "Submit"}</button>
                     </div>
                 </>
             )}

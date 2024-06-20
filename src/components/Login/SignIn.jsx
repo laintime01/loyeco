@@ -20,23 +20,28 @@ const SignIn = ({ handleResponse }) => {
 
     // submit form
     const onSubmit = async (event) => {
-        console.log(event);
-        await userLogin({...event})
+        await userLogin({...event});
     }
+    
     useEffect(() => {
-        if(isError){
-            setInfoError(error?.data?.message)
+        if (isError) {
+            setInfoError(error?.data?.message || "Login failed, please try again later.");
+            swal({
+                icon: 'error',
+                text: 'Login failed, please try again later.',
+                timer: 2000
+            });
         }
-        if(isSuccess){
+        if (isSuccess) {
             sessionStorage.setItem('accessToken', data);
             swal({
                 icon: 'success',
                 text: `Successfully Logged In`,
                 timer: 2000
-            })
-            navigate("/dashboard")
+            });
+            navigate("/dashboard");
         }
-    }, [isError, error, isSuccess, navigate])
+    }, [isError, error, isSuccess, navigate, data]);
 
     return (
         <form className="sign-in-form" onSubmit={handleSubmit(onSubmit)}>
